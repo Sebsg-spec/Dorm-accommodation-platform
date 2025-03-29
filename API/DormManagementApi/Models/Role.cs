@@ -3,7 +3,7 @@
     public enum RoleLevel
     {
         Student = 1,
-        Secretary = 2,
+        Secretar = 2,
         Admin = 3
     }
 
