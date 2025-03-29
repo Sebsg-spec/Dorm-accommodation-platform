@@ -6,7 +6,7 @@
         public string? Password { get; set; }
     }
 
-    public class UserRegisterDto: UserDto
+    public class UserRegisterDto : UserDto
     {
 
     }

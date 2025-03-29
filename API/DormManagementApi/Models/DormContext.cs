@@ -12,6 +12,7 @@ namespace DormManagementApi.Models
             //Database.EnsureCreated();
         }
 
+        public virtual DbSet<DormGroup> DormGroup { get; set; }
         public virtual DbSet<Application> Application { get; set; }
         public virtual DbSet<Dorm> Dorm { get; set; }
         public virtual DbSet<DormPreference> DormPreference { get; set; }

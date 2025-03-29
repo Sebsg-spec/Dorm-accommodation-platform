@@ -68,7 +68,7 @@ namespace DormManagementApi.Controllers
             }
             catch
             {
-                return BadRequest("An error occurred while generating the token");
+                return InternalServerError("An error occurred while generating the token");
             }
         }
 
@@ -95,7 +95,7 @@ namespace DormManagementApi.Controllers
             }
             catch
             {
-                return BadRequest("An error occurred while generating the token");
+                return InternalServerError("An error occurred while generating the token");
             }
         }
 
@@ -181,6 +181,11 @@ namespace DormManagementApi.Controllers
         private bool UserExists(int id)
         {
             return _context.User.Any(e => e.Id == id);
+        }
+
+        private ObjectResult InternalServerError(string? error = null)
+        {
+            return StatusCode(500, error);
         }
 
         private static string HashPassword(string password)
