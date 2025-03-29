@@ -54,12 +54,12 @@ CREATE TABLE [user] (
 
 CREATE TABLE [profile] (
 	[id] INT PRIMARY KEY FOREIGN KEY REFERENCES [user]([id]),
-	[pin] NCHAR(13) NOT NULL,
-	[sex] NCHAR(1) NOT NULL CHECK(sex IN('M', 'F', 'O')),
+	[pin] NCHAR(13),
+	[sex] NCHAR(1) CHECK(sex IN('M', 'F', 'O')),
 	
-	[first_name] NVARCHAR(255) NOT NULL,
-	[last_name] NVARCHAR(255) NOT NULL,
-	[faculty] INT NOT NULL FOREIGN KEY REFERENCES [faculty]([id])
+	[first_name] NVARCHAR(255),
+	[last_name] NVARCHAR(255),
+	[faculty] INT FOREIGN KEY REFERENCES [faculty]([id])
 )
 
 CREATE TABLE [dorm] (

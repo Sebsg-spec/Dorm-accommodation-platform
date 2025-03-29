@@ -51,6 +51,14 @@ namespace DormManagementApi.Controllers
             };
 
             _context.User.Add(user);
+            await _context.SaveChangesAsync(); // Need to save changes to get the user id
+
+            var profile = new Profile
+            {
+                Id = user.Id
+            };
+
+            _context.Profile.Add(profile);
             await _context.SaveChangesAsync();
 
             try

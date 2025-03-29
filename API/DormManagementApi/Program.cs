@@ -73,7 +73,6 @@ namespace DormManagementApi
 
             builder.Services.AddDbContext<DormContext>(opt => opt
                 .UseSqlServer(connectionString, options => options.CommandTimeout(60))
-                //.UseLazyLoadingProxies()
             );
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

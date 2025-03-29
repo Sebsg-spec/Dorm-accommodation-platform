@@ -18,7 +18,7 @@ namespace DormManagementApi.Attributes
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var user = context.HttpContext.User;
-            if (user == null || user.Identity == null || !user.Identity.IsAuthenticated)
+            if (user.Identity == null || !user.Identity.IsAuthenticated)
             {
                 context.Result = new UnauthorizedResult();
                 return;
