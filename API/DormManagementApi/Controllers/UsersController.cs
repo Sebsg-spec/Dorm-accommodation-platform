@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DormManagementApi.Models;
+using Microsoft.Extensions.Options;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Cryptography;
+using DormManagementApi.Validators;
 
 namespace DormManagementApi.Controllers
 {
@@ -14,10 +17,78 @@ namespace DormManagementApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly DormContext _context;
+        private readonly UserValidator _validator;
+        private readonly byte[] _jwtSecret;
 
-        public UsersController(DormContext context)
+        public UsersController(DormContext context, IOptions<JwtSettings> jwtSettings)
         {
             _context = context;
+            _validator = new UserValidator();
+
+            if (string.IsNullOrWhiteSpace(jwtSettings.Value.Secret))
+                throw new ArgumentException("Invalid JWT settings");
+
+            _jwtSecret = Encoding.ASCII.GetBytes(jwtSettings.Value.Secret);
+        }
+
+        // POST: api/Users/register
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(UserRegisterDto userDto)
+        {
+            var validationResult = _validator.ValidateUserDto(userDto);
+            if (validationResult != string.Empty)
+                return BadRequest(validationResult);
+
+            if (await _context.User.AnyAsync(u => u.Email == userDto.Email))
+                return BadRequest("Email already registered");
+
+            var user = new User
+            {
+                Email = userDto.Email,
+                Password = HashPassword(userDto.Password),
+                Role = (int)RoleLevel.Student
+            };
+
+            _context.User.Add(user);
+            await _context.SaveChangesAsync();
+
+            try
+            {
+                var token = GenerateToken(user);
+                return Ok(new { token });
+            }
+            catch
+            {
+                return BadRequest("An error occurred while generating the token");
+            }
+        }
+
+        // POST: api/Users/login
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(UserLoginDto userDto)
+        {
+            var validationResult = _validator.ValidateUserDto(userDto);
+            if (validationResult != string.Empty)
+                return BadRequest(validationResult);
+
+            var hashedPassword = HashPassword(userDto.Password);
+            var user = await _context.User
+                .SingleOrDefaultAsync(u => u.Email == userDto.Email && u.Password == hashedPassword);
+
+            if (user == null)
+                return Unauthorized("Invalid email or password");
+
+            try
+            {
+                var token = GenerateToken(user);
+                return Ok(new { token });
+            }
+            catch
+            {
+                return BadRequest("An error occurred while generating the token");
+            }
         }
 
         // GET: api/Users
@@ -102,6 +173,34 @@ namespace DormManagementApi.Controllers
         private bool UserExists(int id)
         {
             return _context.User.Any(e => e.Id == id);
+        }
+
+        private static string HashPassword(string password)
+        {
+            var hash = SHA256.HashData(Encoding.UTF8.GetBytes(password));
+            return BitConverter.ToString(hash).Replace("-", "").ToLower();
+        }
+
+        private string GenerateToken(User user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(
+                [
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Email, user.Email.ToString()),
+                    new Claim(ClaimTypes.Role, user.Role.ToString()),
+                ]),
+                Expires = DateTime.UtcNow.AddHours(JwtSettings.ExpirationTimeHours),
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(_jwtSecret),
+                    SecurityAlgorithms.HmacSha256Signature
+                )
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }

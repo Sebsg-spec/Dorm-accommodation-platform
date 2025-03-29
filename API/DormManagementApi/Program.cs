@@ -2,6 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
 using DormManagementApi.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace DormManagementApi
 {
@@ -16,7 +21,7 @@ namespace DormManagementApi
                 options.AddDefaultPolicy(
                     policy =>
                     {
-                        policy.WithOrigins("http://localhost:5173", "http://localhost:4200/")
+                        policy.WithOrigins("http://localhost:4200/")
                             .SetIsOriginAllowed(origin => new Uri(origin).IsLoopback)
                             .AllowAnyHeader()
                             .AllowAnyMethod();
