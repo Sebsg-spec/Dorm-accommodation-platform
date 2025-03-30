@@ -12,6 +12,8 @@ namespace DormManagementApi.Models
         [Column("last_update")]
         public DateTime LastUpdate { get; set; }
         public int Status { get; set; }
-
+        public string? Comment { get; set; }
+        [Column("assigned_dorm")]
+        public int? AssignedDorm { get; set; }
     }
 }

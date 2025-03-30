@@ -47,7 +47,7 @@ VALUES
 	(N'Repartizat'),			-- Dorm assigned to student
 	(N'Cămin acceptat'),		-- Dorm accepted by student
 	(N'Respins'),				-- Application denied by secretary
-	(N'Cămin refuzat');			-- Dorm declied by student
+	(N'Cămin refuzat');			-- Dorm refused by student
 
 INSERT INTO [dorm_group]
 	([name])
@@ -212,3 +212,38 @@ END
 
 CLOSE dorm_cursor;
 DEALLOCATE dorm_cursor;
+
+-- -------------------------
+
+INSERT INTO [application]
+	([user], [faculty], [uuid], [year], [last_update], [status], [comment], [assigned_dorm])
+VALUES
+	(4, 1, '0b228048-05b1-4392-af25-87379858596e', 2025, '2024-09-24 09:12:34', 1, NULL, NULL),
+	(5, 1, '334be039-e905-4246-a35f-43ffa6a4bd06', 2025, '2024-09-17 09:12:34', 2, N'Lipsă adeverință de venit', NULL),
+	(6, 1, '494412be-d931-4cfc-84fb-417305edd492', 2025, '2024-09-24 09:12:34', 3, NULL, NULL),
+	(7, 1, '0ebdfbbe-0128-4f3f-af5b-8daa8e5b2075', 2025, '2024-09-24 09:12:34', 4, NULL, 6),	-- assigned to first preference
+	(8, 1, 'a82f6f9c-a025-4abc-9242-8e0393e5f4d6', 2025, '2024-09-24 09:12:34', 5, NULL, 9),	-- accepted second preference
+	(9, 1, '8139b3c5-37de-4b56-9ae5-d4e8a0ffdf05', 2025, '2024-03-24 09:12:34', 6, N'Media este mai mică decât ultima medie admisă', NULL),
+	(10, 2, 'f546666d-7bee-48d3-b9fe-3fcd41268059', 2025, '2024-03-24 09:12:34', 7, NULL, 8);	-- refused last preference
+
+INSERT INTO [dorm_preference]
+	([application], [dorm], [preference])
+VALUES
+	(1, 12, 1),
+	(1, 13, 2),
+	(1, 8, 3),
+	(2, 1, 1),
+	(2, 2, 2),
+	(3, 3, 1),
+	(3, 4, 2),
+	(3, 5, 3),
+	(4, 6, 1),
+	(4, 7, 2),
+	(5, 8, 1),
+	(5, 9, 2),
+	(5, 10, 3),
+	(6, 11, 1),
+	(6, 12, 2),
+	(7, 13, 1),
+	(7, 14, 2),
+	(7, 8, 3);

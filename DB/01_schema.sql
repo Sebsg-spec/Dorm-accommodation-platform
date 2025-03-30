@@ -93,7 +93,9 @@ CREATE TABLE [application] (
 	[year] INT NOT NULL,
 
 	[last_update] DATETIME2(7),
-	[status] INT NOT NULL FOREIGN KEY REFERENCES [status]([id])
+	[status] INT NOT NULL FOREIGN KEY REFERENCES [status]([id]),
+	[comment] NVARCHAR(255),
+	[assigned_dorm] INT FOREIGN KEY REFERENCES [dorm]([id])
 );
 
 -- -------------------------
