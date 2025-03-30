@@ -61,20 +61,36 @@ VALUES
 
 -- -------------------------
 
--- Test users with password 'a'
+-- Test users with password 'test'
 INSERT INTO [user]
 	([email], [password], [role])
 VALUES
-	('student', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 1),
+	('admin', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 3),
 	('secretar', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 2),
-	('admin', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 3);
+	('student', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 1),
+	('student1', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 1),
+	('student2', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 1),
+	('student3', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 1),
+	('student4', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 1),
+	('student5', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 1),
+	('student6', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 1),
+	('student7', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 1),
+	('secretar2', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 2);
 
 INSERT INTO [profile]
 	([id], [pin], [sex], [first_name], [last_name], [faculty])
 VALUES
-	(1, '1234567890123', 'F', N'First', N'Last', 1),
-	(2, '1234567890123', 'M', N'First', N'Last', 2),
-	(3, '1234567890123', 'O', N'First', N'Last', 3);
+	(1, '1234567890123', 'O', N'Admin', N'Test', NULL),
+	(2, '1234567890123', 'F', N'Secretar', N'FMI Test', 2),
+	(3, '1234567890123', 'M', N'Student', N'FMI Test', 1),
+	(4, '1234567890123', 'F', N'Student', N'FMI În curs de verificare', 1),
+	(5, '1234567890123', 'F', N'Student', N'FMI În așteptare', 1),
+	(6, '1234567890123', 'F', N'Student', N'FMI Validat', 1),
+	(7, '1234567890123', 'M', N'Student', N'FMI Repartizat', 1),
+	(8, '1234567890123', 'M', N'Student', N'FMI Cămin acceptat', 1),
+	(9, '1234567890123', 'M', N'Student', N'FMI Respins', 1),
+	(10, '1234567890123', 'O', N'Student', N'Fizică Cămin refuzat', 2),
+	(11, '1234567890123', 'F', N'Secretar', N'Fizică', 2);
 
 -- -------------------------
 
