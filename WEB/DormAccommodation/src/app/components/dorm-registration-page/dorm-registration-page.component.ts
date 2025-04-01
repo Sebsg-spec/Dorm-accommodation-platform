@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
   templateUrl: './dorm-registration-page.component.html',
   styleUrl: './dorm-registration-page.component.css'
 })
-export class DormRegistrationPageComponent {
 
+export class DormRegistrationPageComponent  {
+ 
 }
