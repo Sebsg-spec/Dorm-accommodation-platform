@@ -1,1 +1,105 @@
-<p>login works!</p>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+
+<body>
+    
+<app-header></app-header>
+
+<div class="top-right-corner">
+    
+</div>
+    <div class="container" id="container">
+ <div class="form-container sign-up">
+        <form #myForm="ngForm" [formGroup]="registerForm">
+            <h1>Crează contul de utilizator</h1>
+
+            <!-- Replace the fullname input with firstName and lastName inputs -->
+            <input type="text" formControlName="firstName" name="firstName" [(ngModel)]="registerObj.firstName"
+                placeholder="Nume" required>
+            <div style="color: red;" *ngIf="registerForm.controls['firstName'].invalid 
+            && registerForm.controls['firstName'].touched">Numele este necesar!</div>
+
+            <input type="text" formControlName="lastName" name="lastName" [(ngModel)]="registerObj.lastName"
+                placeholder="Prenume" required>
+            <div style="color: red;" *ngIf="registerForm.controls['lastName'].invalid 
+            && registerForm.controls['lastName'].touched">Prenumele este necesar!</div>
+
+            <!-- The rest of your form remains the same -->
+            <input type="email" formControlName="email" name="email" [(ngModel)]="registerObj.email"
+                placeholder="Email" required>
+            <div 
+                *ngIf="registerForm.controls['email'].invalid
+                && registerForm.controls['email'].touched 
+                && registerForm.controls['email'].touched">
+                <div style="color: red;" *ngIf="registerForm.controls['email'].errors?.['required']">E-mailul este necesar!</div>
+                <div style="color: red;" *ngIf="registerForm.controls['email'].errors?.['email']">E-mailul nu este valid!</div>
+            </div>
+
+            <input type="password" formControlName="password" placeholder="Parolă">
+            <div style="color: red;" *ngIf="registerForm.controls['password'].invalid && registerForm.controls['password'].touched">Parola este necesară!</div>
+            
+            <input type="password" formControlName="confirmPassword" placeholder="Confirmă parola">
+            <div style="color: red;" *ngIf="registerForm.hasError('notSame') && registerForm.controls['confirmPassword'].touched">Parolele nu se potrivesc!</div>
+
+            <button (click)="onRegister()" mat-button class="submit-btn" type="submit" id="submit-btn2"
+                [disabled]="!myForm.form.valid"
+                [ngStyle]="{'background-color': !myForm.form.valid ? '#808080' : '', 'border':!myForm.form.valid ? '1px solid #808080' : ''}">
+                Înscrieți-vă</button>
+                
+        </form>
+    </div>
+        <div class="form-container sign-in">
+            <form #myForm1="ngForm" [formGroup]="loginForm">
+                <h1>Conectați-vă</h1>
+                <input type="email" formControlName="email" name="email" [(ngModel)]="loginObj.email"
+                    placeholder="Email" required>
+
+                <div style="color: red;"
+                    *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched && loginForm.controls['email'].touched">
+
+                    <div *ngIf="loginForm.controls['email'].errors?.['required']">E-mailul este necesar!</div>
+
+                    <div *ngIf="loginForm.controls['email'].errors?.['email']">>E-mailul nu este valid!</div>
+                </div>
+
+                <input type="password" formControlName="password" name="password" [(ngModel)]="loginObj.password"
+                    placeholder="Parolă" required>
+
+                <div style="color: red;" *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched">Parola este necesară!</div>
+
+
+                <button (click)="onLogIn()" mat-button class="submit-btn" type="submit" id="submit-btn1"
+                    [disabled]="!myForm1.form.valid"
+                    [ngStyle]="{'background-color': !myForm1.form.valid ? '#808080' : '', 'border':!myForm1.form.valid ? '1px solid #808080' : ''}">Conectați-vă</button>
+                   
+            </form>
+           
+
+        </div>
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>
+                        Bine ai revenit!</h1>
+                    <p>
+                        Introduceți datele dumneavoastră personale pentru a utiliza toate funcțiile site-ului</p>
+                    <button class="hidden" id="login">Conectați-vă</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Bună ziua!</h1>
+                    <p>Înregistrați-vă cu datele dumneavoastră personale pentru a utiliza toate funcțiile site-ului</p>
+                    <button class="hidden" id="register">Înscrieți-vă</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

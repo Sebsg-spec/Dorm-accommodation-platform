@@ -1,0 +1,43 @@
+<body>
+<app-header></app-header>
+
+<div class="profile-container">
+    <h2>Profil de utilizator</h2>
+  
+    <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+      <!-- PIN -->
+      <label for="pin">CNP:</label>
+      <input type="number" id="pin" formControlName="pin" />
+  
+      <!-- Sex Dropdown -->
+      <label for="sex">Sex:</label>
+      <select id="sex" formControlName="sex">
+        <option value="F">Femeie (F)</option>
+        <option value="M">Bărbat (B)</option>
+        <option value="O">Altele (A)</option>
+      </select>
+  
+      <!-- First Name -->
+      <label for="firstName">Nume:</label>
+      <input type="text" id="firstName" formControlName="firstName" />
+  
+      <!-- Last Name -->
+      <label for="lastName">Prenume:</label>
+      <input type="text" id="lastName" formControlName="lastName" />
+  
+      <!-- Faculty -->
+      <label for="faculty">Facultate:</label>
+      <input type="number" id="faculty" formControlName="faculty" />
+  
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+  
+      <!-- Submit Button -->
+      <button type="submit" [disabled]="profileForm.invalid">
+        Actualizați profilul</button>
+    </form>
+  </div>
+  
+
+
+</body>
