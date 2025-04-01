@@ -55,7 +55,10 @@ namespace DormManagementApi.Controllers
 
             var profile = new Profile
             {
-                Id = user.Id
+                Id = user.Id,
+                FirstName = userDto.first_name,
+                LastName = userDto.last_name
+
             };
 
             _context.Profile.Add(profile);
