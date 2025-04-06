@@ -2,6 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     position: fixed;
     top: 0;
     margin: 0px 0 20px 0;
@@ -35,11 +36,3 @@
     font-size: 1.8em;
 }
 
-body {
-    
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}

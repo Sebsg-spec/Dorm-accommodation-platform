@@ -36,7 +36,7 @@ namespace DormManagementApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(UserRegisterDto userDto)
         {
-            var validationResult = _validator.ValidateUserDto(userDto);
+            var validationResult = _validator.validateRegisterDto(userDto);
             if (validationResult != string.Empty)
                 return BadRequest(validationResult);
 
@@ -58,7 +58,6 @@ namespace DormManagementApi.Controllers
                 Id = user.Id,
                 FirstName = userDto.first_name,
                 LastName = userDto.last_name
-
             };
 
             _context.Profile.Add(profile);
@@ -217,6 +216,28 @@ namespace DormManagementApi.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public static UserData? ExtractToken(ClaimsPrincipal claimsPrincipal)
+        {
+            var userIdClaim = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                return null;
+
+            var emailClaim = claimsPrincipal.FindFirst(ClaimTypes.Email);
+            if (emailClaim == null || string.IsNullOrWhiteSpace(emailClaim.Value))
+                return null;
+
+            var accessLevelClaim = claimsPrincipal.FindFirst(ClaimTypes.Role);
+            if (accessLevelClaim == null || !int.TryParse(accessLevelClaim.Value, out int userAccessLevel))
+                return null;
+
+            return new UserData
+            {
+                Id = userId,
+                Email = emailClaim.Value,
+                Role = userAccessLevel
+            };
         }
     }
 }
