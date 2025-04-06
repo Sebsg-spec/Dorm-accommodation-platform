@@ -1,58 +1,192 @@
+/* Base styles with overflow control */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 body {
-    padding-top: 75px; 
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    height: 100vh;
+  padding-top: 75px;
+  background-color: #ffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-family: 'Roboto', 'Arial', sans-serif;
+  
 }
 
 .profile-container {
-  max-width: 400px;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 500px;
+  padding: 30px;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+  margin-top: 115px;
+  overflow-y: hidden; 
 }
 
 h2 {
   text-align: center;
+  margin-top: 0;
+  margin-bottom: 24px;
+  color: #333;
+  font-size: 24px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 label {
-  font-weight: bold;
-  display: block;
-  margin-top: 10px;
+  font-weight: 500;
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 4px;
 }
 
 input, select {
   width: 100%;
-  padding: 8px;
-  margin: 5px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #28a745;
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
 }
 
 button {
   width: 100%;
   background-color: #28a745;
   color: white;
-  padding: 10px;
+  padding: 14px;
   border: none;
-  border-radius: 5px;
-  margin-top: 10px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+.blue{
+  background-color: blue;
+}
+
+.row
+
+button:hover:not(:disabled) {
+  background-color: #218838;
 }
 
 button:disabled {
-  background-color: #ccc;
+  background-color: #dddddd;
   cursor: not-allowed;
 }
 
 .error {
-  color: red;
+  color: #dc3545;
   font-size: 14px;
-  margin-top: 10px;
+  margin-top: 4px;
+  background-color: rgba(220, 53, 69, 0.1);
+  padding: 10px;
+  border-radius: 6px;
+  border-left: 3px solid #dc3545;
+  word-wrap: break-word;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+  .profile-container {
+      padding: 25px;
+      max-width: 90%;
+  }
+  
+  h2 {
+      font-size: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+      padding-top: 50px;
+  }
+  
+  .profile-container {
+      padding: 20px;
+      margin: 15px;
+      border-radius: 8px;
+      max-height: calc(100vh - 80px); /* Adjusted for smaller padding-top */
+  }
+  
+  h2 {
+      font-size: 20px;
+      margin-bottom: 16px;
+  }
+  
+  input, select {
+      padding: 10px;
+      font-size: 14px;
+  }
+  
+  button {
+      padding: 12px;
+      font-size: 14px;
+  }
+  
+  .form-group {
+      gap: 12px;
+  }
+  
+  form {
+      gap: 12px;
+  }
+}
+
+/* For very small screens */
+@media (max-width: 320px) {
+  .profile-container {
+      padding: 15px;
+      margin: 10px;
+  }
+  
+  input, select, button {
+      padding: 8px;
+      font-size: 13px;
+  }
+}
+
+/* Handle orientation changes */
+@media (orientation: landscape) and (max-height: 500px) {
+  body {
+      padding-top: 20px;
+  }
+  
+  .profile-container {
+      margin: 10px 0;
+      max-height: calc(100vh - 40px);
+  }
 }

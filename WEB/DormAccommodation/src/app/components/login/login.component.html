@@ -37,8 +37,8 @@
                 *ngIf="registerForm.controls['email'].invalid
                 && registerForm.controls['email'].touched 
                 && registerForm.controls['email'].touched">
-                <div style="color: red;" *ngIf="registerForm.controls['email'].errors?.['required']">E-mailul este necesar!</div>
-                <div style="color: red;" *ngIf="registerForm.controls['email'].errors?.['email']">E-mailul nu este valid!</div>
+                <div style="color: red;" *ngIf="registerForm.controls['email'].errors?.['required']"> E-mailul este necesar!</div>
+                <div style="color: red;" *ngIf="registerForm.controls['email'].errors?.['email']"> E-mailul nu este valid!</div>
             </div>
 
             <input type="password" formControlName="password" placeholder="Parolă">
@@ -65,7 +65,7 @@
 
                     <div *ngIf="loginForm.controls['email'].errors?.['required']">E-mailul este necesar!</div>
 
-                    <div *ngIf="loginForm.controls['email'].errors?.['email']">>E-mailul nu este valid!</div>
+                    <div *ngIf="loginForm.controls['email'].errors?.['email']">E-mailul nu este valid!</div>
                 </div>
 
                 <input type="password" formControlName="password" name="password" [(ngModel)]="loginObj.password"

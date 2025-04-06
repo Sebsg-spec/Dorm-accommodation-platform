@@ -1,43 +1,118 @@
+<html>
 <body>
-<app-header></app-header>
+  <div class="profile">
+  <app-header></app-header>
 
-<div class="profile-container">
+  <div class="profile-container">
     <h2>Profil de utilizator</h2>
   
     <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
       <!-- PIN -->
-      <label for="pin">CNP:</label>
-      <input type="number" id="pin" formControlName="pin" />
+      <div class="form-group">
+        <label for="pin">CNP:</label>
+        <input
+          type="text"
+          id="pin"
+          formControlName="pin"
+          maxlength="13"
+          pattern="\d*"
+          placeholder="Introduceți CNP-ul"
+        />
+      </div>
+      <div class="error" *ngIf="profileForm.get('pin')?.invalid && profileForm.get('pin')?.touched">
+        <span *ngIf="profileForm.get('pin')?.errors?.['required']">
+          Câmpul este obligatoriu.
+        </span>
+        <span *ngIf="profileForm.get('pin')?.errors?.['minlength'] || profileForm.get('pin')?.errors?.['maxlength']">
+          Vă rugăm introduceți un CNP valid (13 cifre)!
+        </span>
+      </div>
   
       <!-- Sex Dropdown -->
-      <label for="sex">Sex:</label>
-      <select id="sex" formControlName="sex">
-        <option value="F">Femeie (F)</option>
-        <option value="M">Bărbat (B)</option>
-        <option value="O">Altele (A)</option>
-      </select>
+      <div class="form-group">
+        <label for="sex">Sex:</label>
+        <select id="sex" formControlName="sex">
+          <option value="" disabled selected>Selectați sexul</option>
+          <option value="F">Femeie (F)</option>
+          <option value="M">Bărbat (B)</option>
+          <option value="O">Altele (A)</option>
+        </select>
+      </div>
+      <div class="error" *ngIf="profileForm.get('sex')?.invalid && profileForm.get('sex')?.touched">
+        <span *ngIf="profileForm.get('sex')?.errors?.['required']">
+          Câmpul este obligatoriu.
+        </span>
+        </div>
   
       <!-- First Name -->
-      <label for="firstName">Nume:</label>
-      <input type="text" id="firstName" formControlName="firstName" />
-  
+      <div class="form-group">
+        <label for="firstName">Nume:</label>
+        <input type="text" id="firstName" formControlName="firstName" placeholder="Introduceți numele" />
+      </div>
+      <div class="error" *ngIf="profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched">
+        <span *ngIf="profileForm.get('firstName')?.errors?.['required']">
+          Câmpul este obligatoriu.
+        </span>
+      </div>
+
+
       <!-- Last Name -->
-      <label for="lastName">Prenume:</label>
-      <input type="text" id="lastName" formControlName="lastName" />
-  
+      <div class="form-group">
+        <label for="lastName">Prenume:</label>
+        <input type="text" id="lastName" formControlName="lastName" placeholder="Introduceți prenumele" />
+      </div>
+      <div class="error" *ngIf="profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched">
+        <span *ngIf="profileForm.get('lastName')?.errors?.['required']">
+          Câmpul este obligatoriu.
+        </span>
+        </div>
+
+
       <!-- Faculty -->
-      <label for="faculty">Facultate:</label>
-      <input type="number" id="faculty" formControlName="faculty" />
-  
+      <div class="form-group">
+        <label for="faculty">Facultate:</label>
+        <select id="faculty" formControlName="faculty" class="form-control">
+          <option *ngFor="let faculty of faculties" [value]="faculty.id">{{ faculty.name }}</option>
+        </select>
+      </div>
+      <div class="error" *ngIf="profileForm.get('faculty')?.invalid && profileForm.get('faculty')?.touched">
+        <span *ngIf="profileForm.get('faculty')?.errors?.['required']">
+          Câmpul este obligatoriu.
+        </span>
+      </div>
+
+
+      <div class="form-group">
+        <label for="yearOfStudy">An de studiu:</label>
+        <input
+          type="number"
+          id="yearOfStudy"
+          min="1"
+          max="6"
+          formControlName="yearOfStudy"
+          placeholder="Introduceți anul de studiu"
+        />
+        <div class="error" *ngIf="profileForm.get('yearOfStudy')?.invalid && profileForm.get('yearOfStudy')?.touched">
+          <span *ngIf="profileForm.get('yearOfStudy')?.errors?.['required']">
+            Câmpul este obligatoriu.
+          </span>
+          <span *ngIf="profileForm.get('yearOfStudy')?.errors?.['min'] || profileForm.get('yearOfStudy')?.errors?.['max']">
+            Vă rugăm introduceți valori între 1 și 6.
+          </span>
+        </div>
+      </div>
+      
       <!-- Error Message -->
       <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
   
       <!-- Submit Button -->
-      <button type="submit" [disabled]="profileForm.invalid">
-        Actualizați profilul</button>
+      <button class="row" type="submit" [disabled]="profileForm.invalid">
+        Actualizați profilul
+      </button>
+      <button class="blue row" *ngIf="pin" routerLink="/home" type="button">Acasă</button>
     </form>
-  </div>
   
-
-
+  </div>
+</div>
 </body>
+</html>

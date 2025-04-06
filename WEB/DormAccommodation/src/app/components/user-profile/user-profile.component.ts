@@ -3,6 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProfileService } from '../../../services/profile.service';
 import { Profile } from '../../models/profile.model';
 
+import {jwtDecode, JwtPayload}  from "jwt-decode";
+import { FacultyService } from '../../../services/faculty.service';
+
 @Component({
   selector: 'app-user-profile',
   standalone: false,
@@ -12,14 +15,21 @@ import { Profile } from '../../models/profile.model';
 
 export class UserProfileComponent {
   profileForm!: FormGroup;
-  userId: number = 1; 
+  userId!: string  ; 
   loading = true;
   errorMessage: string = '';
+  pin!: boolean;
+  faculties: { id: number, name: string }[] = [];
+  token: string |null;
 
-  constructor(private fb: FormBuilder, private profileService: ProfileService) {}
+  constructor(private fb: FormBuilder, private profileService: ProfileService, private facultyService: FacultyService) {
+    this.token = sessionStorage.getItem("Key")
+    
+  }
 
   ngOnInit(): void {
     this.initializeForm();
+    this.loadFaculties();
     this.loadUserProfile();
   }
 
@@ -29,15 +39,36 @@ export class UserProfileComponent {
       sex: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      faculty: ['', Validators.required]
+      faculty: ['', Validators.required],
+      yearOfStudy: ['', [Validators.required, Validators.min(1), Validators.max(6)]]
+    });
+  }
+ 
+  loadFaculties(): void {
+    this.facultyService.getFaculties().subscribe({
+      next: (data) => {
+        this.faculties = data;  // Populate the faculties array
+      },
+      error: (error) => {
+        this.errorMessage = 'Error loading faculties data.';
+        console.error(error);
+      }
     });
   }
 
   loadUserProfile(): void {
+   
+    this.userId = this.getUserIdFromToken(this.token) ?? "";
     this.profileService.getProfile(this.userId).subscribe({
       next: (profile) => {
         this.profileForm.patchValue(profile);
         this.loading = false;
+        if(profile.pin){
+          this.pin = true;
+        }
+        else{
+          this.pin = false
+        }
       },
       error: (error) => {
         this.errorMessage = 'Error loading profile data.';
@@ -50,11 +81,13 @@ export class UserProfileComponent {
   updateProfile(): void {
     if (this.profileForm.valid) {
       const updatedProfile: Profile = this.profileForm.value;
-      updatedProfile.id = this.userId;
+       updatedProfile.id = Number(this.userId);
 
-      this.profileService.updateProfile(updatedProfile).subscribe({
+      this.profileService.updateProfile(this.userId, updatedProfile).subscribe({
         next: () => {
+
           alert('Profil actualizat cu succes');
+          window.location.reload();
         },
         error: (error) => {
           this.errorMessage = 'Nu s-a putut actualiza profilul. Încearcă din nou.';
@@ -65,4 +98,17 @@ export class UserProfileComponent {
       this.errorMessage = 'Vă rugăm să completați corect toate câmpurile obligatorii';
     }
   }
+
+  getUserIdFromToken(token: string | null): string | null {
+    if (!token) return null;
+
+    try {
+        const payloadBase64 = token.split('.')[1];
+        const decodedPayload = JSON.parse(atob(payloadBase64));
+
+        return decodedPayload.nameid || decodedPayload.sub || null; 
+    } catch (error) {
+        console.error("Error decoding token:", error);
+        return null;
+    }}
 }

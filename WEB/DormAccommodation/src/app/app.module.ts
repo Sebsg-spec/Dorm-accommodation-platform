@@ -26,6 +26,7 @@ import { User } from './models/user.model';
 import { Login } from './models/login.model';
 import { HeaderComponent } from './components/header/header.component';
 import { Profile } from './models/profile.model';
+import { jwtDecode } from 'jwt-decode';
 
 
 
@@ -57,7 +58,8 @@ const routes: Routes = [
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    
   ],
   providers: [User, Login, Profile],
   bootstrap: [AppComponent]

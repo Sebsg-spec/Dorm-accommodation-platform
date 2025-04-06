@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { LoginService } from '../../../services/login.service';
 import { User } from '../../models/user.model';
 import { Login } from '../../models/login.model';
+import { ProfileService } from '../../../services/profile.service';
+import { Profile } from '../../models/profile.model';
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -52,7 +54,7 @@ export class LoginComponent implements OnInit{
    form!: FormGroup;
    errorMessage!: string
  
-   constructor(private http: HttpClient, private router: Router, private formBuilder: FormBuilder, private Login: LoginService, private User: User, private login: Login  ) {
+   constructor(private http: HttpClient, private router: Router, private formBuilder: FormBuilder, private Login: LoginService, private Profile: ProfileService, private User: User, private login: Login  ) {
  
     this.registerForm = this.formBuilder.group({
       firstName: ['', Validators.required],
@@ -100,14 +102,14 @@ export class LoginComponent implements OnInit{
    onLogIn(): any {
     this.login.email = this.loginForm.controls['email'].value;
     this.login.password = this.loginForm.controls['password'].value;
+    
   
     this.Login.login(this.login).subscribe({
       next: (response: any) => {
         if (response.token) {
           sessionStorage.setItem("Key", response.token);
-          this.router.navigateByUrl('home');
-          this.canAcces = "true";
-          sessionStorage.setItem('canAcces', this.canAcces);
+          this.redirect();
+
         } else {
           this.canAcces = "false";
           sessionStorage.setItem('canAcces', this.canAcces);
@@ -120,8 +122,23 @@ export class LoginComponent implements OnInit{
       }
     });
   }
- 
    
+  redirect() : any{
+    const pin = sessionStorage.getItem("Key")
+    const id = this.getUserIdFromToken(pin);
+    this.Profile.getProfile(id!).subscribe((response : Profile) => {
+      this.canAcces = "true";
+      sessionStorage.setItem('canAcces', this.canAcces);
+      if(response.pin){
+        this.router.navigateByUrl('home');
+      } else{
+        
+        this.router.navigateByUrl('user-profile');
+      }
+    })
+
+  }
+
    onRegister(): any {
  
      if (this.registerForm.valid) {
@@ -136,6 +153,7 @@ export class LoginComponent implements OnInit{
           if (response.token) {
             sessionStorage.setItem("Key", response.token);
             this.router.navigateByUrl('user-profile')
+
             this.canAcces = "true";
             sessionStorage.setItem('canAcces', this.canAcces)
 
@@ -149,11 +167,14 @@ export class LoginComponent implements OnInit{
         error: (err) => {
           this.canAcces = "false";
           sessionStorage.setItem('canAcces', this.canAcces);
+
           alert("Cont deja existent")
+
           const container: HTMLElement | null = document.getElementById('container');
           if (container) {
             container.classList.remove("active");
           }
+
           this.registerForm.reset();
         
         }
@@ -161,6 +182,19 @@ export class LoginComponent implements OnInit{
 
     };
    }
+
+   getUserIdFromToken(token: string | null): string | null {
+    if (!token) return null;
+
+    try {
+        const payloadBase64 = token.split('.')[1];
+        const decodedPayload = JSON.parse(atob(payloadBase64));
+
+        return decodedPayload.nameid || decodedPayload.sub || null; 
+    } catch (error) {
+        console.error("Error decoding token:", error);
+        return null;
+    }}
  }
  
  
