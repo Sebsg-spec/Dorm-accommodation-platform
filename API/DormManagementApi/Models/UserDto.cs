@@ -1,4 +1,6 @@
-﻿namespace DormManagementApi.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DormManagementApi.Models
 {
     public class UserDto
     {
@@ -17,5 +19,32 @@
     public class UserLoginDto : UserDto
     {
 
+    }
+
+    public class UserApplicationDto
+    {
+        public int ApplicationId { get; set; }
+        public string StudentName { get; set; }
+        public string Faculty { get; set; }
+        public int Year { get; set; }
+        public DateTime LastUpdate { get; set; }
+        public Status Status { get; set; }
+        public string? Comment { get; set; }
+        public int? AssignedDorm { get; set; }
+        public Dictionary<int,string> Preferences { get; set; }
+
+
+        public UserApplicationDto(int applicationId, string studentName, string faculty, int year, DateTime lastUpdate, Status status, string? comment, int? assignedDorm, Dictionary<int, string> preferences)
+        {
+            ApplicationId = applicationId;
+            StudentName = studentName;
+            Faculty = faculty;
+            Year = year;
+            LastUpdate = lastUpdate;
+            Status = status;
+            Comment = comment;
+            AssignedDorm = assignedDorm;
+            Preferences = preferences;
+        }
     }
 }

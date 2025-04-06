@@ -2,8 +2,6 @@ import {Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProfileService } from '../../../services/profile.service';
 import { Profile } from '../../models/profile.model';
-
-import {jwtDecode, JwtPayload}  from "jwt-decode";
 import { FacultyService } from '../../../services/faculty.service';
 
 @Component({
@@ -15,7 +13,7 @@ import { FacultyService } from '../../../services/faculty.service';
 
 export class UserProfileComponent {
   profileForm!: FormGroup;
-  userId!: string  ; 
+  userId!: string  ;
   loading = true;
   errorMessage: string = '';
   pin!: boolean;
@@ -24,7 +22,7 @@ export class UserProfileComponent {
 
   constructor(private fb: FormBuilder, private profileService: ProfileService, private facultyService: FacultyService) {
     this.token = sessionStorage.getItem("Key")
-    
+
   }
 
   ngOnInit(): void {
@@ -43,7 +41,7 @@ export class UserProfileComponent {
       yearOfStudy: ['', [Validators.required, Validators.min(1), Validators.max(6)]]
     });
   }
- 
+
   loadFaculties(): void {
     this.facultyService.getFaculties().subscribe({
       next: (data) => {
@@ -57,8 +55,8 @@ export class UserProfileComponent {
   }
 
   loadUserProfile(): void {
-   
-    this.userId = this.getUserIdFromToken(this.token) ?? "";
+
+    this.userId = this.profileService.getUserIdFromToken(this.token) ?? "";
     this.profileService.getProfile(this.userId).subscribe({
       next: (profile) => {
         this.profileForm.patchValue(profile);
@@ -99,16 +97,5 @@ export class UserProfileComponent {
     }
   }
 
-  getUserIdFromToken(token: string | null): string | null {
-    if (!token) return null;
 
-    try {
-        const payloadBase64 = token.split('.')[1];
-        const decodedPayload = JSON.parse(atob(payloadBase64));
-
-        return decodedPayload.nameid || decodedPayload.sub || null; 
-    } catch (error) {
-        console.error("Error decoding token:", error);
-        return null;
-    }}
 }

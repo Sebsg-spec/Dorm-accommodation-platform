@@ -1,1 +1,61 @@
-<p>home works!</p>
+<div class="component">
+  <app-header-parameterized [hasUserLoginCard]="true"></app-header-parameterized>
+  <div class="content">
+    <div *ngIf="showWhat == Consts.APPLICATIONS_CLOSED" class="alert alert-secondary registration-period-ended"
+         role="alert">Etapa de aplicare pentru
+      obținerea unui loc în căminele UBB s-a încheiat.
+    </div>
+    <div *ngIf="showWhat == Consts.APPLICATIONS_OPEN_NONE_REGISTERED" class="alert alert-info create-application"
+         role="alert"
+         (click)="GoToDormRegistration()">Încarcă dosar
+    </div>
+    <div *ngIf="showWhat == Consts.APPLICATIONS_OPEN_REGISTERED_ALREADY">
+      <div class="applications">
+        <div class="card">
+          <div class="card-header applications">
+            <div class="fa-solid fa-folder applications-icon">
+
+            </div>
+            Înregistrările tale
+          </div>
+          <div class="card-body">
+            <div class="card mb-3" style="max-width: 400px;">
+              <div class="card-header"><strong>Nr. înregistrare: </strong>{{nrDosar}}</div>
+
+              <div class="card-body">
+                <p class="card-text"><strong>Student: </strong>{{student}}</p>
+                <p class="card-text"><strong>Facultate:</strong> {{faculty}}</p>
+                <p class="card-text"><strong>Tip cerere:</strong> cazare</p>
+                <p class="card-text"><strong>Status:</strong> {{status_name}}</p>
+                <div class="separator"></div>
+                <br>
+                <button class="btn btn-outline-primary" (click)="GoToUserProfile()">Detalii dosar</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <br>
+    <br>
+    <div class="separator"></div>
+    <div class="container">
+      <div class="row footer">
+        <div class="col-md">
+          © Universitatea Babeş-Bolyai, 2025, <br>
+          toate drepturile rezervate
+        </div>
+        <div class="col-md">
+          Protecția datelor cu caracter personal
+        </div>
+        <div class="col-md">
+          Politica de utilizare a cookies-urilor
+        </div>
+      </div>
+    </div>
+    <br>
+  </footer>
+</div>

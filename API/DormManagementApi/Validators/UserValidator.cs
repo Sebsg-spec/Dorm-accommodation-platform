@@ -35,4 +35,5 @@ namespace DormManagementApi.Validators
 
             return string.Join("\n", errors);
         }
+    }
 }

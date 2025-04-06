@@ -1,0 +1,26 @@
+<div class="component">
+  <div class="header">
+    <div class="logo-container">
+      <div class="logo">
+        <img src="assets/LogoUBB.jpg" alt="University Logo">
+        <img src="assets/Logo_DTIC.jpg" alt="DTIC Logo">
+      </div>
+      <div class="title"> Platformă pentru înscrierea <br> în procesul de cazare</div>
+    </div>
+
+    <div *ngIf="hasUserLoginCard" class="login-card">
+      <div class="login-card-item" (click)="GoToUserProfile()">
+        <div class="fas fa-user login-card-item-icon"></div>
+        {{EmailAddress}}
+      </div>
+      <div class="login-card-item" (click)="Logout()">
+        <div class="fas fa-sign-out-alt login-card-item-icon"></div>
+        Logout
+      </div>
+    </div>
+
+  </div>
+  <br>
+  <div class="separator"></div>
+  <br>
+</div>

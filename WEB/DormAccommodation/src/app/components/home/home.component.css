@@ -1,0 +1,70 @@
+* {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.create-application {
+  display: flex;
+  box-sizing: border-box;
+  width: 50%;
+  padding: 1%;
+  border-radius: 20px;
+  flex-direction: row;
+  color: white;
+  background-color: #1a4977;
+  align-items: center;
+  align-self: center;
+  justify-content: center;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.35);
+  border-color: #1a4977;
+}
+
+.component {
+  display:flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 1%;
+  box-sizing: border-box;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  box-sizing: border-box;
+  width: 90%;
+  align-self: center;
+}
+
+.registration-period-ended {
+  display: flex;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+.applications-icon {
+  color: #e83e8c;
+}
+
+.application-card {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: solid 1px black;
+  padding: 2%;
+  width: 40%;
+}
+
+.separator {
+  display: flex;
+  border-bottom: solid 1px #c5c5c5;
+  margin-left: 4%;
+  margin-right: 4%;
+}
+
+.footer {
+  display: flex;
+  font-size: 80%;
+  justify-content: space-evenly;
+}

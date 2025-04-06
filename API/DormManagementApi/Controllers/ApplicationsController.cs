@@ -41,6 +41,33 @@ namespace DormManagementApi.Controllers
             return application;
         }
 
+        [HttpGet("GetByUserId/{userId}")]
+        public async Task<ActionResult<UserApplicationDto>> GetByUserId(int userId)
+        {
+
+            var userProfile = await _context.Profile.FindAsync(userId);
+
+            var faculty = await _context.Faculty.FindAsync(userProfile.Faculty);
+
+            var userApplication = await _context.Application.Where(b => b.User.Equals(userId)).ToListAsync();
+
+            var status = await _context.Status.FindAsync(userApplication[0].Status);
+
+            List<DormPreference> applicationPreferences = await _context.DormPreference.Where(x => x.Application.Equals(userApplication[0].Id)).ToListAsync();
+
+            List<Dorm> dorms = await _context.Dorm.ToListAsync();
+
+            Dictionary<int, string> preferences = new Dictionary<int, string>();
+
+            foreach (DormPreference pref in applicationPreferences ){
+                preferences.Add(pref.Preference, dorms.Where(dorm => dorm.Id.Equals(pref.Dorm)).FirstOrDefault().Name);
+
+            }
+
+
+            return new UserApplicationDto(userApplication[0].Id, userProfile.FirstName + " " + userProfile.LastName, faculty.Name, userApplication[0].Year, userApplication[0].LastUpdate, status, userApplication[0].Comment, userApplication[0].AssignedDorm, preferences);
+        }
+
         // PUT: api/Applications/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
