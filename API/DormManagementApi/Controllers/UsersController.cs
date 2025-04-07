@@ -228,15 +228,15 @@ namespace DormManagementApi.Controllers
             if (emailClaim == null || string.IsNullOrWhiteSpace(emailClaim.Value))
                 return null;
 
-            var accessLevelClaim = claimsPrincipal.FindFirst(ClaimTypes.Role);
-            if (accessLevelClaim == null || !int.TryParse(accessLevelClaim.Value, out int userAccessLevel))
+            var roleLevelClaim = claimsPrincipal.FindFirst(ClaimTypes.Role);
+            if (roleLevelClaim == null || !int.TryParse(roleLevelClaim.Value, out int userRole))
                 return null;
 
             return new UserData
             {
                 Id = userId,
                 Email = emailClaim.Value,
-                Role = userAccessLevel
+                Role = userRole
             };
         }
     }

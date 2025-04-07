@@ -18,7 +18,7 @@ namespace DormManagementApi.Validators
                 errors.Add("Email must contain at least 4 characters");
 
             if (string.IsNullOrWhiteSpace(userDto.Password) || userDto.Password.Length < 8)
-                errors.Add("Password must contain at least 4 characters");
+                errors.Add("Password must contain at least 8 characters");
 
             return string.Join("\n", errors);
         }
