@@ -64,7 +64,8 @@ CREATE TABLE [profile] (
 	
 	[first_name] NVARCHAR(255),
 	[last_name] NVARCHAR(255),
-	[faculty] INT FOREIGN KEY REFERENCES [faculty]([id])
+	[faculty] INT FOREIGN KEY REFERENCES [faculty]([id]),
+	[year_of_study] INT CHECK([year_of_study] > 0 AND [year_of_study] < 4)
 );
 
 CREATE TABLE [dorm] (

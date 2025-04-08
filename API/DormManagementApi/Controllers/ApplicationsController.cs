@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DormManagementApi.Models;
+using DormManagementApi.Attributes;
 
 namespace DormManagementApi.Controllers
 {
@@ -41,15 +42,20 @@ namespace DormManagementApi.Controllers
             return application;
         }
 
-        [HttpGet("GetByUserId/{userId}")]
-        public async Task<ActionResult<UserApplicationDto>> GetByUserId(int userId)
+        [HttpGet("GetApplications")]
+        public async Task<ActionResult<UserApplicationDto>> GetApplications()
         {
+            // User <= with big U - It contains claims-based 
+            // identity information (from the JWT token)
+            var userData = UsersController.ExtractToken(User);
+            if (userData == null)
+                return Unauthorized("Invalid token");
 
-            var userProfile = await _context.Profile.FindAsync(userId);
+            var userProfile = await _context.Profile.FindAsync(userData.Id);
 
             var faculty = await _context.Faculty.FindAsync(userProfile.Faculty);
 
-            var userApplication = await _context.Application.Where(b => b.User.Equals(userId)).ToListAsync();
+            var userApplication = await _context.Application.Where(b => b.User.Equals(userData.Id)).ToListAsync();
 
             var status = await _context.Status.FindAsync(userApplication[0].Status);
 

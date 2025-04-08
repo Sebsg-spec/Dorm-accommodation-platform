@@ -7,7 +7,7 @@ import { authGuardGuard } from '../Guard/auth-guard.guard';
 // Usefull
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 // Components
 import { LoginComponent } from './components/login/login.component';
@@ -28,6 +28,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { Profile } from './models/profile.model';
 import { jwtDecode } from 'jwt-decode';
 import { HeaderParameterizedComponent } from './components/header-parameterized/header-parameterized.component';
+import { JwtInterceptor } from './utils/jwt.interceptor';
 
 
 
@@ -61,9 +62,13 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    
   ],
-  providers: [User, Login, Profile],
+  providers: [User, Login, Profile,
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: JwtInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

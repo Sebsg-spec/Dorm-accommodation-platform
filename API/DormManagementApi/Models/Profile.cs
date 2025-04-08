@@ -12,6 +12,7 @@ namespace DormManagementApi.Models
         [Column("last_name")]
         public string? LastName { get; set; }
         public int? Faculty { get; set; }
+        [Column("year_of_study")]
         public int? YearOfStudy { get; set; }
     }
 }

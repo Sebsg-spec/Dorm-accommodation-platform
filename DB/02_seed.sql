@@ -78,19 +78,19 @@ VALUES
 	('secretar2@test.com', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 2);
 
 INSERT INTO [profile]
-	([id], [pin], [sex], [first_name], [last_name], [faculty])
+	([id], [pin], [sex], [first_name], [last_name], [faculty], [year_of_study])
 VALUES
-	(1, '1234567890123', 'O', N'Admin', N'Test', NULL),
-	(2, '1234567890123', 'F', N'Secretar', N'FMI Test', 2),
-	(3, '1234567890123', 'M', N'Student', N'FMI Test', 1),
-	(4, '1234567890123', 'F', N'Student', N'FMI În curs de verificare', 1),
-	(5, '1234567890123', 'F', N'Student', N'FMI În așteptare', 1),
-	(6, '1234567890123', 'F', N'Student', N'FMI Validat', 1),
-	(7, '1234567890123', 'M', N'Student', N'FMI Repartizat', 1),
-	(8, '1234567890123', 'M', N'Student', N'FMI Cămin acceptat', 1),
-	(9, '1234567890123', 'M', N'Student', N'FMI Respins', 1),
-	(10, '1234567890123', 'O', N'Student', N'Fizică Cămin refuzat', 2),
-	(11, '1234567890123', 'F', N'Secretar', N'Fizică', 2);
+	(1, '1234567890123', 'O', N'Admin', N'Test', NULL, NULL),
+	(2, '1234567890123', 'F', N'Secretar', N'FMI Test', 2, NULL),
+	(3, '1234567890123', 'M', N'Student', N'FMI Test', 1, 1),
+	(4, '1234567890123', 'F', N'Student', N'FMI În curs de verificare', 1, 2),
+	(5, '1234567890123', 'F', N'Student', N'FMI În așteptare', 1, 3),
+	(6, '1234567890123', 'F', N'Student', N'FMI Validat', 1, 1),
+	(7, '1234567890123', 'M', N'Student', N'FMI Repartizat', 1, 2),
+	(8, '1234567890123', 'M', N'Student', N'FMI Cămin acceptat', 1, 3),
+	(9, '1234567890123', 'M', N'Student', N'FMI Respins', 1, 1),
+	(10, '1234567890123', 'O', N'Student', N'Fizică Cămin refuzat', 2, 2),
+	(11, '1234567890123', 'F', N'Secretar', N'Fizică', 2, NULL);
 
 -- -------------------------
 

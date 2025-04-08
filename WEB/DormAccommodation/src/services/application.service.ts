@@ -11,7 +11,7 @@ export class ApplicationService {
 
   constructor(private http: HttpClient) { }
   getByUserId(userId: string): Observable<any> {
-    return this.http.get<any>(`${Consts.APPLICATION_GET_BY_USER_ID}/${userId}`);
+    return this.http.get<any>(`${Consts.APPLICATIONs_GET}`);
   }
 }
 
