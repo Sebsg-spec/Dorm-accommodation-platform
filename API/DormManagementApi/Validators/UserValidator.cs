@@ -15,7 +15,7 @@ namespace DormManagementApi.Validators
             List<string> errors = [];
 
             //if (userDto.Email == null || !Regex.IsMatch(userDto.Email, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
-            //    errors.Add("Email must contain at least 4 characters");
+            //    errors.Add("Invalid email format");
 
             return string.Join("\n", errors);
         }
@@ -30,7 +30,7 @@ namespace DormManagementApi.Validators
             if (string.IsNullOrWhiteSpace(userRegisterDto.last_name) || userRegisterDto.last_name.Length < 2)
                 errors.Add("Last name must contain at least 2 characters");
 
-            //if (string.IsNullOrWhiteSpace(userRegisterDto.Password) || userRegisterDto.Password.Length < 7)
+            //if (string.IsNullOrWhiteSpace(userRegisterDto.Password) || userRegisterDto.Password.Length < 8)
             //    errors.Add("Password must contain at least 8 characters");
 
             return string.Join("\n", errors);
