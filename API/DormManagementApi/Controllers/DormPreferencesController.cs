@@ -94,18 +94,18 @@ namespace DormManagementApi.Controllers
 
             foreach (var dormPreference in dormPreferences)
             {
-                _context.DormPreference.Add(dormPreference);
+                dormPreferencesService.Create(dormPreference);
             }
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                // Handle potential errors (e.g., constraints violation)
-                throw;
-            }
+            //try
+            //{
+            //    await _context.SaveChangesAsync();
+            //}
+            //catch (DbUpdateException)
+            //{
+            //    // Handle potential errors (e.g., constraints violation)
+            //    throw;
+            //}
 
             return CreatedAtAction("GetDormPreference", new { id = dormPreferences.First().Application }, dormPreferences);
         }

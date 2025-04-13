@@ -1,5 +1,6 @@
 export class Application {
   id?: number;
+  applicationName: string;
   user: number;
   faculty: number;
   uuid: string;
@@ -12,6 +13,7 @@ export class Application {
   constructor(id:number,user: number, faculty: number, uuid: string, year: number,
               last_update: Date, status: number, comment: string, assigned_dorm: number) {
     this.id = id;
+    this.applicationName = "";
     this.user = user;
     this.faculty = faculty;
     this.uuid = uuid;

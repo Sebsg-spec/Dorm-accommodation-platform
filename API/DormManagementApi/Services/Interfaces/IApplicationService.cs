@@ -8,7 +8,7 @@ namespace DormManagementApi.Repositories.Interfaces
         public IEnumerable<Application> GetAll();
         public Application Get(int id);
         public List<UserApplicationDto> GetByUserId(int userId);
-        public bool Create(Application application);
+        public bool Create(ref Application application);
         public bool Update(Application application);
         public bool Delete(int id);
     }
@@ -23,7 +23,7 @@ namespace DormManagementApi.Repositories.Interfaces
             this.context = context;
         }
 
-        public bool Create(Application application)
+        public bool Create(ref Application application)
         {
             application.ApplicationName = GenerateApplicationName(application);
             context.Application.Add(application);
@@ -86,10 +86,9 @@ namespace DormManagementApi.Repositories.Interfaces
 
             string userInitials = GetUserInitials(userProfile.FirstName, userProfile.LastName);
             string facultyAbbreviation = GetFacultyAbbreviation(faculty.Name);
-            string shortYear = application.Year.ToString().Substring(2);
             string randomSuffix = Guid.NewGuid().ToString("N").Substring(0, 4).ToUpper();
 
-            string applicationName = $"{facultyAbbreviation}-{userInitials}{shortYear}-{randomSuffix}";
+            string applicationName = $"{facultyAbbreviation}-{userInitials}{application.Year}-{randomSuffix}";
             return applicationName;
         }
 
@@ -154,7 +153,7 @@ namespace DormManagementApi.Repositories.Interfaces
 
             foreach (var word in filteredWords)
             {
-                abbreviation.Append(char.ToUpper(word[0]));
+                abbreviation += char.ToUpper(word[0]).ToString();
             }
 
             return abbreviation;

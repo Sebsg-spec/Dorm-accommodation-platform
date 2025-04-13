@@ -7,12 +7,17 @@ export enum Consts {
   BASE_URL = `https://localhost:7038/api`,
 
   APPLICATIONS_GET = `${BASE_URL}/Applications/GetApplications`,
+  APPLICATIONS = `${BASE_URL}/Applications`,
 
   FACULTIES_GET_ALL = `${BASE_URL}/Faculties`,
 
   LOGIN = `${BASE_URL}/Users/login`,
   REGISTER = `${BASE_URL}/Users/register`,
 
-  USER_PROFILE = `${BASE_URL}/Profiles`
+  USER_PROFILE = `${BASE_URL}/Profiles`,
+
+  DORMS = `${BASE_URL}/Dorms`,
+
+  DORM_PREFERENCES = `${BASE_URL}/DormPreferences`
 }
 

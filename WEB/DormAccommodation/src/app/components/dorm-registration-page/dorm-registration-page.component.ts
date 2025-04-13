@@ -157,6 +157,7 @@ export class DormRegistrationPageComponent {
       }
       const app: Application = {
         user: this.userProfile.id,
+        applicationName: "",
         faculty: this.userProfile.faculty,
         uuid: uuidv4(),
         year: 1,

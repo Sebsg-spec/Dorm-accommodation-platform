@@ -86,12 +86,12 @@ namespace DormManagementApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Application>> PostApplication(Application application)
         {
-            bool created = applicationService.Create(application);
+            bool created = applicationService.Create(ref application);
             if (!created)
             {
                 return StatusCode(500, "Could not create status object");
             }
-            return Created();
+            return application;
         }
 
         // DELETE: api/Applications/5
