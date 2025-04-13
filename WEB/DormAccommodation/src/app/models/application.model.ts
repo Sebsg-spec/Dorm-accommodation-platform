@@ -1,20 +1,22 @@
 export class Application {
+  id?: number;
   user: number;
   faculty: number;
   uuid: string;
   year: number;
-  last_update: Date;
+  lastUpdate: Date;
   status: number;
-  comment: string;
-  assigned_dorm: number;
+  comment?: string;
+  assigned_dorm?: number;
 
-  constructor(user: number, faculty: number, uuid: string, year: number,
+  constructor(id:number,user: number, faculty: number, uuid: string, year: number,
               last_update: Date, status: number, comment: string, assigned_dorm: number) {
+    this.id = id;
     this.user = user;
     this.faculty = faculty;
     this.uuid = uuid;
     this.year = year;
-    this.last_update = last_update;
+    this.lastUpdate = last_update;
     this.status = status;
     this.comment = comment;
     this.assigned_dorm = assigned_dorm;

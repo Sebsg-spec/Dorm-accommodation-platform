@@ -1,25 +1,13 @@
-/* Base styles with overflow control */
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
 *, *:before, *:after {
   box-sizing: inherit;
+  width: 100%;
 }
 
-body {
-  padding-top: 75px;
-  background-color: #ffff;
+.page-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 1%;
   flex-direction: column;
-  font-family: 'Roboto', 'Arial', sans-serif;
-  
+  align-items: center;
 }
 
 .profile-container {
@@ -32,7 +20,6 @@ body {
   background-color: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin: 20px;
-  margin-top: 115px;
   overflow-y: hidden; 
 }
 
@@ -93,7 +80,7 @@ button {
   transition: background-color 0.3s;
 }
 .blue{
-  background-color: blue;
+  background-color: #1A4977;
 }
 
 .row

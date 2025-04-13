@@ -14,7 +14,7 @@ export class LoginService {
               private router: Router) {
   }
 
-  private apiUrl = "https://localhost:44372/api/Users"
+  private apiUrl = "http://localhost:5000/api/Users"
 
 
   register(user: User): Observable<User[]> {

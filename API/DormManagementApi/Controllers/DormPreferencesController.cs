@@ -96,6 +96,32 @@ namespace DormManagementApi.Controllers
 
             return CreatedAtAction("GetDormPreference", new { id = dormPreference.Application }, dormPreference);
         }
+        // POST: api/DormPreferences
+        [HttpPost("multiple")]
+        public async Task<ActionResult<IEnumerable<DormPreference>>> PostDormPreferences(List<DormPreference> dormPreferences)
+        {
+            if (dormPreferences == null || dormPreferences.Count == 0)
+            {
+                return BadRequest("No dorm preferences provided.");
+            }
+
+            foreach (var dormPreference in dormPreferences)
+            {
+                _context.DormPreference.Add(dormPreference);
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                // Handle potential errors (e.g., constraints violation)
+                throw;
+            }
+
+            return CreatedAtAction("GetDormPreference", new { id = dormPreferences.First().Application }, dormPreferences);
+        }
 
         // DELETE: api/DormPreferences/5
         [HttpDelete("{id}")]

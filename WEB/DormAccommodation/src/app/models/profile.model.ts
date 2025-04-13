@@ -5,4 +5,5 @@ export class Profile {
     firstName!: string;
     lastName!: string;
     faculty!: number;
+    yearOfStudy! : number;
   }

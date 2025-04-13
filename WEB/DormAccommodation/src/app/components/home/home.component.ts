@@ -12,7 +12,7 @@ import {ProfileService} from '../../../services/profile.service';
 })
 export class HomeComponent implements OnInit {
 
-  public showWhat = Consts.APPLICATIONS_CLOSED;
+  public showWhat = Consts.APPLICATIONS_OPEN_NONE_REGISTERED;
   public nrDosar = "???";
   public student = "???";
   public faculty = "???";

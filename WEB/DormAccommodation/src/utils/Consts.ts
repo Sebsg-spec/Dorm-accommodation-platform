@@ -4,6 +4,6 @@ export enum Consts {
   APPLICATIONS_OPEN_NONE_REGISTERED,
   APPLICATIONS_OPEN_REGISTERED_ALREADY,
 
-  APPLICATIONs_GET = `https://localhost:7038/api/Applications/GetApplications`,
+  APPLICATIONs_GET = `http://localhost:5000/api/Applications/GetApplications`,
 }
 
