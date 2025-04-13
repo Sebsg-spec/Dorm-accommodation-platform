@@ -50,7 +50,7 @@ namespace DormManagementApi.Services.Interfaces
             {
                 Email = userRegisterDto.Email,
                 Password = AuthUtils.HashPassword(userRegisterDto.Password),
-                Role = (int)RoleLevel.Student
+                Role = (int)RoleLevel.Student  // Default role for now, change to 'Neverificat' later
             };
 
             context.User.Add(user);

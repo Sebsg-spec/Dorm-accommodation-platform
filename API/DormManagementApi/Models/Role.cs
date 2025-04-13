@@ -2,9 +2,10 @@
 {
     public enum RoleLevel
     {
-        Student = 1,
-        Secretar = 2,
-        Admin = 3
+        Neverificat = 1,
+        Student = 2,
+        Secretar = 3,
+        Admin = 4
     }
 
     public class Role
