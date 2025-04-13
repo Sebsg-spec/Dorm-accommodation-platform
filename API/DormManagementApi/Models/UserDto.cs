@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿
+using Microsoft.IdentityModel.Tokens;
 
 namespace DormManagementApi.Models
 {
@@ -24,6 +25,7 @@ namespace DormManagementApi.Models
     public class UserApplicationDto
     {
         public int ApplicationId { get; set; }
+        public string ApplicationName { get; set; }
         public string StudentName { get; set; }
         public string Faculty { get; set; }
         public int Year { get; set; }
@@ -34,9 +36,10 @@ namespace DormManagementApi.Models
         public Dictionary<int,string> Preferences { get; set; }
 
 
-        public UserApplicationDto(int applicationId, string studentName, string faculty, int year, DateTime lastUpdate, Status status, string? comment, int? assignedDorm, Dictionary<int, string> preferences)
+        public UserApplicationDto(int applicationId, string applicationName, string studentName, string faculty, int year, DateTime lastUpdate, Status status, string? comment, int? assignedDorm, Dictionary<int, string> preferences)
         {
             ApplicationId = applicationId;
+            ApplicationName = applicationName == null || applicationName.Length == 0 ? "???" : applicationName;
             StudentName = studentName;
             Faculty = faculty;
             Year = year;

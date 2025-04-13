@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {User} from '../app/models/user.model';
 import {Login} from '../app/models/login.model';
 import {Router} from '@angular/router';
+import {Consts} from '../app/utils/Consts';
 
 @Injectable({
   providedIn: 'root'
@@ -14,15 +15,12 @@ export class LoginService {
               private router: Router) {
   }
 
-  private apiUrl = "http://localhost:5000/api/Users"
-
-
   register(user: User): Observable<User[]> {
-    return this.http.post<User[]>(`${this.apiUrl}/register`, user);
+    return this.http.post<User[]>(Consts.REGISTER, user);
   }
 
   login(user: Login): Observable<Login[]> {
-    return this.http.post<Login[]>(`${this.apiUrl}/login`, user)
+    return this.http.post<Login[]>(Consts.LOGIN, user)
   }
 
   logout() {

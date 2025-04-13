@@ -1,9 +1,0 @@
-export enum Consts {
-
-  APPLICATIONS_CLOSED,
-  APPLICATIONS_OPEN_NONE_REGISTERED,
-  APPLICATIONS_OPEN_REGISTERED_ALREADY,
-
-  APPLICATIONs_GET = `http://localhost:5000/api/Applications/GetApplications`,
-}
-

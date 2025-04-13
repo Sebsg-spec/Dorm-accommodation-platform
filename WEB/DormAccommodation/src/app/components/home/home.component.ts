@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {Consts} from '../../../utils/Consts';
+import {Consts} from '../../utils/Consts';
 import {ApplicationService} from '../../../services/application.service';
-import {ProfileService} from '../../../services/profile.service';
+import {UserApplicationDto} from '../../models/user.application.dto';
+import {Status} from '../../models/status.model';
 
 @Component({
   selector: 'app-home',
@@ -12,44 +13,45 @@ import {ProfileService} from '../../../services/profile.service';
 })
 export class HomeComponent implements OnInit {
 
-  public showWhat = Consts.APPLICATIONS_OPEN_NONE_REGISTERED;
-  public nrDosar = "???";
-  public student = "???";
-  public faculty = "???";
-  public status = null;
-  public status_name = "";
-
+  activeTab: 'your-applications' | 'history' = 'your-applications';
+  public history: UserApplicationDto[] = [];
+  public userCurrentApplicationDto: UserApplicationDto = new UserApplicationDto(0, "???", "???", "???",
+    0, new Date(), new Status(0, ""), "??", 0, new Map())
+  public showWhat = Consts.APPLICATIONS_CLOSED;
   protected readonly Consts = Consts;
 
   constructor(private router: Router,
-              private applicationService: ApplicationService,
-              private userProfileService: ProfileService) { }
+              private applicationService: ApplicationService) {
+  }
 
   ngOnInit(): void {
 
-    var id = this.userProfileService.getUserIdFromToken(sessionStorage.getItem("Key")) ?? "";
-    this.applicationService.getByUserId(id).subscribe((res) => {
+    this.applicationService.getUserApplications().subscribe(
+      (res) => {
+        console.log(`USER APPLICATIONS: ${res}`)
+        if (res === null || res.length === 0) {
+          this.showWhat = Consts.APPLICATIONS_OPEN_NONE_REGISTERED;
+        } else {
+          this.showWhat = Consts.APPLICATIONS_OPEN_REGISTERED_ALREADY;
+          this.userCurrentApplicationDto = <UserApplicationDto>res.shift();
+          this.history = res;
+        }
+      }, error => {
+        alert("Eroare");
+      })
+  }
 
-      if(res == null) {
-        this.showWhat = Consts.APPLICATIONS_OPEN_NONE_REGISTERED;
-      } else {
-        this.showWhat = Consts.APPLICATIONS_OPEN_REGISTERED_ALREADY;
-        this.student = res.studentName;
-        this.faculty = res.faculty;
-        this.status = res.status;
-        this.status_name = res.status.name;
-      }
-    },error => {
-
-    })
+  switchTabs() {
+    if (this.activeTab === 'your-applications') {
+      this.activeTab = 'history';
+    } else {
+      this.activeTab = 'your-applications';
+    }
   }
 
   GoToDormRegistration() {
     this.router.navigate(['dosar'])
   }
 
-  GoToUserProfile() {
-    this.router.navigate(['user-profile']);
-  }
 
 }

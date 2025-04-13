@@ -29,6 +29,7 @@ import { Profile } from './models/profile.model';
 // import { jwtDecode } from 'jwt-decode';
 import { HeaderParameterizedComponent } from './components/header-parameterized/header-parameterized.component';
 import { JwtInterceptor } from './utils/jwt.interceptor';
+import { ApplicationCardComponent } from './components/application-card/application-card.component';
 
 
 
@@ -53,7 +54,8 @@ const routes: Routes = [
     DormRegistrationPageComponent,
     UserProfileComponent,
     HeaderComponent,
-    HeaderParameterizedComponent
+    HeaderParameterizedComponent,
+    ApplicationCardComponent
   ],
   imports: [
     BrowserModule,

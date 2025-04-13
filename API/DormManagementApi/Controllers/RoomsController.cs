@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using DormManagementApi.Models;
+using DormManagementApi.Services.Interfaces;
 
 namespace DormManagementApi.Controllers
 {
@@ -13,25 +8,26 @@ namespace DormManagementApi.Controllers
     [ApiController]
     public class RoomsController : ControllerBase
     {
-        private readonly DormContext _context;
+        private readonly IRoomsService roomsService;
 
-        public RoomsController(DormContext context)
+        public RoomsController(IRoomsService roomsService)
         {
-            _context = context;
+            this.roomsService = roomsService;
         }
 
         // GET: api/Rooms
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Room>>> GetRoom()
         {
-            return await _context.Room.ToListAsync();
+            var roomsList = roomsService.GetAll();
+            return Ok(roomsList);
         }
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Room>> GetRoom(int id)
         {
-            var room = await _context.Room.FindAsync(id);
+            var room = roomsService.Get(id);
 
             if (room == null)
             {
@@ -51,24 +47,19 @@ namespace DormManagementApi.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(room).State = EntityState.Modified;
+            bool updated = roomsService.Update(room);
 
-            try
+            if (updated)
             {
-                await _context.SaveChangesAsync();
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!RoomExists(id))
+                if (!roomsService.Exists(id))
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
             }
-
             return NoContent();
         }
 
@@ -77,31 +68,25 @@ namespace DormManagementApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Room>> PostRoom(Room room)
         {
-            _context.Room.Add(room);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetRoom", new { id = room.Id }, room);
+            bool created = roomsService.Create(room);
+            if (!created)
+            {
+                return StatusCode(500, "Could not create status object");
+            }
+            return Created();
         }
 
         // DELETE: api/Rooms/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRoom(int id)
         {
-            var room = await _context.Room.FindAsync(id);
-            if (room == null)
+            bool deleted = roomsService.Delete(id);
+
+            if (!deleted)
             {
-                return NotFound();
+                return StatusCode(500, "Could not delete status object");
             }
-
-            _context.Room.Remove(room);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool RoomExists(int id)
-        {
-            return _context.Room.Any(e => e.Id == id);
+            return Ok();
         }
     }
 }

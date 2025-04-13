@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DormManagementApi.Models;
+using DormManagementApi.Services.Interfaces;
+using DormManagementApi.Repositories.Interfaces;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DormManagementApi.Controllers
 {
@@ -8,25 +11,26 @@ namespace DormManagementApi.Controllers
     [ApiController]
     public class RolesController : ControllerBase
     {
-        private readonly DormContext _context;
+        private readonly IRolesService rolesService;
 
-        public RolesController(DormContext context)
+        public RolesController(IRolesService rolesService)
         {
-            _context = context;
+            this.rolesService = rolesService;
         }
 
         // GET: api/Roles
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Role>>> GetRole()
         {
-            return await _context.Role.ToListAsync();
+            var applicationsList = rolesService.GetAll();
+            return Ok(applicationsList);
         }
 
         // GET: api/Roles/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Role>> GetRole(long id)
         {
-            var role = await _context.Role.FindAsync(id);
+            var role = rolesService.Get(id);
 
             if (role == null)
             {
@@ -46,24 +50,19 @@ namespace DormManagementApi.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(role).State = EntityState.Modified;
+            bool updated = rolesService.Update(role);
 
-            try
+            if (updated)
             {
-                await _context.SaveChangesAsync();
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!RoleExists(id))
+                if (!rolesService.Exists(id))
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
             }
-
             return NoContent();
         }
 
@@ -72,31 +71,25 @@ namespace DormManagementApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Role>> PostRole(Role role)
         {
-            _context.Role.Add(role);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetRole", new { id = role.Id }, role);
+            bool created = rolesService.Create(role);
+            if (!created)
+            {
+                return StatusCode(500, "Could not create status object");
+            }
+            return Created();
         }
 
         // DELETE: api/Roles/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRole(long id)
         {
-            var role = await _context.Role.FindAsync(id);
-            if (role == null)
+            bool deleted = rolesService.Delete(id);
+
+            if (!deleted)
             {
-                return NotFound();
+                return StatusCode(500, "Could not delete status object");
             }
-
-            _context.Role.Remove(role);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool RoleExists(long id)
-        {
-            return _context.Role.Any(e => e.Id == id);
+            return Ok();
         }
     }
 }

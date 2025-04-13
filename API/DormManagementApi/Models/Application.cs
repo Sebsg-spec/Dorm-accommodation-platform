@@ -5,6 +5,8 @@ namespace DormManagementApi.Models
     public class Application
     {
         public int Id { get; set; }
+        [Column("application_name")]
+        public string ApplicationName {  get; set; }
         public int User { get; set; }
         public int Faculty { get; set; }
         public string Uuid { get; set; }

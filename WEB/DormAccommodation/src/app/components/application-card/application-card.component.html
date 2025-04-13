@@ -1,0 +1,24 @@
+<div class="card">
+  <div class="card-header">
+    <div class="fas fa-solid fa-paste icon-item"></div>
+    <div>
+      <strong>Nr. înregistrare: </strong>{{currentApplication.applicationName}}
+    </div>
+  </div>
+
+  <div class="card-body">
+    <p class="card-text"><strong>Student:   </strong>{{currentApplication.studentName}}</p>
+    <p class="card-text"><strong>Facultate:  </strong> {{currentApplication.faculty}}</p>
+    <p class="card-text"><strong>Tip cerere:  </strong> cazare</p>
+    <p class="card-text"><strong>Status:   </strong> {{currentApplication.status.name}}</p>
+    <p class="card-text"><strong>Ultima actualizare:   </strong> {{currentApplication.lastUpdate | date: 'dd.MM.yyyy, h:mm a'}}</p>
+
+    <br>
+    <div class="separator"></div>
+    <br>
+    <div class="footer">
+      <button (click)="GoToApplicationDetails()">Detalii dosar</button>
+    </div>
+  </div>
+</div>
+

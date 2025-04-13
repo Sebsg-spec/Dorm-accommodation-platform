@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DormManagementApi.Models;
+using DormManagementApi.Services.Interfaces;
+using DormManagementApi.Repositories.Interfaces;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DormManagementApi.Controllers
 {
@@ -13,25 +16,25 @@ namespace DormManagementApi.Controllers
     [ApiController]
     public class ProfilesController : ControllerBase
     {
-        private readonly DormContext _context;
-
-        public ProfilesController(DormContext context)
+        private readonly IProfilesService profilesService;
+        public ProfilesController(IProfilesService profilesService)
         {
-            _context = context;
+            this.profilesService = profilesService;
         }
 
         // GET: api/Profiles
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Profile>>> GetProfile()
         {
-            return await _context.Profile.ToListAsync();
+            var profilesList = profilesService.GetAll();
+            return Ok(profilesList);
         }
 
         // GET: api/Profiles/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Profile>> GetProfile(int id)
         {
-            var profile = await _context.Profile.FindAsync(id);
+            var profile = profilesService.Get(id);
 
             if (profile == null)
             {
@@ -51,24 +54,19 @@ namespace DormManagementApi.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(profile).State = EntityState.Modified;
+            bool updated = profilesService.Update(profile);
 
-            try
+            if (updated)
             {
-                await _context.SaveChangesAsync();
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!ProfileExists(id))
+                if (!profilesService.Exists(id))
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
             }
-
             return NoContent();
         }
 
@@ -77,31 +75,25 @@ namespace DormManagementApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Profile>> PostProfile(Profile profile)
         {
-            _context.Profile.Add(profile);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetProfile", new { id = profile.Id }, profile);
+            bool created = profilesService.Create(profile);
+            if (!created)
+            {
+                return StatusCode(500, "Could not create status object");
+            }
+            return Created();
         }
 
         // DELETE: api/Profiles/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProfile(int id)
         {
-            var profile = await _context.Profile.FindAsync(id);
-            if (profile == null)
+            bool deleted = profilesService.Delete(id);
+
+            if (!deleted)
             {
-                return NotFound();
+                return StatusCode(500, "Could not delete status object");
             }
-
-            _context.Profile.Remove(profile);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool ProfileExists(int id)
-        {
-            return _context.Profile.Any(e => e.Id == id);
+            return Ok();
         }
     }
 }

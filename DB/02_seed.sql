@@ -75,6 +75,7 @@ VALUES
 	('student5@test.com', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 1),
 	('student6@test.com', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 1),
 	('student7@test.com', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 1),
+	('student8@test.com', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 1),
 	('secretar2@test.com', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 2);
 
 INSERT INTO [profile]
@@ -216,15 +217,17 @@ DEALLOCATE dorm_cursor;
 -- -------------------------
 
 INSERT INTO [application]
-	([user], [faculty], [uuid], [year], [last_update], [status], [comment], [assigned_dorm])
+	([application_name], [user], [faculty], [uuid], [year], [last_update], [status], [comment], [assigned_dorm])
 VALUES
-	(4, 1, '0b228048-05b1-4392-af25-87379858596e', 2025, '2024-09-24 09:12:34', 1, NULL, NULL),
-	(5, 1, '334be039-e905-4246-a35f-43ffa6a4bd06', 2025, '2024-09-17 09:12:34', 2, N'Lipsă adeverință de venit', NULL),
-	(6, 1, '494412be-d931-4cfc-84fb-417305edd492', 2025, '2024-09-24 09:12:34', 3, NULL, NULL),
-	(7, 1, '0ebdfbbe-0128-4f3f-af5b-8daa8e5b2075', 2025, '2024-09-24 09:12:34', 4, NULL, 6),	-- assigned to first preference
-	(8, 1, 'a82f6f9c-a025-4abc-9242-8e0393e5f4d6', 2025, '2024-09-24 09:12:34', 5, NULL, 9),	-- accepted second preference
-	(9, 1, '8139b3c5-37de-4b56-9ae5-d4e8a0ffdf05', 2025, '2024-03-24 09:12:34', 6, N'Media este mai mică decât ultima medie admisă', NULL),
-	(10, 2, 'f546666d-7bee-48d3-b9fe-3fcd41268059', 2025, '2024-03-24 09:12:34', 7, NULL, 8);	-- refused last preference
+	('SF1240924', 4, 1, '0b228048-05b1-4392-af25-87379858596e', 2025, '2024-09-24 09:12:34', 1, NULL, NULL),
+	('SF2240917', 5, 1, '334be039-e905-4246-a35f-43ffa6a4bd06', 2025, '2024-09-17 09:12:34', 2, N'Lipsă adeverință de venit', NULL),
+	('SF3240924', 6, 1, '494412be-d931-4cfc-84fb-417305edd492', 2025, '2024-09-24 09:12:34', 3, NULL, NULL),
+	('SF4240924', 7, 1, '0ebdfbbe-0128-4f3f-af5b-8daa8e5b2075', 2025, '2024-09-24 09:12:34', 4, NULL, 6),	-- assigned to first preference
+	('SF1240924', 8, 1, 'a82f6f9c-a025-4abc-9242-8e0393e5f4d6', 2025, '2025-09-24 09:12:34', 5, NULL, 9),	-- accepted second preference
+	('SF1240924', 8, 1, 'a82f6f9c-a025-4abc-9242-8e0393e5f4d6', 2023, '2023-09-24 09:12:34', 5, NULL, 9),	-- accepted second preference
+	('FMI-SFCA25-E9R1', 8, 1, 'a82f6f9c-a025-4abc-9242-8e0393e5f4d6', 2022, '2022-09-24 09:32:34', 5, NULL, 9),	-- accepted second preference
+	('SF2240324', 9, 1, '8139b3c5-37de-4b56-9ae5-d4e8a0ffdf05', 2025, '2024-03-24 09:12:34', 6, N'Media este mai mică decât ultima medie admisă', NULL),
+	('SF3240324', 10, 2, 'f546666d-7bee-48d3-b9fe-3fcd41268059', 2025, '2024-03-24 09:12:34', 7, NULL, 8);	-- refused last preference
 
 INSERT INTO [dorm_preference]
 	([application], [dorm], [preference])
@@ -242,8 +245,14 @@ VALUES
 	(5, 8, 1),
 	(5, 9, 2),
 	(5, 10, 3),
-	(6, 11, 1),
-	(6, 12, 2),
-	(7, 13, 1),
-	(7, 14, 2),
-	(7, 8, 3);
+	(6, 8, 1),
+	(6, 9, 2),
+	(6, 10, 3),
+	(7, 8, 1),
+	(7, 9, 2),
+	(7, 10, 3),
+	(8, 11, 1),
+	(8, 12, 2),
+	(9, 13, 1),
+	(9, 14, 2),
+	(9, 8, 3);

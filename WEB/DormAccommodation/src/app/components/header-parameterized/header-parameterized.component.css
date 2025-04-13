@@ -65,6 +65,12 @@
   background-color: #1a4977;
   align-items: center;
   font-size: small;
+  cursor: pointer;
+  border: none;
+}
+
+button:hover {
+  color: #cccccc;
 }
 
 .login-card-item-icon {
@@ -72,12 +78,4 @@
   margin-right: 2%;
   margin-left: 2%;
   color: #e83e8c;
-}
-
-
-.separator {
-  display: flex;
-  border-bottom: solid 1px #c5c5c5;
-  margin-left: 2%;
-  margin-right: 2%;
 }

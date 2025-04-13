@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using DormManagementApi.Models;
+using DormManagementApi.Repositories.Interfaces;
 
 namespace DormManagementApi.Controllers
 {
@@ -13,25 +8,26 @@ namespace DormManagementApi.Controllers
     [ApiController]
     public class StatusController : ControllerBase
     {
-        private readonly DormContext _context;
+        private readonly IStatusService statusService;
 
-        public StatusController(DormContext context)
+        public StatusController(IStatusService statusService)
         {
-            _context = context;
+            this.statusService = statusService;
         }
 
         // GET: api/Status
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Status>>> GetStatus()
         {
-            return await _context.Status.ToListAsync();
+            var statusList = statusService.GetAll();
+            return Ok(statusList);
         }
 
         // GET: api/Status/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Status>> GetStatus(int id)
         {
-            var status = await _context.Status.FindAsync(id);
+            var status = statusService.Get(id);
 
             if (status == null)
             {
@@ -51,24 +47,19 @@ namespace DormManagementApi.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(status).State = EntityState.Modified;
+            bool updated = statusService.Update(id, status);
 
-            try
+            if (updated)
             {
-                await _context.SaveChangesAsync();
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!StatusExists(id))
+                if (!statusService.Exists(id))
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
             }
-
             return NoContent();
         }
 
@@ -77,31 +68,26 @@ namespace DormManagementApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Status>> PostStatus(Status status)
         {
-            _context.Status.Add(status);
-            await _context.SaveChangesAsync();
+            bool created = statusService.Create(status);
 
-            return CreatedAtAction("GetStatus", new { id = status.Id }, status);
+            if (created)
+            {
+                return Created();
+            }
+            return StatusCode(500, "Could not create status object");
         }
 
         // DELETE: api/Status/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStatus(int id)
         {
-            var status = await _context.Status.FindAsync(id);
-            if (status == null)
+            bool deleted = statusService.Delete(id);
+
+            if (deleted)
             {
-                return NotFound();
+                return Ok();
             }
-
-            _context.Status.Remove(status);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool StatusExists(int id)
-        {
-            return _context.Status.Any(e => e.Id == id);
+            return StatusCode(500, "Could not delete status object");
         }
     }
 }

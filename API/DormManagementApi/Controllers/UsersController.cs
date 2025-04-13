@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using DormManagementApi.Models;
 using Microsoft.Extensions.Options;
 using System.Text;
@@ -7,8 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Cryptography;
 using DormManagementApi.Validators;
+using DormManagementApi.Services.Interfaces;
 
 namespace DormManagementApi.Controllers
 {
@@ -16,13 +15,13 @@ namespace DormManagementApi.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly DormContext _context;
+        private readonly IUsersService _usersService;
         private readonly UserValidator _validator;
         private readonly byte[] _jwtSecret;
 
-        public UsersController(DormContext context, IOptions<JwtSettings> jwtSettings)
+        public UsersController(IUsersService usersService, IOptions<JwtSettings> jwtSettings)
         {
-            _context = context;
+            _usersService = usersService;
             _validator = new UserValidator();
 
             if (string.IsNullOrWhiteSpace(jwtSettings.Value.Secret))
@@ -40,28 +39,18 @@ namespace DormManagementApi.Controllers
             if (validationResult != string.Empty)
                 return BadRequest(validationResult);
 
-            if (await _context.User.AnyAsync(u => u.Email == userDto.Email))
+            if (_usersService.Exists(userDto.Email))
                 return BadRequest("Email already registered");
 
-            var user = new User
+            bool created = _usersService.Create(userDto);
+
+
+            if (!created)
             {
-                Email = userDto.Email,
-                Password = HashPassword(userDto.Password),
-                Role = (int)RoleLevel.Student
-            };
+                return InternalServerError("Could not create user.");
+            }
 
-            _context.User.Add(user);
-            await _context.SaveChangesAsync(); // Need to save changes to get the user id
-
-            var profile = new Profile
-            {
-                Id = user.Id,
-                FirstName = userDto.first_name,
-                LastName = userDto.last_name
-            };
-
-            _context.Profile.Add(profile);
-            await _context.SaveChangesAsync();
+            var user = _usersService.Get(userDto.Email);
 
             try
             {
@@ -83,9 +72,7 @@ namespace DormManagementApi.Controllers
             if (validationResult != string.Empty)
                 return BadRequest(validationResult);
 
-            var hashedPassword = HashPassword(userDto.Password);
-            var user = await _context.User
-                .SingleOrDefaultAsync(u => u.Email == userDto.Email && u.Password == hashedPassword);
+            var user = _usersService.Authenticate(userDto);
 
             if (user == null)
                 return Unauthorized("Invalid email or password");
@@ -105,14 +92,15 @@ namespace DormManagementApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUser()
         {
-            return await _context.User.ToListAsync();
+            var usersList = _usersService.GetAll();
+            return Ok(usersList);
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
-            var user = await _context.User.FindAsync(id);
+            var user = _usersService.Get(id);
 
             if (user == null)
             {
@@ -132,24 +120,19 @@ namespace DormManagementApi.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            bool updated = _usersService.Update(user);
 
-            try
+            if (updated)
             {
-                await _context.SaveChangesAsync();
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!UserExists(id))
+                if (!_usersService.Exists(id))
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
             }
-
             return NoContent();
         }
 
@@ -158,42 +141,30 @@ namespace DormManagementApi.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-            _context.User.Add(user);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            bool created = _usersService.Create(user);
+            if (!created)
+            {
+                return StatusCode(500, "Could not create status object");
+            }
+            return Created();
         }
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
+            bool deleted = _usersService.Delete(id);
+
+            if (!deleted)
             {
-                return NotFound();
+                return StatusCode(500, "Could not delete status object");
             }
-
-            _context.User.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool UserExists(int id)
-        {
-            return _context.User.Any(e => e.Id == id);
+            return Ok();
         }
 
         private ObjectResult InternalServerError(string? error = null)
         {
             return StatusCode(500, error);
-        }
-
-        private static string HashPassword(string password)
-        {
-            var hash = SHA256.HashData(Encoding.UTF8.GetBytes(password));
-            return BitConverter.ToString(hash).Replace("-", "").ToLower();
         }
 
         private string GenerateToken(User user)

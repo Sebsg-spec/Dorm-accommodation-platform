@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {LoginService} from '../../../services/login.service';
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-header-parameterized',
@@ -14,7 +14,8 @@ export class HeaderParameterizedComponent implements OnInit {
 
   public EmailAddress = sessionStorage.getItem("email");
 
-  constructor(private loginService: LoginService,private router: Router) {
+  constructor(private loginService: LoginService,
+              private router: Router) {
   }
   ngOnInit(): void {
   }
@@ -25,5 +26,4 @@ export class HeaderParameterizedComponent implements OnInit {
   GoToUserProfile() {
     this.router.navigate(['user-profile']);
   }
-
 }

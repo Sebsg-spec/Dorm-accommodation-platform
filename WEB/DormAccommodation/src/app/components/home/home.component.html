@@ -5,39 +5,37 @@
          role="alert">Etapa de aplicare pentru
       obținerea unui loc în căminele UBB s-a încheiat.
     </div>
-    <div *ngIf="showWhat == Consts.APPLICATIONS_OPEN_NONE_REGISTERED" class="alert alert-info create-application"
+    <button *ngIf="showWhat == Consts.APPLICATIONS_OPEN_NONE_REGISTERED" class="alert alert-info create-application-button"
          role="alert"
          (click)="GoToDormRegistration()">Încarcă dosar
-    </div>
-    <div *ngIf="showWhat == Consts.APPLICATIONS_OPEN_REGISTERED_ALREADY">
-      <div class="applications">
-        <div class="card">
-          <div class="card-header applications">
-            <div class="fa-solid fa-folder applications-icon">
-
-            </div>
-            Înregistrările tale
-          </div>
-          <div class="card-body">
-            <div class="card mb-3" style="max-width: 400px;">
-              <div class="card-header"><strong>Nr. înregistrare: </strong>{{nrDosar}}</div>
-
-              <div class="card-body">
-                <p class="card-text"><strong>Student: </strong>{{student}}</p>
-                <p class="card-text"><strong>Facultate:</strong> {{faculty}}</p>
-                <p class="card-text"><strong>Tip cerere:</strong> cazare</p>
-                <p class="card-text"><strong>Status:</strong> {{status_name}}</p>
-                <div class="separator"></div>
-                <br>
-                <button class="btn btn-outline-primary" (click)="GoToUserProfile()">Detalii dosar</button>
-              </div>
-            </div>
-
-          </div>
+    </button>
+    <div class="applications" *ngIf="showWhat == Consts.APPLICATIONS_OPEN_REGISTERED_ALREADY">
+      <div class="applications-header">
+        <!-- dashboard-section.component.html -->
+        <nav class="nav-bar">
+          <button (click)="switchTabs()" [class.active]="activeTab === 'your-applications'">Înregistrările tale</button>
+          <button (click)="switchTabs()" [class.active]="activeTab === 'history'">Istoric</button>
+        </nav>
+      </div>
+      <div class="cards-container">
+        <div *ngIf="activeTab === 'your-applications'">
+            <app-application-card [currentApplication]="userCurrentApplicationDto"></app-application-card>
         </div>
+        <ng-container *ngIf="activeTab === 'history'">
+          <div *ngIf="history.length > 0">
+            <div *ngFor="let t of history">
+              <app-application-card [currentApplication]="t"></app-application-card>
+            </div>
+          </div>
+          <div *ngIf="history.length === 0">
+            -
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>
+
+
   <footer>
     <br>
     <br>

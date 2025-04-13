@@ -2,8 +2,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {Consts} from '../utils/Consts';
-import { Application } from '../app/models/application.model';
+import {Consts} from '../app/utils/Consts';
+import {UserApplicationDto} from '../app/models/user.application.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,8 @@ export class ApplicationService {
   private apiUrl = "http://localhost:5000/api/Applications"
 
   constructor(private http: HttpClient) { }
-  getByUserId(userId: string): Observable<any> {
-    return this.http.get<any>(`${Consts.APPLICATIONs_GET}`);
+  getUserApplications(): Observable<UserApplicationDto[]> {
+    return this.http.get<UserApplicationDto[]>(`${Consts.APPLICATIONS_GET}`);
   }
 
   getApplications(): Observable<Application[]> {

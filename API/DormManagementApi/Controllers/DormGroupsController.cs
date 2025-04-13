@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using DormManagementApi.Models;
+using DormManagementApi.Services.Interfaces;
 
 namespace DormManagementApi.Controllers
 {
@@ -8,25 +8,26 @@ namespace DormManagementApi.Controllers
     [ApiController]
     public class DormGroupsController : ControllerBase
     {
-        private readonly DormContext _context;
+        private readonly IDormGroupService dormGroupService;
 
-        public DormGroupsController(DormContext context)
+        public DormGroupsController(IDormGroupService dormGroupService)
         {
-            _context = context;
+            this.dormGroupService = dormGroupService;
         }
 
         // GET: api/DormGroups
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DormGroup>>> GetDormGroup()
         {
-            return await _context.DormGroup.ToListAsync();
+            var dormGroupList = dormGroupService.GetAll();
+            return Ok(dormGroupList);
         }
 
         // GET: api/DormGroups/5
         [HttpGet("{id}")]
         public async Task<ActionResult<DormGroup>> GetDormGroup(int id)
         {
-            var dormGroup = await _context.DormGroup.FindAsync(id);
+            var dormGroup = dormGroupService.Get(id);
 
             if (dormGroup == null)
             {
@@ -46,24 +47,19 @@ namespace DormManagementApi.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(dormGroup).State = EntityState.Modified;
+            bool updated = dormGroupService.Update(dormGroup);
 
-            try
+            if (updated)
             {
-                await _context.SaveChangesAsync();
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!DormGroupExists(id))
+                if (!dormGroupService.Exists(id))
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
             }
-
             return NoContent();
         }
 
@@ -72,31 +68,25 @@ namespace DormManagementApi.Controllers
         [HttpPost]
         public async Task<ActionResult<DormGroup>> PostDormGroup(DormGroup dormGroup)
         {
-            _context.DormGroup.Add(dormGroup);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetDormGroup", new { id = dormGroup.Id }, dormGroup);
+            bool created = dormGroupService.Create(dormGroup);
+            if (!created)
+            {
+                return StatusCode(500, "Could not create status object");
+            }
+            return Created();
         }
 
         // DELETE: api/DormGroups/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDormGroup(int id)
         {
-            var dormGroup = await _context.DormGroup.FindAsync(id);
-            if (dormGroup == null)
+            bool deleted = dormGroupService.Delete(id);
+
+            if (!deleted)
             {
-                return NotFound();
+                return StatusCode(500, "Could not delete status object");
             }
-
-            _context.DormGroup.Remove(dormGroup);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool DormGroupExists(int id)
-        {
-            return _context.DormGroup.Any(e => e.Id == id);
+            return Ok();
         }
     }
 }

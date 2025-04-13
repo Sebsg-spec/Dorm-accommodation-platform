@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DormManagementApi.Models;
+using DormManagementApi.Services.Interfaces;
+using DormManagementApi.Repositories.Interfaces;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DormManagementApi.Controllers
 {
@@ -13,32 +16,33 @@ namespace DormManagementApi.Controllers
     [ApiController]
     public class DormPreferencesController : ControllerBase
     {
-        private readonly DormContext _context;
+        private readonly IDormPreferencesService dormPreferencesService;
 
-        public DormPreferencesController(DormContext context)
+        public DormPreferencesController(IDormPreferencesService dormPreferencesService)
         {
-            _context = context;
+            this.dormPreferencesService = dormPreferencesService;
         }
 
         // GET: api/DormPreferences
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DormPreference>>> GetDormPreference()
         {
-            return await _context.DormPreference.ToListAsync();
+            var dormPreferenceList = dormPreferencesService.GetAll();
+            return Ok(dormPreferencesService);
         }
 
         // GET: api/DormPreferences/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<DormPreference>> GetDormPreference(int id)
+        public async Task<ActionResult<IEnumerable<DormPreference>>> GetDormPreference(int id)
         {
-            var dormPreference = await _context.DormPreference.FindAsync(id);
+            IEnumerable<DormPreference> dormPreference = dormPreferencesService.Get(id);
 
-            if (dormPreference == null)
+            if (dormPreference == null || !dormPreference.Any())
             {
                 return NotFound();
             }
 
-            return dormPreference;
+            return Ok(dormPreference);
         }
 
         // PUT: api/DormPreferences/5
@@ -51,24 +55,19 @@ namespace DormManagementApi.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(dormPreference).State = EntityState.Modified;
+            bool updated = dormPreferencesService.Update(dormPreference);
 
-            try
+            if (updated)
             {
-                await _context.SaveChangesAsync();
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!DormPreferenceExists(id))
+                if (!dormPreferencesService.Exists(id))
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
             }
-
             return NoContent();
         }
 
@@ -77,24 +76,12 @@ namespace DormManagementApi.Controllers
         [HttpPost]
         public async Task<ActionResult<DormPreference>> PostDormPreference(DormPreference dormPreference)
         {
-            _context.DormPreference.Add(dormPreference);
-            try
+            bool created = dormPreferencesService.Create(dormPreference);
+            if (!created)
             {
-                await _context.SaveChangesAsync();
+                return StatusCode(500, "Could not create status object");
             }
-            catch (DbUpdateException)
-            {
-                if (DormPreferenceExists(dormPreference.Application))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetDormPreference", new { id = dormPreference.Application }, dormPreference);
+            return Created();
         }
         // POST: api/DormPreferences
         [HttpPost("multiple")]
@@ -127,21 +114,13 @@ namespace DormManagementApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDormPreference(int id)
         {
-            var dormPreference = await _context.DormPreference.FindAsync(id);
-            if (dormPreference == null)
+            bool deleted = dormPreferencesService.Delete(id);
+
+            if (!deleted)
             {
-                return NotFound();
+                return StatusCode(500, "Could not delete status object");
             }
-
-            _context.DormPreference.Remove(dormPreference);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool DormPreferenceExists(int id)
-        {
-            return _context.DormPreference.Any(e => e.Application == id);
+            return Ok();
         }
     }
 }

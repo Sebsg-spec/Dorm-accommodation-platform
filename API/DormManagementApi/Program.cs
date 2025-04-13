@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using DormManagementApi.Repositories.Interfaces;
+using DormManagementApi.Services.Interfaces;
 
 namespace DormManagementApi
 {
@@ -74,6 +76,18 @@ namespace DormManagementApi
             builder.Services.AddDbContext<DormContext>(opt => opt
                 .UseSqlServer(connectionString, options => options.CommandTimeout(60))
             );
+
+            builder.Services.AddScoped<IApplicationService, ApplicationService>();
+            builder.Services.AddScoped<IDormGroupService, DormGroupService>();
+            builder.Services.AddScoped<IDormPreferencesService, DormPreferencesService>();
+            builder.Services.AddScoped<IDormsService, DormsService>();
+            builder.Services.AddScoped<IFacultiesService, FacultiesService>();
+            builder.Services.AddScoped<IProfilesService, ProfilesService>();
+            builder.Services.AddScoped<IRolesService, RolesService>();
+            builder.Services.AddScoped<IRoomsService, RoomsService>();
+            builder.Services.AddScoped<IUsersService, UsersService>();
+            builder.Services.AddScoped<IStatusService, StatusService>();
+
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DormManagementApi.Models;
+using DormManagementApi.Services.Interfaces;
+using DormManagementApi.Repositories.Interfaces;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DormManagementApi.Controllers
 {
@@ -13,25 +16,26 @@ namespace DormManagementApi.Controllers
     [ApiController]
     public class FacultiesController : ControllerBase
     {
-        private readonly DormContext _context;
+        private readonly IFacultiesService facultiesService;
 
-        public FacultiesController(DormContext context)
+        public FacultiesController(IFacultiesService facultiesService)
         {
-            _context = context;
+            this.facultiesService = facultiesService;
         }
 
         // GET: api/Faculties
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Faculty>>> GetFaculty()
         {
-            return await _context.Faculty.ToListAsync();
+            var facultiesList = facultiesService.GetAll();
+            return Ok(facultiesList);
         }
 
         // GET: api/Faculties/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Faculty>> GetFaculty(int id)
         {
-            var faculty = await _context.Faculty.FindAsync(id);
+            var faculty = facultiesService.Get(id);
 
             if (faculty == null)
             {
@@ -51,24 +55,19 @@ namespace DormManagementApi.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(faculty).State = EntityState.Modified;
+            bool updated = facultiesService.Update(faculty);
 
-            try
+            if (updated)
             {
-                await _context.SaveChangesAsync();
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!FacultyExists(id))
+                if (!facultiesService.Exists(id))
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
             }
-
             return NoContent();
         }
 
@@ -77,31 +76,25 @@ namespace DormManagementApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Faculty>> PostFaculty(Faculty faculty)
         {
-            _context.Faculty.Add(faculty);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetFaculty", new { id = faculty.Id }, faculty);
+            bool created = facultiesService.Create(faculty);
+            if (!created)
+            {
+                return StatusCode(500, "Could not create status object");
+            }
+            return Created();
         }
 
         // DELETE: api/Faculties/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFaculty(int id)
         {
-            var faculty = await _context.Faculty.FindAsync(id);
-            if (faculty == null)
+            bool deleted = facultiesService.Delete(id);
+
+            if (!deleted)
             {
-                return NotFound();
+                return StatusCode(500, "Could not delete status object");
             }
-
-            _context.Faculty.Remove(faculty);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool FacultyExists(int id)
-        {
-            return _context.Faculty.Any(e => e.Id == id);
+            return Ok();
         }
     }
 }

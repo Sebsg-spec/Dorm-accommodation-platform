@@ -9,14 +9,14 @@
     </div>
 
     <div *ngIf="hasUserLoginCard" class="login-card">
-      <div class="login-card-item" (click)="GoToUserProfile()">
+      <button class="login-card-item" (click)="GoToUserProfile()">
         <div class="fas fa-user login-card-item-icon"></div>
         {{EmailAddress}}
-      </div>
-      <div class="login-card-item" (click)="Logout()">
+      </button>
+      <button class="login-card-item" (click)="Logout()">
         <div class="fas fa-sign-out-alt login-card-item-icon"></div>
         Logout
-      </div>
+      </button>
     </div>
 
   </div>

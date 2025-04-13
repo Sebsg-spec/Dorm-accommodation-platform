@@ -87,6 +87,7 @@ CREATE TABLE [room] (
 
 CREATE TABLE [application] (
     [id] INT PRIMARY KEY IDENTITY,
+	[application_name] NVARCHAR(255) NOT NULL,
 	[user] INT NOT NULL FOREIGN KEY REFERENCES [user]([id]),
 	[faculty] INT NOT NULL FOREIGN KEY REFERENCES [faculty]([id]),
 
