@@ -91,7 +91,8 @@ VALUES
 	(8, '1234567890123', 'M', N'Student', N'FMI Cămin acceptat', 1, 3),
 	(9, '1234567890123', 'M', N'Student', N'FMI Respins', 1, 1),
 	(10, '1234567890123', 'O', N'Student', N'Fizică Cămin refuzat', 2, 2),
-	(11, '1234567890123', 'F', N'Secretar', N'Fizică Test', 2, NULL);
+	(11, '1234567890123', 'F', N'Student', N'Fizică Test', 2, 3),
+	(12, '1234567890123', 'M', N'Secretar', N'Fizică Test', 2, NULL);
 
 -- -------------------------
 

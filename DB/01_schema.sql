@@ -65,7 +65,7 @@ CREATE TABLE [profile] (
 	[first_name] NVARCHAR(255),
 	[last_name] NVARCHAR(255),
 	[faculty] INT FOREIGN KEY REFERENCES [faculty]([id]),
-	[year_of_study] INT CHECK([year_of_study] > 0 AND [year_of_study] < 4)
+	[year_of_study] INT CHECK([year_of_study] > 0)
 );
 
 CREATE TABLE [dorm] (
@@ -87,7 +87,7 @@ CREATE TABLE [room] (
 
 CREATE TABLE [application] (
     [id] INT PRIMARY KEY IDENTITY,
-	[application_name] NVARCHAR(255) NOT NULL,
+	[application_name] VARCHAR(255) NOT NULL,
 	[user] INT NOT NULL FOREIGN KEY REFERENCES [user]([id]),
 	[faculty] INT NOT NULL FOREIGN KEY REFERENCES [faculty]([id]),
 
