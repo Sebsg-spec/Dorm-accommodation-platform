@@ -24,7 +24,7 @@ export class ApplicationService {
     return this.http.get<Application>(`${Consts.APPLICATIONS}/${id}`);
   }
 
-  postApplication(app: Application): Observable<Application> {
+  postApplication(app: FormData): Observable<Application> {
     return this.http.post<Application>(`${Consts.APPLICATIONS}`, app);
   }
 

@@ -6,7 +6,6 @@ import { Profile } from '../../models/profile.model';
 import { ProfileService } from '../../../services/profile.service';
 import { ApplicationService } from '../../../services/application.service';
 import { Application } from '../../models/application.model';
-import { faculty } from '../../models/faculty.model';
 import { DormPreferenceService } from './../../../services/dormPreference';
 import { v4 as uuidv4 } from 'uuid';
 import { Router } from '@angular/router';
@@ -19,8 +18,8 @@ import { Router } from '@angular/router';
 })
 export class DormRegistrationPageComponent {
   dormApplicationForm!: FormGroup;
-  selectedFile: File | null = null;
-  selectedAdditionalFile: File | null = null;
+  selectedFiles: File[] = [];
+  selectedAdditionalFiles: File[] = [];
   dorms: Dorm[] = [];
 
   userId: string = '';
@@ -91,15 +90,16 @@ export class DormRegistrationPageComponent {
   }
 
   onFileChange(event: any, type: string) {
-    const file = event.target.files[0];
-    if (file) {
-      if (type === 'document') {
-        this.selectedFile = file;
-        this.dormApplicationForm.patchValue({ document: file });
-      } else if (type === 'additionalDocuments') {
-        this.selectedAdditionalFile = file;
-        this.dormApplicationForm.patchValue({ additionalDocuments: file });
-      }
+    const files: File[] = Array.from(event.target.files);
+    if (files.length == 0)
+      return;
+
+    if (type === 'document') {
+      this.selectedFiles = files;
+      this.dormApplicationForm.patchValue({ document: files });
+    } else if (type === 'additionalDocuments') {
+      this.selectedAdditionalFiles = files;
+      this.dormApplicationForm.patchValue({ additionalDocuments: files });
     }
   }
 
@@ -114,48 +114,18 @@ export class DormRegistrationPageComponent {
   onSubmit() {
     if (this.dormApplicationForm.valid && this.userProfile) {
       console.log('Form Values:', this.dormApplicationForm.value);
-      console.log('Selected File:', this.selectedFile);
+      console.log('Selected Files:', this.selectedFiles);
 
       const formData = new FormData();
-      formData.append('document', this.selectedFile as Blob);
-      formData.append(
-        'dormPreference1',
-        this.dormApplicationForm.get('dormPreference1')?.value
-      );
-      formData.append(
-        'dormPreference2',
-        this.dormApplicationForm.get('dormPreference2')?.value
-      );
-      formData.append(
-        'dormPreference3',
-        this.dormApplicationForm.get('dormPreference3')?.value
-      );
-      formData.append(
-        'applyForRedistribution',
-        this.dormApplicationForm.get('applyForRedistribution')?.value
-          ? 'true'
-          : 'false'
-      );
+      this.selectedFiles.forEach((file, _) => {
+        formData.append('files', file, file.name);
+      });
 
-      // formData.append('userId', this.userProfile.id); // or whatever unique ID field you have
-      // formData.append('firstName', this.userProfile.firstName);
-      // formData.append('lastName', this.userProfile.lastName);
-      // formData.append('faculty', this.userProfile.faculty);
-      // formData.append('studyYear', this.userProfile.yearOfStudy);
+      this.selectedAdditionalFiles.forEach((file, _) => {
+        formData.append('files', file, file.name);
+      });
 
-      if (this.dormApplicationForm.get('specialRequest')?.value) {
-        formData.append(
-          'specialRequestType',
-          this.dormApplicationForm.get('specialRequestType')?.value
-        );
-        if (this.selectedAdditionalFile) {
-          formData.append(
-            'additionalDocuments',
-            this.selectedAdditionalFile as Blob
-          );
-        }
-      }
-      const app: Application = {
+      const metadata: Application = {
         user: this.userProfile.id,
         applicationName: "",
         faculty: this.userProfile.faculty,
@@ -166,7 +136,9 @@ export class DormRegistrationPageComponent {
         status: 1,
       };
 
-      this.applicationService.postApplication(app).subscribe({
+      formData.append('meta', JSON.stringify(metadata));
+
+      this.applicationService.postApplication(formData).subscribe({
         next: (createdApp) => {
           const dormPreference1 =
             this.dormApplicationForm.get('dormPreference1')?.value;

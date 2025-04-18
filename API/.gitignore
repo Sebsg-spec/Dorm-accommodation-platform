@@ -402,3 +402,5 @@ FodyWeavers.xsd
 ## Custom
 appsettings.json
 appsettings.development.json
+
+Uploads/

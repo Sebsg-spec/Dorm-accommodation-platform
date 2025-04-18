@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DormManagementApi.Models;
 using DormManagementApi.Repositories.Interfaces;
+using System.Text.Json;
 
 namespace DormManagementApi.Controllers
 {
@@ -84,13 +85,50 @@ namespace DormManagementApi.Controllers
         // POST: api/Applications
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Application>> PostApplication(Application application)
+        public async Task<ActionResult<Application>> PostApplication([FromForm] List<IFormFile> files, [FromForm] string meta)
         {
+            if (files == null || files.Count == 0)
+                return BadRequest("No files uploaded");
+
+            Application? application;
+            try
+            {
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                application = JsonSerializer.Deserialize<Application>(meta, options);
+                if (application == null)
+                {
+                    throw new Exception("Empty application after deserialization");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Invalid metadata: {ex.Message}");
+            }
+
             bool created = applicationService.Create(ref application);
             if (!created)
             {
                 return StatusCode(500, "Could not create status object");
             }
+
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", application.Uuid);
+            if (!Directory.Exists(uploadPath))
+                Directory.CreateDirectory(uploadPath);
+
+            for(int index = 0; index < files.Count; index++)
+            {
+                var file = files[index];
+                string fileName = $"{index + 1}.pdf";
+
+                var filePath = Path.Combine(uploadPath, fileName);
+                using var stream = new FileStream(filePath, FileMode.Create);
+                await file.CopyToAsync(stream);
+            }
+
             return application;
         }
 

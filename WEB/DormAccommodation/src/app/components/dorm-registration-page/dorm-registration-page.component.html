@@ -13,7 +13,7 @@
           accept=".pdf"
           required
         />
-        <div *ngIf="!selectedFile && dormApplicationForm.get('document')?.touched" class="error">
+        <div *ngIf="selectedFiles.length == 0 && dormApplicationForm.get('document')?.touched" class="error">
           Te rog să încarci documentul.
         </div>
       </div>
