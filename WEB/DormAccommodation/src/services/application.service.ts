@@ -39,6 +39,16 @@ export class ApplicationService {
   updateApplicationStatus(id: number, statusUpdateDto: StatusUpdateDto): Observable<void> {
     return this.http.patch<void>(`${Consts.APPLICATIONS}/${id}`, statusUpdateDto);
   }
+
+  getApplicationDocuments(applicationId: number): Observable<string[]> {
+    return this.http.get<string[]>(`${Consts.APPLICATION_DOCUMENTS}/${applicationId}`);
+  }
+  
+  getDocumentFile(applicationId: number, fileName: string): Observable<Blob> {
+    return this.http.get(`${Consts.APPLICATION_DOCUMENTS}/${applicationId}/${fileName}`, {
+      responseType: 'blob'
+    });
+  }
 }
 
 

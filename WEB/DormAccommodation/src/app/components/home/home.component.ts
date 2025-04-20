@@ -25,15 +25,15 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.applicationService.getUserApplications().subscribe(
       (res) => {
-        console.log(`USER APPLICATIONS:`, res)
+        console.log(`APPLICATIONS:`, res)
         if (res === null || res.length === 0) {
           this.showWhat = Consts.APPLICATIONS_OPEN_NONE_REGISTERED;
         } else {
           this.showWhat = Consts.APPLICATIONS_OPEN_REGISTERED_ALREADY;
 
-          const currentYear = new Date().getFullYear();
-          this.openApplications = res.filter(app => app.status.id !== 5 && app.status.id !== 7 && app.year >= currentYear);
-          this.history = res.filter(app => app.status.id === 5 || app.status.id === 7 || app.year < currentYear);
+          // Everything that is 'Cămin acceptat' or 'Cămin refuzat' goes to history
+          this.openApplications = res.filter(app => app.status.id !== 5 && app.status.id !== 7);
+          this.history = res.filter(app => app.status.id === 5 || app.status.id === 7);
         }
       }, error => {
         alert("Eroare");

@@ -199,7 +199,7 @@ namespace DormManagementApi.Controllers
             if (!Directory.Exists(uploadPath))
                 Directory.CreateDirectory(uploadPath);
 
-            for(int index = 0; index < files.Count; index++)
+            for (int index = 0; index < files.Count; index++)
             {
                 var file = files[index];
                 string fileName = $"{index + 1}.pdf";
@@ -223,6 +223,79 @@ namespace DormManagementApi.Controllers
                 return StatusCode(500, "Could not delete status object");
             }
             return Ok();
+        }
+
+        [HttpGet("Documents/{id}")]
+        public async Task<IActionResult> GetDocuments(int id)
+        {
+            var userData = UsersController.ExtractToken(User);
+            if (userData == null)
+                return Unauthorized("Invalid token");
+
+            var application = applicationService.Get(id);
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            if (application.User != userData.Id && userData.Role < (int)RoleLevel.Secretar)
+            {
+                return Unauthorized("You are not authorized to fetch the list of documents");
+            }
+
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", application.Uuid);
+            if (!Directory.Exists(uploadPath))
+                return NotFound("No documents found");
+
+            var files = Directory.GetFiles(uploadPath);
+            if (files.Length == 0)
+                return NotFound("No documents found");
+
+            var documents = new List<string>();
+            foreach (var file in files)
+            {
+                var fileName = Path.GetFileName(file);
+                documents.Add(fileName);
+            }
+
+            return Ok(documents);
+        }
+
+        [HttpGet("Documents/{id}/{document}")]
+        public async Task<IActionResult> GetDocument(int id, string document)
+        {
+            var userData = UsersController.ExtractToken(User);
+            if (userData == null)
+                return Unauthorized("Invalid token");
+
+            var application = applicationService.Get(id);
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            if (application.User != userData.Id && userData.Role < (int)RoleLevel.Secretar)
+            {
+                return Unauthorized("You are not authorized to view this document");
+            }
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", application.Uuid, document);
+            if (!System.IO.File.Exists(filePath))
+                return NotFound("Document not found");
+
+            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            var fileInfo = new FileInfo(filePath);
+            var contentType = "application/pdf";
+            
+            var fileName = Path.GetFileName(filePath);
+            var contentDisposition = new System.Net.Mime.ContentDisposition
+            {
+                FileName = fileName,
+                Inline = true
+            }.ToString();
+
+            Response.Headers.Append("Content-Disposition", contentDisposition);
+            return File(fileStream, contentType, fileName);
         }
     }
 }

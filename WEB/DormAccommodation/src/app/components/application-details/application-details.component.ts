@@ -4,6 +4,7 @@ import {ApplicationService} from '../../../services/application.service';
 import {UserApplicationDto} from '../../models/user.application.dto';
 import { ProfileService } from '../../../services/profile.service';
 import { StatusUpdateDto } from '../../models/status.update.dto';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-application-details',
@@ -30,11 +31,19 @@ export class ApplicationDetailsComponent implements OnInit {
   selectedStatusId: number = this.statuses[0].id;
   statusComment: string = '';
   updateStatusLoading: boolean = false;
+  updateSuccess: boolean = false;
+  
+  files: string[] = [];
+  selectedFile: string | null = null;
+
+  fileObject: SafeResourceUrl | null = null;
+  fileLoading: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private applicationService: ApplicationService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private sanitizer: DomSanitizer
   ) { 
     this.userRole = parseInt(this.profileService.getUserProp("role") ?? "0");
   }
@@ -45,6 +54,9 @@ export class ApplicationDetailsComponent implements OnInit {
       if (idParam) {
         this.applicationId = +idParam;
         this.loadApplicationDetails();
+        if (this.userRole === 3) {
+          this.loadPdfFiles();
+        }
       } else {
         this.errorMessage = 'Nu a fost furnizat un ID al dosarului.';
         this.loading = false;
@@ -83,8 +95,8 @@ export class ApplicationDetailsComponent implements OnInit {
   }
 
   updateApplicationStatus(): void {
-    if (!this.statusComment || this.statusComment.trim().length < 5) {
-      this.errorMessage = 'Comentariul trebuie să conțină minim 5 caractere.';
+    if (!this.statusComment || this.statusComment.trim().length < 5 || this.statusComment.trim().length > 255) {
+      this.errorMessage = 'Comentariul trebuie să conțină minim 5 caractere si maxim 255 de caractere.';
       return;
     }
 
@@ -102,11 +114,53 @@ export class ApplicationDetailsComponent implements OnInit {
         this.statusComment = '';
         this.loadApplicationDetails();
         this.updateStatusLoading = false;
+        this.showSuccessFeedback();
       },
       error: (error) => {
         this.updateStatusLoading = false;
         this.errorMessage = 'A apărut o eroare la actualizarea statusului.';
         console.error(error);
+      }
+    });
+  }
+
+  showSuccessFeedback(): void {
+    this.updateSuccess = true;
+    setTimeout(() => {
+      this.updateSuccess = false;
+    }, 3000);
+  }
+  
+  loadPdfFiles(): void {
+    if (!this.applicationId) return;
+    
+    this.applicationService.getApplicationDocuments(this.applicationId).subscribe({
+      next: (files) => {
+        this.files = files;
+      },
+      error: (error) => {
+        console.error('Error loading PDF files:', error);
+      }
+    });
+  }
+
+  viewPdf(file: string): void {
+    if (!this.applicationId) return;
+
+    this.fileLoading = true;
+    this.fileObject = null;
+    
+    this.applicationService.getDocumentFile(this.applicationId, file).subscribe({
+      next: (response) => {
+        const fileURL = URL.createObjectURL(response);
+        this.fileObject = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
+        this.selectedFile = file;
+        this.fileLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading PDF file:', error);
+        this.fileLoading = false;
+        this.errorMessage = 'Eroare la încărcarea documentului.';
       }
     });
   }

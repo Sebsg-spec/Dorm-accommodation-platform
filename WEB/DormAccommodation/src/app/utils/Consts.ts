@@ -9,7 +9,9 @@ export enum Consts {
 
   APPLICATIONS_GET = `${BASE_URL}/Applications/GetApplications`,
   APPLICATIONS = `${BASE_URL}/Applications`,
+  
   APPLICATION_DETAILS = `${BASE_URL}/Applications/Details`,
+  APPLICATION_DOCUMENTS = `${BASE_URL}/Applications/Documents`,
 
   FACULTIES_GET_ALL = `${BASE_URL}/Faculties`,
 

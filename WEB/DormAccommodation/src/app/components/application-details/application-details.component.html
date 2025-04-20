@@ -8,6 +8,7 @@
       <p>{{ errorMessage }}</p>
     </div>
     <div *ngIf="!loading && !errorMessage && application" class="application-details">
+      <button class="back-button" routerLink="/home" style="margin-bottom: 16px;">Înapoi</button>
       <h2>Detalii Dosar</h2>
       <div class="details-card">
         <p><strong>Nr. înregistrare:</strong> {{ application.applicationName }}</p>
@@ -29,6 +30,29 @@
         </div>
       </div>
 
+      <div *ngIf="userRole === 3" class="pdf-section">
+        <h3>Documente</h3>
+        <div class="pdf-container">
+          <div class="pdf-file-list">
+            <p *ngIf="files.length === 0">Nu există documente disponibile.</p>
+            <ul>
+              <li *ngFor="let file of files" (click)="viewPdf(file)" [class.active]="file === selectedFile">
+                {{ file }}
+              </li>
+            </ul>
+          </div>
+          <div class="pdf-viewer">
+            <div *ngIf="fileLoading" class="pdf-loading">
+              <p>Se încarcă documentul...</p>
+            </div>
+            <div *ngIf="!fileLoading && !fileObject" class="pdf-placeholder">
+              <p>Selectați un document pentru vizualizare</p>
+            </div>
+            <iframe *ngIf="!fileLoading && fileObject" [src]="fileObject" width="100%" height="600"></iframe>
+          </div>
+        </div>
+      </div>
+
       <div *ngIf="userRole === 3" class="status-update-section">
         <h3>Actualizare Status</h3>
         <div class="form-group">
@@ -39,16 +63,22 @@
         </div>
         <div class="form-group">
           <label for="statusComment">Comentariu:</label>
-          <textarea id="statusComment" class="form-control" rows="3" [(ngModel)]="statusComment"></textarea>
-          <small *ngIf="statusComment.length > 0 && statusComment.length < 5" class="text-danger">Comentariul trebuie să conțină minim 5 caractere</small>
+          <textarea placeholder="Adăugați un comentariu de minim 5 caractere" id="statusComment" class="form-control" rows="3" [(ngModel)]="statusComment"></textarea>
+          <small *ngIf="statusComment.length > 0 && (statusComment.length < 5 || statusComment.length > 255)" class="text-danger">Comentariul trebuie să conțină minim 5 caractere, si maxim 255 de caractere</small>
         </div>
-        <button 
-          [disabled]="updateStatusLoading || statusComment.length < 5" 
-          class="btn btn-primary" 
-          (click)="updateApplicationStatus()">
-          <span *ngIf="updateStatusLoading">Se actualizează...</span>
-          <span *ngIf="!updateStatusLoading">Actualizează status</span>
-        </button>
+        <div class="button-group">
+          <button 
+            [disabled]="updateStatusLoading || statusComment.length < 5" 
+            class="btn btn-primary" 
+            (click)="updateApplicationStatus()">
+            <span *ngIf="updateStatusLoading">Se actualizează...</span>
+            <span *ngIf="!updateStatusLoading">Actualizează status</span>
+          </button>
+          <div *ngIf="updateSuccess" class="success-checkmark">
+            <div class="check-icon"></div>
+            <span class="success-message">Status actualizat cu succes!</span>
+          </div>
+        </div>
       </div>
 
       <button class="back-button" routerLink="/home">Înapoi</button>
