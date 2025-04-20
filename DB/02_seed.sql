@@ -83,7 +83,7 @@ INSERT INTO [profile]
 	([id], [pin], [sex], [first_name], [last_name], [faculty], [year_of_study])
 VALUES
 	(1, '1234567890123', 'O', N'Admin', N'Test', NULL, NULL),
-	(2, '1234567890123', 'F', N'Secretar', N'FMI Test', 2, NULL),
+	(2, '1234567890123', 'F', N'Secretar', N'FMI Test', 1, NULL),
 	(3, '1234567890123', 'M', N'Student', N'FMI Test', 1, 1),
 	(4, '1234567890123', 'F', N'Student', N'FMI În curs de verificare', 1, 2),
 	(5, '1234567890123', 'F', N'Student', N'FMI În așteptare', 1, 3),

@@ -142,8 +142,7 @@ export class LoginComponent implements OnInit {
   }
 
   redirect(): any {
-    const pin = sessionStorage.getItem('Key');
-    const id = this.Profile.getUserIdFromToken(pin);
+    const id = this.Profile.getUserProp('nameid');
     this.Profile.getProfile(id!).subscribe((response: Profile) => {
       this.canAcces = 'true';
       sessionStorage.setItem('canAcces', this.canAcces);

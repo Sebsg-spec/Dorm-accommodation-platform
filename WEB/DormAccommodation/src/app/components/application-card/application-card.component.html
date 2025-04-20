@@ -13,11 +13,9 @@
     <p class="card-text"><strong>Status:   </strong> {{currentApplication.status.name}}</p>
     <p class="card-text"><strong>Ultima actualizare:   </strong> {{currentApplication.lastUpdate | date: 'dd.MM.yyyy, h:mm a'}}</p>
 
-    <br>
     <div class="separator"></div>
-    <br>
     <div class="footer">
-      <button (click)="GoToApplicationDetails()">Detalii dosar</button>
+      <button (click)="GoToApplicationDetails()">Detalii</button>
     </div>
   </div>
 </div>

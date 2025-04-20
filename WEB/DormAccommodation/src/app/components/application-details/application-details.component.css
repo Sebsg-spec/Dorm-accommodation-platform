@@ -1,0 +1,84 @@
+* {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.component {
+  display:flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1%;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.loading, .error {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.error {
+  color: #dc3545;
+}
+
+.application-details {
+  margin-top: 30px;
+}
+
+h2 {
+  color: #343a40;
+  margin-bottom: 20px;
+}
+
+.details-card {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.back-button {
+  display: flex;
+  border: 1px solid #1a4977;
+  color: white;
+  padding: 8px 16px;
+  background-color: #1a4977;
+  border-radius: 5px;
+  font-weight: 600;
+  min-width: 100px;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: white;
+  color: #1a4977;
+}
+
+.button:hover {
+  color: #1a4977;
+  background-color: white;
+}
+
+footer {
+  margin-top: auto;
+}
+
+.separator {
+  border-top: 1px solid #e0e0e0;
+  margin-bottom: 20px;
+}
+
+.footer {
+  text-align: center;
+  color: #6c757d;
+  font-size: 14px;
+} 

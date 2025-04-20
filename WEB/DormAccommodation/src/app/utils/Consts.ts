@@ -1,6 +1,7 @@
 export enum Consts {
 
   APPLICATIONS_CLOSED,
+  APPLICATIONS_LOADING,
   APPLICATIONS_OPEN_NONE_REGISTERED,
   APPLICATIONS_OPEN_REGISTERED_ALREADY,
 
@@ -8,6 +9,7 @@ export enum Consts {
 
   APPLICATIONS_GET = `${BASE_URL}/Applications/GetApplications`,
   APPLICATIONS = `${BASE_URL}/Applications`,
+  APPLICATION_DETAILS = `${BASE_URL}/Applications/Details`,
 
   FACULTIES_GET_ALL = `${BASE_URL}/Faculties`,
 

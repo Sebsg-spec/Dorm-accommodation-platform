@@ -7,6 +7,8 @@ namespace DormManagementApi.Repositories.Interfaces
         public bool Exists(int id);
         public IEnumerable<Application> GetAll();
         public Application Get(int id);
+        public UserApplicationDto? GetDetails(int id);
+        public List<UserApplicationDto> GetForSecretary(int userId);
         public List<UserApplicationDto> GetByUserId(int userId);
         public bool Create(ref Application application);
         public bool Update(Application application);
@@ -54,9 +56,44 @@ namespace DormManagementApi.Repositories.Interfaces
             return context.Application.Find(id);
         }
 
+        public UserApplicationDto? GetDetails(int id)
+        {
+            var application = context.Application.Find(id);
+
+            var userProfile = context.Profile.Find(application.User);
+
+            var result = ToDto([application], userProfile);
+            return result.Count > 0 ? result[0] : null;
+        }
+
         public IEnumerable<Application> GetAll()
         {
             return context.Application.ToList();
+        }
+
+        public List<UserApplicationDto> GetForSecretary(int userId)
+        {
+            var secretaryProfile = context.Profile.Find(userId);
+
+            var faculty = context.Faculty.Find(secretaryProfile.Faculty);
+
+            var secretaryApplications = context.Application
+                .Where(b => b.Faculty.Equals(secretaryProfile.Faculty))
+                .OrderByDescending(x => x.LastUpdate)
+                .ToList();
+
+            List<UserApplicationDto> result = [];
+
+            foreach (Application application in secretaryApplications)
+            {
+                var user = context.User.Find(application.User);
+                var userProfile = context.Profile.Find(user.Id);
+
+                var applicationDto = ToDto([application], userProfile)[0];
+                result.Add(applicationDto);
+            }
+
+            return result;
         }
 
         public List<UserApplicationDto> GetByUserId(int userId)

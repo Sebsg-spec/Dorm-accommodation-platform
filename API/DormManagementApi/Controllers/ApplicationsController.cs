@@ -28,7 +28,41 @@ namespace DormManagementApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Application>> GetApplication(int id)
         {
+            var userData = UsersController.ExtractToken(User);
+            if (userData == null)
+                return Unauthorized("Invalid token");
+
             var application = applicationService.Get(id);
+
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            if (application.User != userData.Id && userData.Role < (int)RoleLevel.Secretar)
+            {
+                return Unauthorized("You are not authorized to view this application");
+            }
+
+            return application;
+        }
+
+        // GET: api/Applications/Details/5
+        [HttpGet("Details/{id}")]
+        public async Task<ActionResult<UserApplicationDto>> GetApplicationDetails(int id)
+        {
+            var userData = UsersController.ExtractToken(User);
+            if (userData == null)
+                return Unauthorized("Invalid token");
+
+            var applicationData = applicationService.Get(id);
+
+            if (applicationData.User != userData.Id && userData.Role < (int)RoleLevel.Secretar)
+            {
+                return Unauthorized("You are not authorized to view this application");
+            }
+
+            var application = applicationService.GetDetails(id);
 
             if (application == null)
             {
@@ -47,7 +81,16 @@ namespace DormManagementApi.Controllers
             if (userData == null)
                 return Unauthorized("Invalid token");
 
-            var userApplications = applicationService.GetByUserId(userData.Id);
+            List<UserApplicationDto> userApplications = [];
+
+            if (userData.Role == (int)RoleLevel.Secretar)
+            {
+                userApplications = applicationService.GetForSecretary(userData.Id);
+            }
+            else
+            {
+                userApplications = applicationService.GetByUserId(userData.Id);
+            }
 
             if (userApplications == null)
             {

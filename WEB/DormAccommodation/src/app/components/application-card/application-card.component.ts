@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {UserApplicationDto} from '../../models/user.application.dto';
 import {Status} from '../../models/status.model';
 import {DatePipe} from '@angular/common';
@@ -14,6 +14,7 @@ export class ApplicationCardComponent implements OnInit {
 
   @Input() currentApplication: UserApplicationDto = new UserApplicationDto(0, "???", "Student cu nume lung", "Facultatea de cuvinte lungi",
     0, new Date(), new Status(0, ""), "??", 0, new Map());
+  @Output() viewDetailsEvent = new EventEmitter<number>();
 
   constructor() {
 
@@ -24,7 +25,6 @@ export class ApplicationCardComponent implements OnInit {
   }
 
   GoToApplicationDetails() {
-    alert("Going to application details page.");
+    this.viewDetailsEvent.emit(this.currentApplication.applicationId);
   }
-
 }

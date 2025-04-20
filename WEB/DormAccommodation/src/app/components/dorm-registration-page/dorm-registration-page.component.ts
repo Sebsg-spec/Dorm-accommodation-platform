@@ -68,7 +68,7 @@ export class DormRegistrationPageComponent {
   }
 
   loadUserProfile(): void {
-    this.userId = this.profileService.getUserIdFromToken(this.token) ?? '';
+    this.userId = this.profileService.getUserProp('nameid') ?? '';
     console.log('this.userId:', this.userId);
     if (this.userId) {
       this.profileService.getProfile(this.userId).subscribe({

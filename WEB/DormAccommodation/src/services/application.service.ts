@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
@@ -22,6 +21,10 @@ export class ApplicationService {
 
   getApplicationById(id: number): Observable<Application> {
     return this.http.get<Application>(`${Consts.APPLICATIONS}/${id}`);
+  }
+
+  getApplicationDetails(id: number): Observable<UserApplicationDto> {
+    return this.http.get<UserApplicationDto>(`${Consts.APPLICATION_DETAILS}/${id}`);
   }
 
   postApplication(app: FormData): Observable<Application> {

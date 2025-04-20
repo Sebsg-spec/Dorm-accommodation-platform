@@ -16,6 +16,7 @@ import { AdminComponent } from './components/admin/admin.component';
 import { ManagementComponent } from './components/management/management.component';
 import { DormRegistrationPageComponent } from './components/dorm-registration-page/dorm-registration-page.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { ApplicationDetailsComponent } from './components/application-details/application-details.component';
 
 // Routes
 import { RouterModule, Routes } from '@angular/router';
@@ -40,6 +41,7 @@ const routes: Routes = [
   { path: 'admin', component: AdminComponent, canActivate: [authGuardGuard] },
   { path: 'management', component: ManagementComponent, canActivate: [authGuardGuard] },
   { path: 'user-profile', component: UserProfileComponent, canActivate: [authGuardGuard]},
+  { path: 'application-details/:id', component: ApplicationDetailsComponent, canActivate: [authGuardGuard]},
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 
@@ -55,7 +57,8 @@ const routes: Routes = [
     UserProfileComponent,
     HeaderComponent,
     HeaderParameterizedComponent,
-    ApplicationCardComponent
+    ApplicationCardComponent,
+    ApplicationDetailsComponent
   ],
   imports: [
     BrowserModule,

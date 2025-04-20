@@ -19,17 +19,19 @@ export class ProfileService {
     return this.http.put(`${Consts.USER_PROFILE}/${profileid}`, profile);
   }
 
-  getUserIdFromToken(token: string | null): string | null {
+  getUserProp(prop: string): string | null {
+    const token = sessionStorage.getItem("Key");
     if (!token) return null;
 
     try {
       const payloadBase64 = token.split('.')[1];
       const decodedPayload = JSON.parse(atob(payloadBase64));
 
-      return decodedPayload.nameid || decodedPayload.sub || null;
+      return decodedPayload[prop] || null;
     } catch (error) {
       console.error("Error decoding token:", error);
       return null;
-    }}
+    }
+  }
 }
 

@@ -55,8 +55,7 @@ export class UserProfileComponent {
   }
 
   loadUserProfile(): void {
-
-    this.userId = this.profileService.getUserIdFromToken(this.token) ?? "";
+    this.userId = this.profileService.getUserProp("nameid") ?? "";
     this.profileService.getProfile(this.userId).subscribe({
       next: (profile) => {
         this.profileForm.patchValue(profile);

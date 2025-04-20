@@ -1,0 +1,55 @@
+<div class="component">
+  <app-header-parameterized [hasUserLoginCard]="true"></app-header-parameterized>
+  <div class="content">
+    <div *ngIf="loading" class="loading">
+      <p>Se încarcă detaliile dosarului...</p>
+    </div>
+    <div *ngIf="errorMessage" class="error">
+      <p>{{ errorMessage }}</p>
+    </div>
+    <div *ngIf="!loading && !errorMessage && application" class="application-details">
+      <h2>Detalii Dosar</h2>
+      <div class="details-card">
+        <p><strong>Nr. înregistrare:</strong> {{ application.applicationName }}</p>
+        <p><strong>Nume student:</strong> {{ application.studentName }}</p>
+        <p><strong>Facultate:</strong> {{ application.faculty }}</p>
+        <p><strong>An:</strong> {{ application.year }}</p>
+        <p><strong>Ultima actualizare:</strong> {{ application.lastUpdate | date:'dd/MM/yyyy HH:mm' }}</p>
+        <p><strong>Status:</strong> {{ application.status.name }}</p>
+        <p><strong>Comentariu:</strong> {{ application.comment || 'Niciun comentariu' }}</p>
+        <p><strong>Cămin alocat:</strong> {{ application.assignedDorm ? application.assignedDorm : 'Nealocat' }}</p>
+        
+        <div *ngIf="hasPreferences()">
+          <h5>Preferințe cămin</h5>
+          <ol>
+            <li *ngFor="let pref of application.preferences | keyvalue">
+              {{ pref.value }}
+            </li>
+          </ol>
+        </div>
+      </div>
+      <button class="back-button" routerLink="/home">Înapoi</button>
+    </div>
+  </div>
+  
+  <footer>
+    <br>
+    <br>
+    <div class="separator"></div>
+    <div class="container">
+      <div class="row footer">
+        <div class="col-md">
+          © Universitatea Babeş-Bolyai, 2025, <br>
+          toate drepturile rezervate
+        </div>
+        <div class="col-md">
+          Protecția datelor cu caracter personal
+        </div>
+        <div class="col-md">
+          Politica de utilizare a cookies-urilor
+        </div>
+      </div>
+    </div>
+    <br>
+  </footer>
+</div> 
