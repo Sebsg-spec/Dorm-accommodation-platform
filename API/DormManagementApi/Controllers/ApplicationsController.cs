@@ -2,6 +2,7 @@
 using DormManagementApi.Models;
 using DormManagementApi.Repositories.Interfaces;
 using System.Text.Json;
+using DormManagementApi.Attributes;
 
 namespace DormManagementApi.Controllers
 {
@@ -97,6 +98,42 @@ namespace DormManagementApi.Controllers
                 return NotFound();
             }
             return userApplications;
+        }
+
+        // PATCH: api/Applications/5
+        [HttpPatch("{id}")]
+        [Role(RoleLevel.Secretar)]
+        public async Task<IActionResult> PatchApplication(int id, StatusUpdateDto statusUpdate)
+        {
+            var application = applicationService.Get(id);
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            if (statusUpdate.Status == application.Status)
+            {
+                return NoContent();
+            }
+
+            application.Status = statusUpdate.Status;
+            application.Comment = statusUpdate.Comment;
+            application.LastUpdate = DateTime.UtcNow;
+
+            bool updated = applicationService.Update(application);
+
+            if (updated)
+            {
+                return Ok();
+            }
+            else
+            {
+                if (!applicationService.Exists(id))
+                {
+                    return NotFound();
+                }
+            }
+            return NoContent();
         }
 
         // PUT: api/Applications/5

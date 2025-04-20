@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {Consts} from '../app/utils/Consts';
 import {UserApplicationDto} from '../app/models/user.application.dto';
 import {Application} from '../app/models/application.model';
+import { StatusUpdateDto } from '../app/models/status.update.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,10 @@ export class ApplicationService {
 
   deleteApplication(id: number): Observable<void> {
     return this.http.delete<void>(`${Consts.APPLICATIONS}/${id}`);
+  }
+
+  updateApplicationStatus(id: number, statusUpdateDto: StatusUpdateDto): Observable<void> {
+    return this.http.patch<void>(`${Consts.APPLICATIONS}/${id}`, statusUpdateDto);
   }
 }
 

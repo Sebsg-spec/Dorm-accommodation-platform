@@ -28,6 +28,29 @@
           </ol>
         </div>
       </div>
+
+      <div *ngIf="userRole === 3" class="status-update-section">
+        <h3>Actualizare Status</h3>
+        <div class="form-group">
+          <label for="statusSelect">Status nou:</label>
+          <select id="statusSelect" class="form-control" [(ngModel)]="selectedStatusId">
+            <option *ngFor="let status of statuses" [value]="status.id">{{ status.name }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="statusComment">Comentariu:</label>
+          <textarea id="statusComment" class="form-control" rows="3" [(ngModel)]="statusComment"></textarea>
+          <small *ngIf="statusComment.length > 0 && statusComment.length < 5" class="text-danger">Comentariul trebuie să conțină minim 5 caractere</small>
+        </div>
+        <button 
+          [disabled]="updateStatusLoading || statusComment.length < 5" 
+          class="btn btn-primary" 
+          (click)="updateApplicationStatus()">
+          <span *ngIf="updateStatusLoading">Se actualizează...</span>
+          <span *ngIf="!updateStatusLoading">Actualizează status</span>
+        </button>
+      </div>
+
       <button class="back-button" routerLink="/home">Înapoi</button>
     </div>
   </div>

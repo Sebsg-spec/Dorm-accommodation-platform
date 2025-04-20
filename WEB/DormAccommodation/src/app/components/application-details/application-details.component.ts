@@ -3,6 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {ApplicationService} from '../../../services/application.service';
 import {UserApplicationDto} from '../../models/user.application.dto';
 import { ProfileService } from '../../../services/profile.service';
+import { StatusUpdateDto } from '../../models/status.update.dto';
 
 @Component({
   selector: 'app-application-details',
@@ -16,6 +17,19 @@ export class ApplicationDetailsComponent implements OnInit {
   loading: boolean = true;
   errorMessage: string = '';
   public userRole: number | null = null;
+  
+  statuses: { id: number, name: string }[] = [
+    // { id: 1, name: 'În curs de verificare' },
+    { id: 2, name: 'În așteptare' },
+    { id: 3, name: 'Validat' },
+    // { id: 4, name: 'Repartizat' },
+    // { id: 5, name: 'Cămin acceptat' },
+    { id: 6, name: 'Respins' },
+    // { id: 7, name: 'Cămin refuzat' }
+  ];
+  selectedStatusId: number = this.statuses[0].id;
+  statusComment: string = '';
+  updateStatusLoading: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -32,7 +46,7 @@ export class ApplicationDetailsComponent implements OnInit {
         this.applicationId = +idParam;
         this.loadApplicationDetails();
       } else {
-        this.errorMessage = 'No application ID provided';
+        this.errorMessage = 'Nu a fost furnizat un ID al dosarului.';
         this.loading = false;
       }
     });
@@ -51,14 +65,49 @@ export class ApplicationDetailsComponent implements OnInit {
         next: (application) => {
           this.application = application;
           this.loading = false;
+          if (this.application?.status?.id) {
+            const statusExists = this.statuses.some(s => s.id === this.application?.status?.id);
+            if (statusExists) {
+              this.selectedStatusId = this.application.status.id;
+            }
+          }
           console.log(this.application);
         },
         error: (error) => {
-          this.errorMessage = 'Error loading application details.';
+          this.errorMessage = 'A apărut o eroare la încărcarea detaliilor despre dosar.';
           console.error(error);
           this.loading = false;
         }
       });
     }
+  }
+
+  updateApplicationStatus(): void {
+    if (!this.statusComment || this.statusComment.trim().length < 5) {
+      this.errorMessage = 'Comentariul trebuie să conțină minim 5 caractere.';
+      return;
+    }
+
+    if (!this.applicationId || this.userRole !== 3) {
+      this.errorMessage = 'Nu aveți permisiunea să actualizați statusul dosarului.';
+      return;
+    }
+
+    this.updateStatusLoading = true;
+    this.applicationService.updateApplicationStatus(
+      this.applicationId, 
+      new StatusUpdateDto(this.selectedStatusId, this.statusComment)
+    ).subscribe({
+      next: () => {
+        this.statusComment = '';
+        this.loadApplicationDetails();
+        this.updateStatusLoading = false;
+      },
+      error: (error) => {
+        this.updateStatusLoading = false;
+        this.errorMessage = 'A apărut o eroare la actualizarea statusului.';
+        console.error(error);
+      }
+    });
   }
 }
