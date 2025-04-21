@@ -15,9 +15,9 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 export class ApplicationDetailsComponent implements OnInit {
   applicationId: number | null = null;
   application: UserApplicationDto | null = null;
-  loading: boolean = true;
-  errorMessage: string = '';
+
   public userRole: number | null = null;
+  errorMessage: string = '';
   
   statuses: { id: number, name: string }[] = [
     // { id: 1, name: 'În curs de verificare' },
@@ -28,10 +28,16 @@ export class ApplicationDetailsComponent implements OnInit {
     { id: 6, name: 'Respins' },
     // { id: 7, name: 'Cămin refuzat' }
   ];
+
   selectedStatusId: number = this.statuses[0].id;
   statusComment: string = '';
+  loading: boolean = true;
+
   updateStatusLoading: boolean = false;
   updateSuccess: boolean = false;
+
+  actionLoading: boolean = false;
+  actionSuccess: boolean = false;
   
   files: string[] = [];
   selectedFile: string | null = null;
@@ -163,5 +169,68 @@ export class ApplicationDetailsComponent implements OnInit {
         this.errorMessage = 'Eroare la încărcarea documentului.';
       }
     });
+  }
+
+  acceptApplication(): void {
+    if (!this.applicationId || this.userRole !== 2) {
+      this.errorMessage = 'Nu aveți permisiunea să acceptați repartizarea.';
+      return;
+    }
+
+    if (this.application?.status?.id !== 4) {
+      this.errorMessage = 'Acțiunea nu este disponibilă în statusul curent.';
+      return;
+    }
+
+    this.actionLoading = true;
+    this.applicationService.acceptApplication(
+      this.applicationId, 
+    ).subscribe({
+      next: () => {
+        this.loadApplicationDetails();
+        this.actionLoading = false;
+        this.showActionSuccessFeedback();
+      },
+      error: (error) => {
+        this.actionLoading = false;
+        this.errorMessage = 'A apărut o eroare la procesarea acțiunii.';
+        console.error(error);
+      }
+    });
+  }
+
+  declineApplication(): void {
+    if (!this.applicationId || this.userRole !== 2) {
+      this.errorMessage = 'Nu aveți permisiunea să refuzați repartizarea.';
+      return;
+    }
+
+    if (this.application?.status?.id !== 4) {
+      this.errorMessage = 'Acțiunea nu este disponibilă în statusul curent.';
+      return;
+    }
+
+    this.actionLoading = true;
+    this.applicationService.declineApplication(
+      this.applicationId, 
+    ).subscribe({
+      next: () => {
+        this.loadApplicationDetails();
+        this.actionLoading = false;
+        this.showActionSuccessFeedback();
+      },
+      error: (error) => {
+        this.actionLoading = false;
+        this.errorMessage = 'A apărut o eroare la procesarea acțiunii.';
+        console.error(error);
+      }
+    });
+  }
+
+  showActionSuccessFeedback(): void {
+    this.actionSuccess = true;
+    setTimeout(() => {
+      this.actionSuccess = false;
+    }, 3000);
   }
 }

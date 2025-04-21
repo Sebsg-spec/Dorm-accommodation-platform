@@ -31,7 +31,9 @@ namespace DormManagementApi.Controllers
         {
             var userData = UsersController.ExtractToken(User);
             if (userData == null)
+            {
                 return Unauthorized("Invalid token");
+            }
 
             var application = applicationService.Get(id);
 
@@ -54,7 +56,9 @@ namespace DormManagementApi.Controllers
         {
             var userData = UsersController.ExtractToken(User);
             if (userData == null)
+            {
                 return Unauthorized("Invalid token");
+            }
 
             var applicationData = applicationService.Get(id);
 
@@ -80,7 +84,9 @@ namespace DormManagementApi.Controllers
             // identity information (from the JWT token)
             var userData = UsersController.ExtractToken(User);
             if (userData == null)
+            {
                 return Unauthorized("Invalid token");
+            }
 
             List<UserApplicationDto> userApplications = [];
 
@@ -111,13 +117,90 @@ namespace DormManagementApi.Controllers
                 return NotFound();
             }
 
-            if (statusUpdate.Status == application.Status)
-            {
-                return NoContent();
-            }
-
             application.Status = statusUpdate.Status;
             application.Comment = statusUpdate.Comment;
+            application.LastUpdate = DateTime.UtcNow;
+
+            bool updated = applicationService.Update(application);
+
+            if (updated)
+            {
+                return Ok();
+            }
+            else
+            {
+                if (!applicationService.Exists(id))
+                {
+                    return NotFound();
+                }
+            }
+            return NoContent();
+        }
+
+        // POST: api/Applications/5/accept
+        [HttpPost("{id}/accept")]
+        public async Task<IActionResult> AcceptDorm(int id)
+        {
+            var userData = UsersController.ExtractToken(User);
+            if (userData == null)
+            {
+                return Unauthorized("Invalid token");
+            }
+
+            var application = applicationService.Get(id);
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            if (application.User != userData.Id)
+            {
+                return Unauthorized("You are not authorized to accept this application");
+            }
+
+            application.Status = 5;
+            application.Comment = null;
+            application.LastUpdate = DateTime.UtcNow;
+
+            bool updated = applicationService.Update(application);
+
+            if (updated)
+            {
+                return Ok();
+            }
+            else
+            {
+                if (!applicationService.Exists(id))
+                {
+                    return NotFound();
+                }
+            }
+            return NoContent();
+        }
+
+        // POST: api/Applications/5/decline
+        [HttpPost("{id}/decline")]
+        public async Task<IActionResult> DeclineDorm(int id)
+        {
+            var userData = UsersController.ExtractToken(User);
+            if (userData == null)
+            {
+                return Unauthorized("Invalid token");
+            }
+
+            var application = applicationService.Get(id);
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            if (application.User != userData.Id)
+            {
+                return Unauthorized("You are not authorized to decline this application");
+            }
+
+            application.Status = 7;
+            application.Comment = null;
             application.LastUpdate = DateTime.UtcNow;
 
             bool updated = applicationService.Update(application);
@@ -230,7 +313,9 @@ namespace DormManagementApi.Controllers
         {
             var userData = UsersController.ExtractToken(User);
             if (userData == null)
+            {
                 return Unauthorized("Invalid token");
+            }
 
             var application = applicationService.Get(id);
             if (application == null)
@@ -266,7 +351,9 @@ namespace DormManagementApi.Controllers
         {
             var userData = UsersController.ExtractToken(User);
             if (userData == null)
+            {
                 return Unauthorized("Invalid token");
+            }
 
             var application = applicationService.Get(id);
             if (application == null)

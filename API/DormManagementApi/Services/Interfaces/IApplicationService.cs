@@ -139,6 +139,7 @@ namespace DormManagementApi.Repositories.Interfaces
                 List<DormPreference> applicationPreferences = context.DormPreference.Where(x => x.Application.Equals(application.Id)).ToList();
                 List<Dorm> dorms = context.Dorm.ToList();
                 Dictionary<int, string> preferences = new Dictionary<int, string>();
+                string? assignedDormName = application.AssignedDorm != null ? context.Dorm.Find(application.AssignedDorm).Name : null;
                 foreach (DormPreference pref in applicationPreferences)
                 {
                     preferences.Add(pref.Preference, dorms.Where(dorm => dorm.Id.Equals(pref.Dorm)).FirstOrDefault().Name);
@@ -146,7 +147,7 @@ namespace DormManagementApi.Repositories.Interfaces
                 }
 
                 UserApplicationDto userApplicationDto = new UserApplicationDto(application.Id, application.ApplicationName, userProfile.FirstName + " " + userProfile.LastName,
-                    faculty.Name, application.Year, application.LastUpdate, status, application.Comment, application.AssignedDorm, preferences);
+                    faculty.Name, application.Year, application.LastUpdate, status, application.Comment, application.AssignedDorm, assignedDormName, preferences);
 
                 result.Add(userApplicationDto);
             }

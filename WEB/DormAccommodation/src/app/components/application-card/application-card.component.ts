@@ -13,7 +13,7 @@ import {DatePipe} from '@angular/common';
 export class ApplicationCardComponent implements OnInit {
 
   @Input() currentApplication: UserApplicationDto = new UserApplicationDto(0, "???", "Student cu nume lung", "Facultatea de cuvinte lungi",
-    0, new Date(), new Status(0, ""), "??", 0, new Map());
+    0, new Date(), new Status(0, ""), "??", 0, "???", new Map());
   @Output() viewDetailsEvent = new EventEmitter<number>();
 
   constructor() {

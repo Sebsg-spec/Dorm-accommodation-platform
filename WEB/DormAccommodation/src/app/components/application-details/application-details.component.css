@@ -195,6 +195,28 @@ select.form-control {
   color: #1a4977;
 }
 
+.btn-success {
+  color: white;
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-success:hover:not([disabled]) {
+  background-color: white;
+  color: #28a745;
+}
+
+.btn-danger {
+  color: white;
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover:not([disabled]) {
+  background-color: white;
+  color: #dc3545;
+}
+
 .btn[disabled] {
   opacity: 0.65;
   cursor: not-allowed;
@@ -294,4 +316,29 @@ footer {
   100% {
     opacity: 1;
   }
+}
+
+.action-buttons-section {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.action-buttons-section h3 {
+  color: #343a40;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.action-buttons-section p {
+  margin-bottom: 15px;
+}
+
+.action-buttons-section .button-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
 } 

@@ -33,10 +33,11 @@ namespace DormManagementApi.Models
         public Status Status { get; set; }
         public string? Comment { get; set; }
         public int? AssignedDorm { get; set; }
+        public string? AssignedDormName { get; set; }
         public Dictionary<int,string> Preferences { get; set; }
 
 
-        public UserApplicationDto(int applicationId, string applicationName, string studentName, string faculty, int year, DateTime lastUpdate, Status status, string? comment, int? assignedDorm, Dictionary<int, string> preferences)
+        public UserApplicationDto(int applicationId, string applicationName, string studentName, string faculty, int year, DateTime lastUpdate, Status status, string? comment, int? assignedDorm, string? assignedDormName, Dictionary<int, string> preferences)
         {
             ApplicationId = applicationId;
             ApplicationName = applicationName == null || applicationName.Length == 0 ? "???" : applicationName;
@@ -47,6 +48,7 @@ namespace DormManagementApi.Models
             Status = status;
             Comment = comment;
             AssignedDorm = assignedDorm;
+            AssignedDormName = assignedDormName;
             Preferences = preferences;
         }
     }

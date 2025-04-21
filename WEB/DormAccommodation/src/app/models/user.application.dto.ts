@@ -10,10 +10,11 @@ export class UserApplicationDto {
   status: Status;
   comment: string;
   assignedDorm: number;
+  assignedDormName: string;
   preferences: Map<number,string>
 
   constructor(applicationId: number,applicationName: string, studentName: string, faculty: string, year: number,
-              lastUpdate: Date, status: Status, comment: string, assignedDorm: number,
+              lastUpdate: Date, status: Status, comment: string, assignedDorm: number, assignedDormName: string,
               preferences: Map<number,string>) {
     this.applicationId = applicationId;
     this.applicationName = applicationName;
@@ -24,6 +25,7 @@ export class UserApplicationDto {
     this.status = status;
     this.comment = comment;
     this.assignedDorm = assignedDorm;
+    this.assignedDormName = assignedDormName;
     this.preferences = preferences;
   }
 }

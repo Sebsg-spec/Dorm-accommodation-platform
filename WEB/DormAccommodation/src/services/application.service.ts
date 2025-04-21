@@ -49,6 +49,14 @@ export class ApplicationService {
       responseType: 'blob'
     });
   }
+
+  acceptApplication(applicationId: number): Observable<void> {
+    return this.http.post<void>(`${Consts.APPLICATIONS}/${applicationId}/accept`, {});
+  }
+
+  declineApplication(applicationId: number): Observable<void> {
+    return this.http.post<void>(`${Consts.APPLICATIONS}/${applicationId}/decline`, {});
+  }
 }
 
 

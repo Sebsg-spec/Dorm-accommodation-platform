@@ -18,7 +18,7 @@
         <p><strong>Ultima actualizare:</strong> {{ application.lastUpdate | date:'dd/MM/yyyy HH:mm' }}</p>
         <p><strong>Status:</strong> {{ application.status.name }}</p>
         <p><strong>Comentariu:</strong> {{ application.comment || 'Niciun comentariu' }}</p>
-        <p><strong>Cămin alocat:</strong> {{ application.assignedDorm ? application.assignedDorm : 'Nealocat' }}</p>
+        <p><strong>Cămin alocat:</strong> {{ application.assignedDormName ? application.assignedDormName : 'Nealocat' }}</p>
         
         <div *ngIf="hasPreferences()">
           <h5>Preferințe cămin</h5>
@@ -53,7 +53,32 @@
         </div>
       </div>
 
-      <div *ngIf="userRole === 3" class="status-update-section">
+      <div *ngIf="(userRole === 2 && application?.status?.id === 4) || actionSuccess" class="action-buttons-section">
+        <h3>Acțiuni disponibile</h3>
+        <p>Ați fost repartizat la {{ application.assignedDormName }}. Vă rugăm să acceptați sau să refuzați repartizarea:</p>
+        <div class="button-group">
+          <button 
+            [disabled]="actionLoading || actionSuccess" 
+            class="btn btn-success" 
+            (click)="acceptApplication()">
+            <span *ngIf="actionLoading">Se procesează...</span>
+            <span *ngIf="!actionLoading">Accept repartizarea</span>
+          </button>
+          <button 
+            [disabled]="actionLoading || actionSuccess" 
+            class="btn btn-danger" 
+            (click)="declineApplication()">
+            <span *ngIf="actionLoading">Se procesează...</span>
+            <span *ngIf="!actionLoading">Refuz repartizarea</span>
+          </button>
+          <div *ngIf="actionSuccess" class="success-checkmark">
+            <div class="check-icon"></div>
+            <span class="success-message">Acțiune procesată cu succes!</span>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="userRole === 3 && application?.status?.id !== 5 && application?.status?.id !== 7" class="status-update-section">
         <h3>Actualizare Status</h3>
         <div class="form-group">
           <label for="statusSelect">Status nou:</label>
@@ -68,7 +93,7 @@
         </div>
         <div class="button-group">
           <button 
-            [disabled]="updateStatusLoading || statusComment.length < 5" 
+            [disabled]="updateStatusLoading || updateSuccess || statusComment.length < 5" 
             class="btn btn-primary" 
             (click)="updateApplicationStatus()">
             <span *ngIf="updateStatusLoading">Se actualizează...</span>
