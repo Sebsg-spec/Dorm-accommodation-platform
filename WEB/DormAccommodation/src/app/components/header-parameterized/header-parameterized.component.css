@@ -79,3 +79,13 @@ button:hover {
   margin-left: 2%;
   color: #e83e8c;
 }
+
+.separator {
+  border-top: 1px solid #1a4977;
+  width: 95%;
+  margin-left: 2.5%;
+  margin-right: 2.5%;
+
+  margin-top: 2%;
+  margin-bottom: 0.5%;
+}

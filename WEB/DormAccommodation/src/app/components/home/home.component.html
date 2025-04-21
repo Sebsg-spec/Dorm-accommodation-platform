@@ -24,7 +24,8 @@
           <div *ngIf="openApplications.length > 0" class="grid-container">
             <div *ngFor="let app of openApplications" class="grid-item">
               <app-application-card [currentApplication]="app" 
-                (viewDetailsEvent)="GoToApplicationDetails($event)"></app-application-card>
+                (viewDetailsEvent)="GoToApplicationDetails($event)"
+                (updateApplicationEvent)="GoToUpdateApplication($event)"></app-application-card>
             </div>
           </div>
           <div *ngIf="openApplications.length === 0">

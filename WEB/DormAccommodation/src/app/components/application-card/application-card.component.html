@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" [ngClass]="{'needs-action': currentApplication.status.id === 2 && userRole === 2}">
   <div class="card-header">
     <div class="fas fa-solid fa-paste icon-item"></div>
     <div>
@@ -15,6 +15,10 @@
 
     <div class="separator"></div>
     <div class="footer">
+      <button *ngIf="userRole === 2 && currentApplication.status.id === 2" 
+              (click)="GoToUpdateApplication()" 
+              style="margin-right: 10px;"
+              class="action-needed">Modifică</button>
       <button (click)="GoToApplicationDetails()">Detalii</button>
     </div>
   </div>

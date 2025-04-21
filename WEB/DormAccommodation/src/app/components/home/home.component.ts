@@ -55,4 +55,8 @@ export class HomeComponent implements OnInit {
   GoToApplicationDetails(applicationId: number) {
     this.router.navigate(['application-details', applicationId]);
   }
+
+  GoToUpdateApplication(applicationId: number) {
+    this.router.navigate(['application-update', applicationId]);
+  }
 }

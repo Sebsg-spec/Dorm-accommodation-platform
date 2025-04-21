@@ -57,6 +57,8 @@ export class ApplicationService {
   declineApplication(applicationId: number): Observable<void> {
     return this.http.post<void>(`${Consts.APPLICATIONS}/${applicationId}/decline`, {});
   }
+
+  updateDocumentsBatch(applicationId: number, update:FormData): Observable<void> {
+    return this.http.post<void>(`${Consts.APPLICATIONS}/${applicationId}/batch-update`, update); 
+  }
 }
-
-

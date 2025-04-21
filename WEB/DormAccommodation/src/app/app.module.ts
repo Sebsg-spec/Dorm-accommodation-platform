@@ -31,6 +31,7 @@ import { Profile } from './models/profile.model';
 import { HeaderParameterizedComponent } from './components/header-parameterized/header-parameterized.component';
 import { JwtInterceptor } from './utils/jwt.interceptor';
 import { ApplicationCardComponent } from './components/application-card/application-card.component';
+import { ApplicationUpdateComponent } from './components/application-update/application-update.component';
 
 
 
@@ -42,6 +43,7 @@ const routes: Routes = [
   { path: 'management', component: ManagementComponent, canActivate: [authGuardGuard] },
   { path: 'user-profile', component: UserProfileComponent, canActivate: [authGuardGuard]},
   { path: 'application-details/:id', component: ApplicationDetailsComponent, canActivate: [authGuardGuard]},
+  { path: 'application-update/:id', component: ApplicationUpdateComponent, canActivate: [authGuardGuard]},
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 
@@ -58,7 +60,8 @@ const routes: Routes = [
     HeaderComponent,
     HeaderParameterizedComponent,
     ApplicationCardComponent,
-    ApplicationDetailsComponent
+    ApplicationDetailsComponent,
+    ApplicationUpdateComponent
   ],
   imports: [
     BrowserModule,

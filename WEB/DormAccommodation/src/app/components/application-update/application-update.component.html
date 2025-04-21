@@ -1,0 +1,123 @@
+<div class="component">
+  <app-header-parameterized [hasUserLoginCard]="true"></app-header-parameterized>
+  <div class="content">
+    <div *ngIf="loading" class="loading">
+      <p>Se încarcă datele...</p>
+    </div>
+    
+    <div *ngIf="!loading && errorMessage" class="error">
+      <p>{{ errorMessage }}</p>
+    </div>
+    
+    <div *ngIf="!loading && !errorMessage && application" class="application-update">
+      <button class="secondary-btn" routerLink="/home" style="margin-bottom: 16px;">Înapoi</button>
+      <h2>Actualizare dosar</h2>
+      <div class="details-card">
+        <p><strong>Nr. înregistrare:</strong> {{ application.applicationName }}</p>
+        <p><strong>Student:</strong> {{ application.studentName }}</p>
+        <p><strong>Facultate:</strong> {{ application.faculty }}</p>
+        <p><strong>Anul de studiu:</strong> {{ application.year }}</p>
+        <p><strong>Ultima actualizare:</strong> {{ application.lastUpdate | date: 'dd.MM.yyyy, h:mm a' }}</p>
+        <p><strong>Status:</strong> {{ application.status.name }}</p>
+        <p><strong>Comentariu:</strong> {{ application.comment || 'Niciun comentariu' }}</p>
+        
+        <div *ngIf="hasPreferences()">
+          <h5>Preferințe cămin</h5>
+          <ol>
+            <li *ngFor="let pref of application.preferences | keyvalue">
+              {{ pref.value }}
+            </li>
+          </ol>
+        </div>
+      </div>
+      
+      <div *ngIf="!confirmationMode">
+        <div class="pdf-section">
+          <h3>Documente existente</h3>
+          <div class="pdf-container">
+            <div class="pdf-file-list">
+              <p *ngIf="files.length === 0">Nu există documente disponibile.</p>
+              <ul>
+                <li *ngFor="let file of files" 
+                    (click)="viewPdf(file)" 
+                    [class.active]="file === selectedFile"
+                    [class.marked-delete]="isMarkedForDeletion(file)">
+                  <span class="filename">{{ file }}</span>
+                  <button class="delete-btn" (click)="toggleDeleteFile(file); $event.stopPropagation()">
+                    {{ isMarkedForDeletion(file) ? 'Păstrează' : 'Șterge' }}
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div class="pdf-viewer">
+              <div *ngIf="fileLoading" class="pdf-loading">
+                <p>Se încarcă documentul...</p>
+              </div>
+              <div *ngIf="!fileLoading && !fileObject" class="pdf-placeholder">
+                <p>Selectați un document pentru vizualizare</p>
+              </div>
+              <iframe *ngIf="!fileLoading && fileObject" [src]="fileObject" width="100%" height="600"></iframe>
+            </div>
+          </div>
+        </div>
+        
+        <div class="upload-section">
+          <h3>Încarcă documente noi</h3>
+          <input 
+            type="file" 
+            id="newDocuments"
+            #fileInput
+            (change)="onFileChange($event)"
+            accept=".pdf"
+            multiple
+          />
+          
+          <p *ngIf="newDocumentFiles.length > 0" class="file-count">
+            {{ newDocumentFiles.length }} {{ newDocumentFiles.length === 1 ? 'fișier selectat' : 'fișiere selectate' }}
+          </p>
+          
+          <div *ngIf="newDocumentFiles.length > 0" class="new-files-list">
+            <h4>Documente noi:</h4>
+            <ul>
+              <li *ngFor="let file of newDocumentFiles; let i = index">
+                {{ file.name }}
+                <button class="delete-btn" (click)="removeNewFile(i)">Elimină</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="actions">
+          <button class="primary-btn" (click)="toggleConfirmationMode()" [disabled]="newDocumentFiles.length === 0 && documentsToDelete.length === 0">Confirmă modificările</button>
+          <button class="secondary-btn" routerLink="/home">Înapoi</button>
+        </div>
+      </div>
+      
+      <!-- Confirmation view mode -->
+      <div *ngIf="confirmationMode" class="confirmation-mode">
+        <h3>Confirmare modificări</h3>
+        
+        <div *ngIf="documentsToDelete.length > 0" class="confirmation-section">
+          <h4>Documente de șters:</h4>
+          <ul>
+            <li *ngFor="let file of documentsToDelete">{{ file }}</li>
+          </ul>
+        </div>
+        
+        <div *ngIf="newDocumentFiles.length > 0" class="confirmation-section">
+          <h4>Documente de adăugat:</h4>
+          <ul>
+            <li *ngFor="let file of newDocumentFiles">{{ file.name }}</li>
+          </ul>
+        </div>
+        
+        <p class="warning">Atenție! Aceste modificări nu pot fi anulate după confirmare.</p>
+        
+        <div class="actions">
+          <button class="primary-btn" (click)="applyChanges()">Aplică modificările</button>
+          <button class="secondary-btn" (click)="cancelChanges()">Anulează</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

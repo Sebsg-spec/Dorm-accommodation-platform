@@ -61,6 +61,10 @@ namespace DormManagementApi.Controllers
             }
 
             var applicationData = applicationService.Get(id);
+            if (applicationData == null)
+            {
+                return NotFound();
+            }
 
             if (applicationData.User != userData.Id && userData.Role < (int)RoleLevel.Secretar)
             {
@@ -293,6 +297,88 @@ namespace DormManagementApi.Controllers
             }
 
             return application;
+        }
+
+        // POST: api/Applications/5/batch-update
+        [HttpPost]
+        [Route("{id}/batch-update")]
+        public async Task<IActionResult> BatchUpdateDocuments(int id, [FromForm] List<IFormFile> files, [FromForm] string meta)
+        {
+            var userData = UsersController.ExtractToken(User);
+            if (userData == null)
+            {
+                return Unauthorized("Invalid token");
+            }
+
+            var application = applicationService.Get(id);
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            if (application.User != userData.Id)
+            {
+                return Unauthorized("You are not authorized to update this application");
+            }
+
+            List<string> filesToDelete = [];
+
+            try
+            {
+                var deserialized = JsonSerializer.Deserialize<List<string>>(meta);
+                if (deserialized != null)
+                {
+                    filesToDelete = deserialized;
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Invalid metadata: {ex.Message}");
+            }
+
+            var applicationPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", application.Uuid);
+            if (!Directory.Exists(applicationPath))
+            {
+                return StatusCode(500, "Invalid application");
+            }
+
+            foreach (var file in filesToDelete)
+            {
+                var filePath = Path.Combine(applicationPath, file);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+            }
+
+            var existingFiles = Directory.GetFiles(applicationPath);
+            
+            for (int index = 0; index < existingFiles.Length; index++)
+            {
+                var file = existingFiles[index];
+                System.IO.File.Move(file, Path.Combine(applicationPath, $"{index + 1}.pdf"));
+            }
+
+            for (int index = 0; index < files.Count; index++)
+            {
+                var file = files[index];
+                string fileName = $"{index + existingFiles.Length + 1}.pdf";
+
+                var filePath = Path.Combine(applicationPath, fileName);
+                using var stream = new FileStream(filePath, FileMode.Create);
+                await file.CopyToAsync(stream);
+            }
+
+            application.Status = 1;
+            application.LastUpdate = DateTime.UtcNow;
+
+            bool updated = applicationService.Update(application);
+            if (!updated)
+            {
+                return StatusCode(500, "Could not update status object");
+            }
+
+            return NoContent();
         }
 
         // DELETE: api/Applications/5

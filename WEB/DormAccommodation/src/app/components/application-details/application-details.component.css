@@ -27,10 +27,6 @@
   color: #dc3545;
 }
 
-.application-details {
-  margin-top: 30px;
-}
-
 h2 {
   color: #343a40;
   margin-bottom: 20px;
@@ -223,22 +219,18 @@ select.form-control {
 }
 
 .back-button {
-  display: flex;
-  border: 1px solid #1a4977;
-  color: white;
-  padding: 8px 16px;
-  background-color: #1a4977;
-  border-radius: 5px;
-  font-weight: 600;
-  min-width: 100px;
-  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  font-weight: 500;
+  border: none;
+  transition: background-color 0.2s;
+  background-color: #e9ecef;
+  color: #495057;
 }
 
 .back-button:hover {
-  background-color: white;
-  color: #1a4977;
+  background-color: #dee2e6;
 }
 
 .button:hover {
