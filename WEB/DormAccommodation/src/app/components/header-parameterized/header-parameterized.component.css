@@ -51,33 +51,41 @@
   flex-direction: column;
   min-width: 20%;
   max-width: 25%;
+  gap: 8px;
 }
 
 .login-card-item {
   display: flex;
   box-sizing: border-box;
-  padding: 5px;
-  border-radius: 20px;
+  padding: 8px 16px;
+  border-radius: 6px;
   flex-direction: row;
-  margin-bottom: 5%;
-  height: 35%;
+  align-items: center;
   color: white;
   background-color: #1a4977;
-  align-items: center;
-  font-size: small;
+  font-weight: 500;
+  font-size: 14px;
   cursor: pointer;
-  border: none;
+  border: 1px solid #1a4977;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-button:hover {
+.login-card-item:hover {
+  background-color: #3980c2;
+  color: #ffffff;
+}
+
+button:hover:not(.login-card-item) {
   color: #cccccc;
 }
 
 .login-card-item-icon {
   padding-right: 1%;
-  margin-right: 2%;
-  margin-left: 2%;
-  color: #e83e8c;
+  margin-right: 10px;
+  margin-left: 2px;
+  color: #cccccc;
+  font-size: 16px;
 }
 
 .separator {
