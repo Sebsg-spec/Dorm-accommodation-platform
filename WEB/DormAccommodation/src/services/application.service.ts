@@ -59,6 +59,6 @@ export class ApplicationService {
   }
 
   updateDocumentsBatch(applicationId: number, update:FormData): Observable<void> {
-    return this.http.post<void>(`${Consts.APPLICATIONS}/${applicationId}/batch-update`, update); 
+    return this.http.post<void>(`${Consts.APPLICATIONS}/${applicationId}/BatchUpdate`, update); 
   }
 }

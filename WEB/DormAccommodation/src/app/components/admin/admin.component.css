@@ -1,0 +1,212 @@
+* {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.component {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1%;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.admin-title {
+  color: #333;
+  text-align: center;
+  font-size: 28px;
+  flex-grow: 1;
+  margin: 0;
+}
+
+.back-button {
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  border: none;
+  transition: background-color 0.2s;
+  background-color: #e9ecef;
+  color: #495057;
+  position: absolute;
+  left: 0;
+  z-index: 1;
+}
+
+.back-button:hover {
+  background-color: #dee2e6;
+}
+
+.control-panel {
+  display: flex;
+  margin-bottom: 24px;
+  padding: 16px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.control-button {
+  padding: 12px 20px;
+  background-color: #1a4977;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 180px;
+  margin: 0 auto;
+}
+
+.control-button:hover:not(:disabled) {
+  background-color: #0d3c6e;
+}
+
+.control-button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.success-text {
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: fadeIn 0.5s ease;
+}
+
+.section {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+  font-size: 16px;
+}
+
+.section-title {
+  color: #1e3a8a;
+  font-size: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.loading, .error-message {
+  text-align: center;
+  padding: 20px;
+  font-size: 16px;
+}
+
+.error {
+  text-align: center;
+  margin-top: 50px;
+  color: #dc3545;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.users-table th, .users-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.users-table th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.users-table tr:hover {
+  background-color: #f9fafb;
+}
+
+.users-table select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.users-table select:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.action-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 20px;
+}
+
+.save-button {
+  padding: 6px 12px;
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  border: none;
+  border-radius: 4px;
+  cursor: not-allowed;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  width: 100px;
+}
+
+.save-button.active {
+  background-color: #1a4977;
+  color: white;
+  cursor: pointer;
+}
+
+.save-button.active:hover {
+  background-color: #0d3c6e;
+}
+
+.success-checkmark {
+  color: #10b981;
+  font-size: 18px;
+  animation: fadeIn 0.5s ease;
+  min-width: 20px;
+  display: inline-block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -17,6 +17,9 @@ export enum Consts {
 
   LOGIN = `${BASE_URL}/Users/login`,
   REGISTER = `${BASE_URL}/Users/register`,
+  
+  USERS = `${BASE_URL}/Users`,
+  USER_UPDATE_ROLE = `${BASE_URL}/Users/UpdateRole`,
 
   USER_PROFILE = `${BASE_URL}/Profiles`,
 

@@ -8,6 +8,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using DormManagementApi.Validators;
 using DormManagementApi.Services.Interfaces;
+using DormManagementApi.Attributes;
 
 namespace DormManagementApi.Controllers
 {
@@ -90,9 +91,9 @@ namespace DormManagementApi.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUser()
+        public async Task<ActionResult<IEnumerable<UserDetailsDto>>> GetUser()
         {
-            var usersList = _usersService.GetAll();
+            var usersList = _usersService.GetAllDetails();
             return Ok(usersList);
         }
 
@@ -108,6 +109,57 @@ namespace DormManagementApi.Controllers
             }
 
             return user;
+        }
+
+        // POST: api/Users/UpdateRole
+        [HttpPatch("UpdateRole")]
+        [Role(RoleLevel.Admin)]
+        public async Task<IActionResult> UpdateRole(UpdateRoleDto updateRoleDto)
+        {
+            var user = _usersService.Get(updateRoleDto.Id);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            user.Role = updateRoleDto.Role;
+
+            bool updated = _usersService.Update(user);
+            if (!updated)
+            {
+                return StatusCode(500, "Could not update user role");
+            }
+
+            return Ok();
+        }
+
+        // POST: api/Users/ProcessApplications
+        [HttpPost("ProcessApplications")]
+        [Role(RoleLevel.Secretar)]
+        public async Task<IActionResult> ProcessApplications()
+        {
+            var userData = ExtractToken(HttpContext.User);
+            if (userData == null)
+            {
+                return Unauthorized("Invalid token");
+            }
+
+            // Get user faculty
+            var faculty = _usersService.GetFaculty(userData.Id);
+            if (faculty == null)
+            {
+                return BadRequest("User does not have a faculty");
+            }
+
+            // Get dorm applications for the user's faculty that have a status id of 4
+            var dormApplications = _usersService.GetDormApplications(faculty, 4);
+
+            // TODO: Implement the logic to process dorm applications:
+            //  - Order by student's grade
+            //  - Loop students and check each preference
+            //  - Assign to first preference that still has capacity
+
+            return Ok();
         }
 
         // PUT: api/Users/5

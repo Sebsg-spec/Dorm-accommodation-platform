@@ -13,6 +13,10 @@
         <div class="fas fa-user login-card-item-icon"></div>
         {{EmailAddress}}
       </button>
+      <button *ngIf="userRole === 3 || userRole === 4" class="login-card-item" (click)="GoToAdmin()">
+        <div class="fas fa-cog login-card-item-icon"></div>
+        Panou Administrație
+      </button>
       <button class="login-card-item" (click)="Logout()">
         <div class="fas fa-sign-out-alt login-card-item-icon"></div>
         Logout

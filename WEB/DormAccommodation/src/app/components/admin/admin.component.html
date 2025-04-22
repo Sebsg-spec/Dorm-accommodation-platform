@@ -1,1 +1,76 @@
-<p>admin works!</p>
+<div class="component">
+  <app-header-parameterized [hasUserLoginCard]="true"></app-header-parameterized>
+  
+  <div *ngIf="!loading && errorMessage" class="error">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <div class="content" *ngIf="!loading && !errorMessage">
+    <div class="header-container">
+      <button class="back-button" routerLink="/home">Înapoi</button>
+      <h1 class="admin-title">Panou Administrație</h1>
+    </div>
+    
+    <div class="control-panel" *ngIf="userRole === 3">
+      <button 
+        class="control-button"
+        [disabled]="processingApplications"
+        (click)="processApplications()">
+        <span *ngIf="!processingApplications && !processingSuccess">Repartizare dosare</span>
+        <span *ngIf="processingApplications">Se procesează...</span>
+        <span *ngIf="!processingApplications && processingSuccess" class="success-text">
+          <i class="fas fa-check-circle"></i> Procesare finalizată
+        </span>
+      </button>
+    </div>
+
+    <div class="section" *ngIf="userRole === 4">
+      <h2 class="section-title">Listă utilizatori</h2>
+      
+      <div *ngIf="loading" class="loading">
+        <span>Se încarcă utilizatorii...</span>
+      </div>
+      
+      <div *ngIf="!loading" class="users-list">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Nume</th>
+              <th>Prenume</th>
+              <th>Rol curent</th>
+              <th>Acțiuni</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td>{{ user.email }}</td>
+              <td>{{ user.lastName }}</td>
+              <td>{{ user.firstName }}</td>
+              <td>
+                <select 
+                  [disabled]="isAdmin(originalRoles[user.id])" 
+                  [(ngModel)]="selectedRoles[user.id]" 
+                  (change)="onRoleChange(user.id, selectedRoles[user.id])">
+                  <option *ngFor="let role of roles" [value]="role.id">{{ role.name }}</option>
+                </select>
+              </td>
+              <td class="action-cell">
+                <button 
+                  class="save-button" 
+                  [disabled]="!isRoleChanged(user.id)" 
+                  [class.active]="isRoleChanged(user.id)"
+                  (click)="updateUserRole(user.id)">
+                  Salvează
+                </button>
+                <span class="success-checkmark" *ngIf="successfulUpdates[user.id]">
+                  <i class="fas fa-check-circle"></i>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

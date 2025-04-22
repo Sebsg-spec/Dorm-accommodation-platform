@@ -299,9 +299,9 @@ namespace DormManagementApi.Controllers
             return application;
         }
 
-        // POST: api/Applications/5/batch-update
+        // POST: api/Applications/5/BatchUpdate
         [HttpPost]
-        [Route("{id}/batch-update")]
+        [Route("{id}/BatchUpdate")]
         public async Task<IActionResult> BatchUpdateDocuments(int id, [FromForm] List<IFormFile> files, [FromForm] string meta)
         {
             var userData = UsersController.ExtractToken(User);

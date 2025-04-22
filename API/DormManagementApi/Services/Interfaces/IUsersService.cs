@@ -11,12 +11,16 @@ namespace DormManagementApi.Services.Interfaces
         public bool Exists(int id);
         public bool Exists(string email);
         public IEnumerable<User> GetAll();
+        public IEnumerable<UserDetailsDto> GetAllDetails();
         public User Get(int id);
         public User Get(string email);
         public bool Create(User user);
         public bool Create(UserRegisterDto userRegisterDto);
         public bool Update(User user);
         public bool Delete(int id);
+
+        public int? GetFaculty(int id);
+        public IEnumerable<Models.Application> GetDormApplications(int? faculty, int status);
     }
 
     public class UsersService : IUsersService
@@ -120,11 +124,54 @@ namespace DormManagementApi.Services.Interfaces
             return context.User.ToList();
         }
 
+        public IEnumerable<UserDetailsDto> GetAllDetails()
+        {
+            var users = context.User.ToList();
+            var profiles = context.Profile.ToList();
+            var userDetails = from user in users
+                              join profile in profiles on user.Id equals profile.Id
+                              select new UserDetailsDto
+                              {
+                                  Id = user.Id,
+                                  Email = user.Email,
+                                  FirstName = profile.FirstName,
+                                  LastName = profile.LastName,
+                                  Role = user.Role
+                              };
+
+            return userDetails.ToList();
+        }
+
         public bool Update(User user)
         {
             context.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             int changed = context.SaveChanges();
             return changed > 0;
+        }
+
+        public int? GetFaculty(int id)
+        {
+            var profile = context.Profile.Find(id);
+            if (profile == null)
+            {
+                return null;
+            }
+
+            return profile.Faculty;
+        }
+
+        public IEnumerable<Models.Application> GetDormApplications(int? faculty, int status)
+        {
+            if (faculty == null)
+            {
+                return [];
+            }
+
+            var applications = context.Application
+                .Where(a => a.Faculty == faculty && a.Status == status)
+                .ToList();
+
+            return applications;
         }
     }
 }

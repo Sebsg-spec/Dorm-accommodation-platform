@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import {Consts} from '../../utils/Consts';
 import {ApplicationService} from '../../../services/application.service';
 import {UserApplicationDto} from '../../models/user.application.dto';
+import { ProfileService } from '../../../services/profile.service';
 
 @Component({
   selector: 'app-home',
@@ -16,10 +17,14 @@ export class HomeComponent implements OnInit {
   public history: UserApplicationDto[] = [];
   public openApplications: UserApplicationDto[] = [];
   public showWhat = Consts.APPLICATIONS_LOADING;
-  protected readonly Consts = Consts;
 
+  protected readonly Consts = Consts;
+  userRole: number | null = null;
+  
   constructor(private router: Router,
-              private applicationService: ApplicationService) {
+              private applicationService: ApplicationService,
+              private profileService: ProfileService) {
+    this.userRole = parseInt(this.profileService.getUserProp("role") ?? "0");
   }
 
   ngOnInit(): void {
