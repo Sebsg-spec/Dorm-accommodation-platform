@@ -8,20 +8,16 @@
     <div *ngIf="showWhat == Consts.APPLICATIONS_LOADING" class="alert alert-secondary registration-period-ended"
     role="alert">Se încarcă dosarele...
     </div>
-    <button *ngIf="showWhat == Consts.APPLICATIONS_OPEN_NONE_REGISTERED && userRole === 1" class="alert alert-info create-application-button"
+    <button *ngIf="showWhat == Consts.APPLICATIONS_OPEN_NONE_REGISTERED" class="alert alert-info create-application-button"
          role="alert"
          (click)="GoToDormRegistration()">Încarcă dosar
     </button>
 
-    <div *ngIf="showWhat == Consts.APPLICATIONS_OPEN_NONE_REGISTERED && userRole !== 1" class="alert alert-info create-application-button"
-        role="alert">
-      Nu există dosare disponibile pentru tine.
-    </div>
-
     <div class="applications" *ngIf="showWhat == Consts.APPLICATIONS_OPEN_REGISTERED_ALREADY">
       <div class="applications-header">
         <nav class="nav-bar">
-          <button (click)="switchTabs()" [class.active]="activeTab === 'your-applications'">Înregistrările tale</button>
+          <button *ngIf="userRole === 1" (click)="switchTabs()" [class.active]="activeTab === 'your-applications'">Înregistrările tale</button>
+          <button *ngIf="userRole !== 1" (click)="switchTabs()" [class.active]="activeTab === 'your-applications'">Dosare</button>
           <button (click)="switchTabs()" [class.active]="activeTab === 'history'">Istoric</button>
         </nav>
       </div>
