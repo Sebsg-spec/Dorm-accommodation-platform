@@ -20,6 +20,10 @@ export class HomeComponent implements OnInit {
 
   protected readonly Consts = Consts;
   userRole: number | null = null;
+
+  applicationPageSizeOptions = [4, 8, 12];
+  applicationPageSize = 4;
+  applicationCurrentPage = 1;
   
   constructor(private router: Router,
               private applicationService: ApplicationService,
@@ -63,5 +67,18 @@ export class HomeComponent implements OnInit {
 
   GoToUpdateApplication(applicationId: number) {
     this.router.navigate(['application-update', applicationId]);
+  }
+
+  get paginatedApplications() {
+    const startIndex = (this.applicationCurrentPage - 1) * this.applicationPageSize;
+    return this.openApplications.slice(startIndex, startIndex + this.applicationPageSize);
+  }
+  
+  get applicationTotalPages() {
+    return Math.ceil(this.openApplications.length / this.applicationPageSize);
+  }
+  
+  onApplicationPageSizeChange() {
+    this.applicationCurrentPage = 1;
   }
 }

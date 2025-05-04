@@ -21,19 +21,42 @@
           <button (click)="switchTabs()" [class.active]="activeTab === 'history'">Istoric</button>
         </nav>
       </div>
-      <div class="cards-container">
-        <div *ngIf="activeTab === 'your-applications'">
-          <div *ngIf="openApplications.length > 0" class="grid-container">
-            <div *ngFor="let app of openApplications" class="grid-item">
-              <app-application-card [currentApplication]="app" 
-                (viewDetailsEvent)="GoToApplicationDetails($event)"
-                (updateApplicationEvent)="GoToUpdateApplication($event)"></app-application-card>
-            </div>
-          </div>
-          <div *ngIf="openApplications.length === 0">
-            Nu există dosare active
+      <div *ngIf="activeTab === 'your-applications'">
+        <div *ngIf="openApplications.length > 0" class="grid-container">
+          <div *ngFor="let app of paginatedApplications" class="grid-item">
+            <app-application-card [currentApplication]="app"
+              (viewDetailsEvent)="GoToApplicationDetails($event)"
+              (updateApplicationEvent)="GoToUpdateApplication($event)">
+            </app-application-card>
           </div>
         </div>
+        <div *ngIf="openApplications.length === 0">
+          Nu există dosare active
+        </div>
+
+        <div class="pagination-container">
+          <button (click)="applicationCurrentPage = applicationCurrentPage - 1"
+                  [disabled]="applicationCurrentPage === 1"
+                  class="pagination-button"> Prev </button>
+        
+          <span class="pagination-info">Page {{ applicationCurrentPage }} of {{ applicationTotalPages }} </span>
+        
+          <button (click)="applicationCurrentPage = applicationCurrentPage + 1"
+                  [disabled]="applicationCurrentPage === applicationTotalPages"
+                  class="pagination-button">  Next </button>
+        </div>
+        
+
+        <div class="page-size-selector">
+          <label for="applicationPageSize">Afișează</label>
+          <select id="applicationPageSize" [(ngModel)]="applicationPageSize" (change)="onApplicationPageSizeChange()">
+            <option *ngFor="let size of applicationPageSizeOptions" [value]="size">{{ size }}</option>
+          </select>
+          <span>pe pagină</span>
+        </div>
+
+
+      </div>
         <ng-container *ngIf="activeTab === 'history'">
           <div *ngIf="history.length > 0" class="grid-container">
             <div *ngFor="let t of history" class="grid-item">
@@ -47,9 +70,6 @@
         </ng-container>
       </div>
     </div>
-  </div>
-
-
   <footer>
     <br>
     <br>

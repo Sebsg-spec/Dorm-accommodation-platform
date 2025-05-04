@@ -8,7 +8,7 @@
       <p>{{ errorMessage }}</p>
     </div>
     <div *ngIf="!loading && !errorMessage && application" class="application-details">
-      <button class="back-button" routerLink="/home" style="margin-bottom: 16px;">Înapoi</button>
+
       <h2>Detalii Dosar</h2>
       <div class="details-card">
         <p><strong>Nr. înregistrare:</strong> {{ application.applicationName }}</p>
@@ -106,7 +106,7 @@
         </div>
       </div>
 
-      <button class="back-button" routerLink="/home">Înapoi</button>
+
     </div>
   </div>
   
@@ -130,4 +130,7 @@
     </div>
     <br>
   </footer>
+  <a class="fixed-button" routerLink="/home">
+    Înapoi
+  </a>
 </div> 

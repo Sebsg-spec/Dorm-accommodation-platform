@@ -7,7 +7,7 @@
 
   <div class="content" *ngIf="!loading && !errorMessage">
     <div class="header-container">
-      <button class="back-button" routerLink="/home">Înapoi</button>
+
       <h1 class="admin-title">Panou Administrație</h1>
     </div>
     
@@ -43,7 +43,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let user of users">
+            <tr *ngFor="let user of paginatedUsers">
+
               <td>{{ user.email }}</td>
               <td>{{ user.lastName }}</td>
               <td>{{ user.firstName }}</td>
@@ -70,7 +71,35 @@
             </tr>
           </tbody>
         </table>
+        <div class="pagination-container">
+          <button (click)="userCurrentPage = userCurrentPage - 1" 
+                  [disabled]="userCurrentPage === 1" 
+                  class="pagination-button">
+            Prev
+          </button>
+        
+          <span class="pagination-info">Page {{ userCurrentPage }} of {{ userTotalPages }}</span>
+        
+          <button (click)="userCurrentPage = userCurrentPage + 1" 
+                  [disabled]="userCurrentPage === userTotalPages" 
+                  class="pagination-button">
+            Next
+          </button>
+        </div>
+
+        <div class="page-size-selector">
+          <label for="userPageSize">Afișează</label>
+          <select id="userPageSize" [(ngModel)]="userPageSize" (change)="onUserPageSizeChange()">
+            <option *ngFor="let size of userPageSizeOptions" [value]="size">{{ size }}</option>
+          </select>
+          <span>pe pagină</span>
+        </div>
+
+        
       </div>
     </div>
   </div>
+  <a class="fixed-button" routerLink="/home">
+    Înapoi
+  </a>
 </div>

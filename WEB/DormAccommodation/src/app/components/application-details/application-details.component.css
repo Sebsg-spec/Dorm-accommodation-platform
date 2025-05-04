@@ -334,3 +334,23 @@ footer {
   align-items: center;
   flex-wrap: wrap;
 } 
+
+.fixed-button {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background-color:#1A4977;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  transition: background-color 0.3s;
+
+}
+
+.fixed-button:hover {
+  background-color: #0056b3;
+}

@@ -21,6 +21,10 @@ export class AdminComponent implements OnInit {
   
   processingApplications: boolean = false;
   processingSuccess: boolean = false;
+
+  userPageSizeOptions = [5, 10, 20, 50]; 
+  userPageSize = 10;
+  userCurrentPage = 1;
   
   roles = [
     { id: 1, name: 'Neverificat' },
@@ -133,4 +137,18 @@ export class AdminComponent implements OnInit {
     // Reset success indicator when changing role again
     this.successfulUpdates[userId] = false;
   }
+
+
+get paginatedUsers() {
+  const startIndex = (this.userCurrentPage - 1) * this.userPageSize;
+  return this.users.slice(startIndex, startIndex + this.userPageSize);
+}
+
+get userTotalPages() {
+  return Math.ceil(this.users.length / this.userPageSize);
+}
+
+onUserPageSizeChange() {
+  this.userCurrentPage = 1; 
+}
 }
