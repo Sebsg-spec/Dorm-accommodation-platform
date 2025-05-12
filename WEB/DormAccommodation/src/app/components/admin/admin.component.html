@@ -86,15 +86,16 @@
             Next
           </button>
         </div>
-
-        <div class="page-size-selector">
-          <label for="userPageSize">Afișează</label>
-          <select id="userPageSize" [(ngModel)]="userPageSize" (change)="onUserPageSizeChange()">
-            <option *ngFor="let size of userPageSizeOptions" [value]="size">{{ size }}</option>
-          </select>
-          <span>pe pagină</span>
+        <div class="page-size-wrapper">
+          <label for="pageSize" class="page-size-label">Afișează</label>
+          <div class="custom-select-wrapper">
+            <select id="pageSize" [(ngModel)]="userPageSize" (change)="onUserPageSizeChange()">
+              <option *ngFor="let size of userPageSizeOptions" [value]="size">{{ size }}</option>
+            </select>
+            <span class="custom-arrow"></span>
+          </div>
+          <span class="page-size-label">pe pagină</span>
         </div>
-
         
       </div>
     </div>

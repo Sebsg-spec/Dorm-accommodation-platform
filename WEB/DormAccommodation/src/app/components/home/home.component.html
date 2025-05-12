@@ -47,12 +47,15 @@
         </div>
         
 
-        <div class="page-size-selector">
-          <label for="applicationPageSize">Afișează</label>
-          <select id="applicationPageSize" [(ngModel)]="applicationPageSize" (change)="onApplicationPageSizeChange()">
-            <option *ngFor="let size of applicationPageSizeOptions" [value]="size">{{ size }}</option>
-          </select>
-          <span>pe pagină</span>
+        <div class="page-size-wrapper">
+          <label for="pageSize" class="page-size-label">Afișează</label>
+          <div class="custom-select-wrapper">
+            <select id="pageSize" [(ngModel)]="applicationPageSize" (change)="onApplicationPageSizeChange()">
+              <option *ngFor="let size of applicationPageSizeOptions" [value]="size">{{ size }}</option>
+            </select>
+            <span class="custom-arrow"></span>
+          </div>
+          <span class="page-size-label">pe pagină</span>
         </div>
 
 
