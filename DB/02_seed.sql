@@ -98,26 +98,26 @@ VALUES
 -- -------------------------
 
 INSERT INTO [dorm]
-	([dorm_group], [name], [location])
+	([dorm_group], [capacity], [name], [location])
 VALUES
-	(1, N'Căminul A1-A2', N'Str. B.P. Haşdeu nr. 90-92, Jud. Cluj'),
-	(1, N'Căminul A3-A4', N'Str. B.P. Haşdeu nr. 90-92, Jud. Cluj'),
-	(1, N'Căminul 1', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
-	(1, N'Căminul 2', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
-	(1, N'Căminul 3', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
-	(1, N'Căminul 4', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
-	(1, N'Căminul 5', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
-	(1, N'Căminul 6', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
-	(1, N'Căminul 14', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
-	(1, N'Căminul 16', N'Str. B.P. Haşdeu nr. 90-92, Jud. Cluj'),
-	(1, N'Căminul 17', N'Str. B.P. Haşdeu nr. 90-92, Jud. Cluj'),
-	(2, N'Cămin Economica I', N'Str. Teodor Mihali nr. 58, Jud. Cluj'),
-	(2, N'Cămin Economica II', N'Str. Teodor Mihali nr. 59, Jud. Cluj'),
-	(3, N'Căminul "Sport XXI"', N'Str. Pandurilor nr. 7, Jud. Cluj'),
-	(4, N'Cămin Teologic I', N'Str. Bisericii Sf. Toma nr. 2, Jud. Cluj'),
-	(5, N'Complexul de cazare al Universităţii "Babeş-Bolyai"', N'Str. Pandurilor nr. 7, Jud. Cluj'),
-	(6, N'Extensia Universitară Bistriţa', N'Str. Andrei Mureşanu nr. 3-5, Jud. Bistriţa Năsăud'),
-	(6, N'Extensia Universitară Sighetu Marmaţiei', N'Str. Avram Iancu nr. 6, Jud. Maramureş');
+	(1, 150, N'Căminul A1-A2', N'Str. B.P. Haşdeu nr. 90-92, Jud. Cluj'),
+	(1, 150, N'Căminul A3-A4', N'Str. B.P. Haşdeu nr. 90-92, Jud. Cluj'),
+	(1, 150, N'Căminul 1', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
+	(1, 150, N'Căminul 2', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
+	(1, 150, N'Căminul 3', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
+	(1, 150, N'Căminul 4', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
+	(1, 150, N'Căminul 5', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
+	(1, 150, N'Căminul 6', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
+	(1, 150, N'Căminul 14', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
+	(1, 150, N'Căminul 16', N'Str. B.P. Haşdeu nr. 90-92, Jud. Cluj'),
+	(1, 150, N'Căminul 17', N'Str. B.P. Haşdeu nr. 90-92, Jud. Cluj'),
+	(2, 150, N'Cămin Economica I', N'Str. Teodor Mihali nr. 58, Jud. Cluj'),
+	(2, 150, N'Cămin Economica II', N'Str. Teodor Mihali nr. 59, Jud. Cluj'),
+	(3, 150, N'Căminul "Sport XXI"', N'Str. Pandurilor nr. 7, Jud. Cluj'),
+	(4, 150, N'Cămin Teologic I', N'Str. Bisericii Sf. Toma nr. 2, Jud. Cluj'),
+	(5, 150, N'Complexul de cazare al Universităţii "Babeş-Bolyai"', N'Str. Pandurilor nr. 7, Jud. Cluj'),
+	(6, 150, N'Extensia Universitară Bistriţa', N'Str. Andrei Mureşanu nr. 3-5, Jud. Bistriţa Năsăud'),
+	(6, 150, N'Extensia Universitară Sighetu Marmaţiei', N'Str. Avram Iancu nr. 6, Jud. Maramureş');
 
 -- -------------------------
 
@@ -219,17 +219,17 @@ DEALLOCATE dorm_cursor;
 -- -------------------------
 
 INSERT INTO [application]
-	([application_name], [user], [faculty], [uuid], [year], [last_update], [status], [comment], [assigned_dorm])
+	([application_name], [user], [faculty], [grade], [uuid], [year], [last_update], [status], [comment], [assigned_dorm])
 VALUES
-	('SF1240924', 4, 1, '0b228048-05b1-4392-af25-87379858596e', 2025, '2024-09-24 09:12:34', 1, NULL, NULL),
-	('SF2240917', 5, 1, '334be039-e905-4246-a35f-43ffa6a4bd06', 2025, '2024-09-17 09:12:34', 2, N'Lipsă adeverință de venit', NULL),
-	('SF3240924', 6, 1, '494412be-d931-4cfc-84fb-417305edd492', 2025, '2024-09-24 09:12:34', 3, NULL, NULL),
-	('SF4240924', 7, 1, '0ebdfbbe-0128-4f3f-af5b-8daa8e5b2075', 2025, '2024-09-24 09:12:34', 4, NULL, 6),	-- assigned to first preference
-	('SF1240924', 8, 1, 'a82f6f9c-a025-4abc-9242-8e0393e5f4d6', 2025, '2025-09-24 09:12:34', 5, NULL, 9),	-- accepted second preference
-	('SF1240924', 8, 1, 'a82f6f9c-a025-4abc-9242-8e0393e5f4d6', 2023, '2023-09-24 09:12:34', 5, NULL, 9),	-- accepted second preference
-	('FMI-SFCA25-E9R1', 8, 1, 'a82f6f9c-a025-4abc-9242-8e0393e5f4d6', 2022, '2022-09-24 09:32:34', 5, NULL, 9),	-- accepted second preference
-	('SF2240324', 9, 1, '8139b3c5-37de-4b56-9ae5-d4e8a0ffdf05', 2025, '2024-03-24 09:12:34', 6, N'Media este mai mică decât ultima medie admisă', NULL),
-	('SF3240324', 10, 2, 'f546666d-7bee-48d3-b9fe-3fcd41268059', 2025, '2024-03-24 09:12:34', 7, NULL, 8);	-- refused last preference
+	('SF1240924', 4, 1, 8.12, '0b228048-05b1-4392-af25-87379858596e', 2025, '2024-09-24 09:12:34', 1, NULL, NULL),
+	('SF2240917', 5, 1, 9.43, '334be039-e905-4246-a35f-43ffa6a4bd06', 2025, '2024-09-17 09:12:34', 2, N'Lipsă adeverință de venit', NULL),
+	('SF3240924', 6, 1, 10, '494412be-d931-4cfc-84fb-417305edd492', 2025, '2024-09-24 09:12:34', 3, NULL, NULL),
+	('SF4240924', 7, 1, 7.87, '0ebdfbbe-0128-4f3f-af5b-8daa8e5b2075', 2025, '2024-09-24 09:12:34', 4, NULL, 6),	-- assigned to first preference
+	('SF1240924', 8, 1, 8.56, 'a82f6f9c-a025-4abc-9242-8e0393e5f4d6', 2025, '2025-09-24 09:12:34', 5, NULL, 9),	-- accepted second preference
+	('SF1240924', 8, 1, 9.12, 'a82f6f9c-a025-4abc-9242-8e0393e5f4d6', 2023, '2023-09-24 09:12:34', 5, NULL, 9),	-- accepted second preference
+	('FMI-SFCA25-E9R1', 8, 1, 10, 'a82f6f9c-a025-4abc-9242-8e0393e5f4d6', 2022, '2022-09-24 09:32:34', 5, NULL, 9),	-- accepted second preference
+	('SF2240324', 9, 1, 7.09, '8139b3c5-37de-4b56-9ae5-d4e8a0ffdf05', 2025, '2024-03-24 09:12:34', 6, N'Media este mai mică decât ultima medie admisă', NULL),
+	('SF3240324', 10, 2, 8.41, 'f546666d-7bee-48d3-b9fe-3fcd41268059', 2025, '2024-03-24 09:12:34', 7, NULL, 8);	-- refused last preference
 
 INSERT INTO [dorm_preference]
 	([application], [dorm], [preference])

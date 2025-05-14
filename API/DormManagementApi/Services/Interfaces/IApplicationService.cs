@@ -13,6 +13,7 @@ namespace DormManagementApi.Repositories.Interfaces
         public bool Create(ref Application application);
         public bool Update(Application application);
         public bool Delete(int id);
+        public void FreeDormSpace(int? dormId);
     }
 
     public class ApplicationService : IApplicationService
@@ -195,6 +196,16 @@ namespace DormManagementApi.Repositories.Interfaces
             }
 
             return abbreviation;
+        }
+
+        public void FreeDormSpace(int? dormId)
+        {
+            var dorm = context.Dorm.Find(dormId);
+            if (dorm != null)
+            {
+                dorm.Capacity++;
+                context.SaveChanges();
+            }
         }
     }
 }

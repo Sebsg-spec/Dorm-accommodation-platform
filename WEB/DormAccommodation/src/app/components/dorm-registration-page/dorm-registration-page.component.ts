@@ -46,14 +46,14 @@ export class DormRegistrationPageComponent {
     this.loadUserProfile(); 
 
     this.dormApplicationForm.get('dormPreference1')?.valueChanges.subscribe(() => this.updateDormFilters());
-  this.dormApplicationForm.get('dormPreference2')?.valueChanges.subscribe(() => this.updateDormFilters());
-  this.dormApplicationForm.get('dormPreference3')?.valueChanges.subscribe(() => this.updateDormFilters());
-
+    this.dormApplicationForm.get('dormPreference2')?.valueChanges.subscribe(() => this.updateDormFilters());
+    this.dormApplicationForm.get('dormPreference3')?.valueChanges.subscribe(() => this.updateDormFilters());
   }
 
   initializeForm(): void {
     this.dormApplicationForm = this.fb.group({
       document: [null, Validators.required],
+      universityGrade: ['', [Validators.required, Validators.min(1), Validators.max(10)]],
       dormPreference1: ['', Validators.required],
       dormPreference2: ['', Validators.required],
       dormPreference3: ['', Validators.required],
@@ -148,6 +148,7 @@ export class DormRegistrationPageComponent {
         user: this.userProfile.id,
         applicationName: "",
         faculty: this.userProfile.faculty,
+        grade: this.dormApplicationForm.get('universityGrade')?.value,
         uuid: uuidv4(),
         year: 1,
         lastUpdate: new Date(),
@@ -207,5 +208,16 @@ export class DormRegistrationPageComponent {
     } else {
       console.log('Form is invalid or profile not loaded');
     }
+  }
+
+  isValidGrade(event: KeyboardEvent): boolean {
+    const charCode = event.charCode;
+    // Allow only numbers (0-9) and dots
+    if (charCode >= 48 && charCode <= 57 || charCode === 46) {
+      return true;
+    }
+
+    event.preventDefault();
+    return false;
   }
 }

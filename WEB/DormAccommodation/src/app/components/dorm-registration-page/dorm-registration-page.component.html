@@ -17,7 +17,24 @@
           Te rog să încarci documentul.
         </div>
       </div>
-  
+
+      <div class="form-group">
+        <label for="universityGrade">Medie</label>
+        <input
+          type="number"
+          id="universityGrade"
+          formControlName="universityGrade"
+          max="10"
+          min="1"
+          step="0.1"
+          (keypress)="isValidGrade($event)"
+          required
+        />
+        <div *ngIf="dormApplicationForm.get('universityGrade')?.touched && dormApplicationForm.get('universityGrade')?.invalid" class="error">
+          Media trebuie să fie cuprinsă între 1 si 10.
+        </div>
+      </div>
+
       <div class="form-group">
         <label for="dormPreference1">Selectează preferința 1 pentru cămin</label>
         <select id="dormPreference1" formControlName="dormPreference1" required>

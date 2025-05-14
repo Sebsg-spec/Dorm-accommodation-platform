@@ -251,6 +251,7 @@ namespace DormManagementApi.Controllers
 
             if (updated)
             {
+                applicationService.FreeDormSpace(application.AssignedDorm);
                 return Ok();
             }
             else

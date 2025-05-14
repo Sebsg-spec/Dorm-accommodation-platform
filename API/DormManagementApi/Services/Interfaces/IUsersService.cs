@@ -1,5 +1,6 @@
 ﻿using DormManagementApi.Models;
 using DormManagementApi.Utils;
+using NuGet.Protocol.Plugins;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace DormManagementApi.Services.Interfaces
@@ -21,6 +22,8 @@ namespace DormManagementApi.Services.Interfaces
 
         public int? GetFaculty(int id);
         public IEnumerable<Models.Application> GetDormApplications(int? faculty, int status);
+
+        public bool ProcessApplications(int userId);
     }
 
     public class UsersService : IUsersService
@@ -169,9 +172,76 @@ namespace DormManagementApi.Services.Interfaces
 
             var applications = context.Application
                 .Where(a => a.Faculty == faculty && a.Status == status)
+                .OrderByDescending(a => a.MedieAdmitere)
+                .ThenByDescending(a => a.MedieAnAnterior)
+                .ThenByDescending(a => a.Grade)
                 .ToList();
 
             return applications;
+        }
+
+        public bool ProcessApplications(int userId)
+        {
+            // Get user faculty (secretary can only process applications from the same faculty)
+            var faculty = GetFaculty(userId);
+            if (faculty == null)
+            {
+                return false;
+            }
+
+            // Get dorm applications for the user's faculty that have a status id of 3 (application is validated)
+            var dormApplications = GetDormApplications(faculty, 3);
+
+            if (!dormApplications.Any())
+            {
+                return false;
+            }
+
+            // Loop through the students and check each preference
+            foreach (var application in dormApplications)
+            {
+                // Get the preferences for the application from the relationship
+                // The preferences are the result of the intermediary table of the many-to-many
+                // relationship between the dorm table and the application table
+                var preferences = context.DormPreference
+                    .Where(preference => preference.Application == application.Id)
+                    .OrderBy(ad => ad.Preference)
+                    .ToList();
+
+                // Check each preference one by one and assign the student to the first dorm that has capacity
+                // If there is no capacity, the application will change it's status to 6 (rejected)
+                bool assigned = false;
+                foreach (var preference in preferences)
+                {
+                    var dorm = context.Dorm.Find(preference.Dorm);
+                    if (dorm != null && dorm.Capacity > 0)
+                    {
+                        // Assign the student to the dorm
+                        application.AssignedDorm = dorm.Id;
+                        dorm.Capacity--;
+                        assigned = true;
+                        break;
+                    }
+                }
+
+                if (!assigned)
+                {
+                    // No dorm available, change status to 6 (rejected)
+                    application.Status = 6;
+                    application.Comment = "Nu exista locuri disponibile in caminurile preferate";
+                }
+                else
+                {
+                    // Update the status to 5 (assigned)
+                    application.Status = 5;
+                    application.Comment = $"Repartizat la căminul {application.AssignedDorm}";
+                }
+
+                application.LastUpdate = DateTime.Now;
+            }
+
+            int changed = context.SaveChanges();
+            return changed > 0;
         }
     }
 }

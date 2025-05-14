@@ -144,22 +144,15 @@ namespace DormManagementApi.Controllers
                 return Unauthorized("Invalid token");
             }
 
-            // Get user faculty
-            var faculty = _usersService.GetFaculty(userData.Id);
-            if (faculty == null)
+            if (_usersService.ProcessApplications(userData.Id))
             {
-                return BadRequest("User does not have a faculty");
+                return Ok();
             }
-
-            // Get dorm applications for the user's faculty that have a status id of 4
-            var dormApplications = _usersService.GetDormApplications(faculty, 4);
-
-            // TODO: Implement the logic to process dorm applications:
-            //  - Order by student's grade
-            //  - Loop students and check each preference
-            //  - Assign to first preference that still has capacity
-
-            return Ok();
+            else
+            {
+                // No applications to process
+                return NoContent();
+            }
         }
 
         // PUT: api/Users/5

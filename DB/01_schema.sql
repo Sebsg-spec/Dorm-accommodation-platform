@@ -71,6 +71,7 @@ CREATE TABLE [profile] (
 CREATE TABLE [dorm] (
     [id] INT PRIMARY KEY IDENTITY,
 	[dorm_group] INT NOT NULL FOREIGN KEY REFERENCES [dorm_group]([id]),
+	[capacity] INT NOT NULL,
 
 	[name] NVARCHAR(255) NOT NULL,
 	[location] NVARCHAR(255) NOT NULL
@@ -90,6 +91,9 @@ CREATE TABLE [application] (
 	[application_name] VARCHAR(255) NOT NULL,
 	[user] INT NOT NULL FOREIGN KEY REFERENCES [user]([id]),
 	[faculty] INT NOT NULL FOREIGN KEY REFERENCES [faculty]([id]),
+	[grade] FLOAT(24) NOT NULL,
+	[last_year_grade] FLOAT(24),
+	[admission_grade] FLOAT(24),
 
 	[uuid] CHAR(36) NOT NULL CHECK(LEN(LTRIM(RTRIM([uuid]))) = 36),
 	[year] INT NOT NULL,
