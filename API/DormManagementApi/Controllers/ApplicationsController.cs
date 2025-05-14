@@ -181,6 +181,46 @@ namespace DormManagementApi.Controllers
             }
             return NoContent();
         }
+        [HttpPost("{id}/redistribution")]
+        public async Task<IActionResult> ApplyForRedistribution(int id)
+        {
+            var userData = UsersController.ExtractToken(User);
+            if (userData == null)
+            {
+                return Unauthorized("Invalid token");
+            }
+
+            var application = applicationService.Get(id);
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            if (application.User != userData.Id)
+            {
+                return Unauthorized("You are not authorized to perform this action");
+            }
+
+
+            application.Status = 3; 
+            application.Comment = "Studentul a aplicat pentru redistribuire"; 
+            application.LastUpdate = DateTime.UtcNow;
+
+            bool updated = applicationService.Update(application);
+
+            if (updated)
+            {
+                return Ok();
+            }
+            else
+            {
+                if (!applicationService.Exists(id))
+                {
+                    return NotFound();
+                }
+                return StatusCode(500, "Failed to update application");
+            }
+        }
 
         // POST: api/Applications/5/decline
         [HttpPost("{id}/decline")]

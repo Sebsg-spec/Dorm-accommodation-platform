@@ -227,6 +227,33 @@ export class ApplicationDetailsComponent implements OnInit {
     });
   }
 
+  applyForRedistribution(): void {
+    if (!this.applicationId || this.userRole !== 2) { 
+      this.errorMessage = 'Nu aveți permisiunea să aplicați pentru redistribuire.';
+      return;
+    }
+
+    if (this.application?.status?.id !== 4) {
+      this.errorMessage = 'Acțiunea nu este disponibilă în statusul curent.';
+      return;
+    }
+
+    this.actionLoading = true;
+    this.applicationService.applyForRedistribution(
+      this.applicationId
+    ).subscribe({
+      next: () => {
+        this.loadApplicationDetails();
+        this.actionLoading = false;
+        this.showActionSuccessFeedback();
+      },
+      error: (error : any) => {
+        this.actionLoading = false;
+        this.errorMessage = 'A apărut o eroare la trimiterea cererii de redistribuire.';
+        console.error(error);
+      }
+    });
+  }
   showActionSuccessFeedback(): void {
     this.actionSuccess = true;
     setTimeout(() => {

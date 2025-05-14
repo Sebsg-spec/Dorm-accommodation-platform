@@ -28,6 +28,9 @@ export class DormRegistrationPageComponent {
   loadingProfile = true;
   errorMessage = '';
 
+  filteredDorms1: Dorm[] = [];
+  filteredDorms2: Dorm[] = [];
+  filteredDorms3: Dorm[] = []; 
   constructor(
     private fb: FormBuilder,
     private dormService: DormService,
@@ -40,7 +43,12 @@ export class DormRegistrationPageComponent {
   ngOnInit(): void {
     this.initializeForm();
     this.loadDorms();
-    this.loadUserProfile(); // 👈 Load user profile
+    this.loadUserProfile(); 
+
+    this.dormApplicationForm.get('dormPreference1')?.valueChanges.subscribe(() => this.updateDormFilters());
+  this.dormApplicationForm.get('dormPreference2')?.valueChanges.subscribe(() => this.updateDormFilters());
+  this.dormApplicationForm.get('dormPreference3')?.valueChanges.subscribe(() => this.updateDormFilters());
+
   }
 
   initializeForm(): void {
@@ -54,28 +62,42 @@ export class DormRegistrationPageComponent {
       specialRequestType: [''],
       additionalDocuments: [null],
     });
+
+    this.dormApplicationForm.get('dormPreference1')?.valueChanges.subscribe(() => this.updateDormFilters());
+    this.dormApplicationForm.get('dormPreference2')?.valueChanges.subscribe(() => this.updateDormFilters());
+    this.dormApplicationForm.get('dormPreference3')?.valueChanges.subscribe(() => this.updateDormFilters());
+  
   }
 
   loadDorms(): void {
     this.dormService.getDorms().subscribe({
       next: (data: Dorm[]) => {
         this.dorms = data;
+    this.updateDormFilters()
+
       },
       error: (err) => {
         console.error('Error loading dorms', err);
       },
     });
   }
-
+  updateDormFilters(): void {
+    const selected1 = this.dormApplicationForm.get('dormPreference1')?.value;
+    const selected2 = this.dormApplicationForm.get('dormPreference2')?.value;
+    const selected3 = this.dormApplicationForm.get('dormPreference3')?.value;
+  
+    this.filteredDorms1 = this.dorms.filter(dorm => String(dorm.id)!== String(selected2) && String(dorm.id) !== String(selected3));
+    this.filteredDorms2 = this.dorms.filter(dorm => String(dorm.id) !== String(selected1) && String(dorm.id) !== String(selected3));
+    this.filteredDorms3 = this.dorms.filter(dorm => String(dorm.id) !== String(selected1) && String(dorm.id) !== String(selected2));
+  
+  }
   loadUserProfile(): void {
     this.userId = this.profileService.getUserProp('nameid') ?? '';
-    console.log('this.userId:', this.userId);
     if (this.userId) {
       this.profileService.getProfile(this.userId).subscribe({
         next: (profile) => {
           this.userProfile = profile;
           this.loadingProfile = false;
-          console.log('Loaded user profile:', profile);
         },
         error: (error) => {
           this.errorMessage = 'Error loading profile data.';
@@ -113,9 +135,6 @@ export class DormRegistrationPageComponent {
 
   onSubmit() {
     if (this.dormApplicationForm.valid && this.userProfile) {
-      console.log('Form Values:', this.dormApplicationForm.value);
-      console.log('Selected Files:', this.selectedFiles);
-
       const formData = new FormData();
       this.selectedFiles.forEach((file, _) => {
         formData.append('files', file, file.name);
