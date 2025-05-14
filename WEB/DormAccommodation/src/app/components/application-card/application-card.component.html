@@ -1,12 +1,14 @@
 <div class="card" 
      [ngClass]="{
        'needs-action': currentApplication.status.id === 2 && userRole === 2,
-       'validated': currentApplication.status.id === 3,
        'departed': currentApplication.status.id === 4
      }">
 
   <div class="card-header">
-    <div class="fas fa-solid fa-paste icon-item"></div>
+    <div class="fas fa-solid fa-paste icon-item "
+    [ngClass]="{
+      'needs-action': currentApplication.status.id === 2 && userRole === 2,
+      'departed': currentApplication.status.id === 4}"></div>
     <div>
       <strong>Nr. înregistrare: </strong>{{currentApplication.applicationName}}
     </div>

@@ -1,6 +1,5 @@
-*, *:before, *:after {
-  box-sizing: inherit;
-  width: 100%;
+* {
+  font-family: 'Montserrat', sans-serif;
 }
 
 .page-container {
@@ -192,7 +191,7 @@ button:disabled {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   transition: background-color 0.3s;
-  width: 5.5%;
+
 }
 
 .fixed-button:hover {

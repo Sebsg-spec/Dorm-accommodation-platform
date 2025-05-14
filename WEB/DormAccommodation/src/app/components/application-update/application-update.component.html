@@ -10,7 +10,6 @@
     </div>
     
     <div *ngIf="!loading && !errorMessage && application" class="application-update">
-      <button class="secondary-btn" routerLink="/home" style="margin-bottom: 16px;">Înapoi</button>
       <h2>Actualizare dosar</h2>
       <div class="details-card">
         <p><strong>Nr. înregistrare:</strong> {{ application.applicationName }}</p>
@@ -89,7 +88,7 @@
         
         <div class="actions">
           <button class="primary-btn" (click)="toggleConfirmationMode()" [disabled]="newDocumentFiles.length === 0 && documentsToDelete.length === 0">Confirmă modificările</button>
-          <button class="secondary-btn" routerLink="/home">Înapoi</button>
+          
         </div>
       </div>
       
@@ -119,5 +118,8 @@
         </div>
       </div>
     </div>
+    <a class="fixed-button" routerLink="/home">
+      Înapoi
+    </a>
   </div>
 </div>
