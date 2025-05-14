@@ -71,6 +71,13 @@
             <span *ngIf="actionLoading">Se procesează...</span>
             <span *ngIf="!actionLoading">Refuz repartizarea</span>
           </button>
+          <button 
+            [disabled]="actionLoading || actionSuccess" 
+            class="btn btn-blue" 
+            (click)="applyForRedistribution()">
+            <span *ngIf="actionLoading">Se procesează...</span>
+            <span *ngIf="!actionLoading">Applica pentru redistribuire</span>
+          </button>
           <div *ngIf="actionSuccess" class="success-checkmark">
             <div class="check-icon"></div>
             <span class="success-message">Acțiune procesată cu succes!</span>

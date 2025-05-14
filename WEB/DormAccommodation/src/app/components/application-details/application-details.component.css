@@ -207,6 +207,10 @@ select.form-control {
   background-color: #dc3545;
   border-color: #dc3545;
 }
+.btn-blue {
+  color: white;
+  background-color: #1a4977;
+}
 
 .btn-danger:hover:not([disabled]) {
   background-color: white;
