@@ -162,7 +162,7 @@ namespace DormManagementApi.Controllers
                 return Unauthorized("You are not authorized to accept this application");
             }
 
-            application.Status = 5;
+            application.Status = (int)ApplicationStatus.CaminAcceptat;
             application.Comment = null;
             application.LastUpdate = DateTime.UtcNow;
 
@@ -202,7 +202,7 @@ namespace DormManagementApi.Controllers
             }
 
 
-            application.Status = 3; 
+            application.Status = (int)ApplicationStatus.Validat; 
             application.Comment = "Studentul a aplicat pentru redistribuire"; 
             application.LastUpdate = DateTime.UtcNow;
 
@@ -243,7 +243,7 @@ namespace DormManagementApi.Controllers
                 return Unauthorized("You are not authorized to decline this application");
             }
 
-            application.Status = 7;
+            application.Status = (int)ApplicationStatus.CaminRefuzat;
             application.Comment = null;
             application.LastUpdate = DateTime.UtcNow;
 
@@ -410,7 +410,7 @@ namespace DormManagementApi.Controllers
                 await file.CopyToAsync(stream);
             }
 
-            application.Status = 1;
+            application.Status = (int)ApplicationStatus.InCursDeVerificare;
             application.LastUpdate = DateTime.UtcNow;
 
             bool updated = applicationService.Update(application);

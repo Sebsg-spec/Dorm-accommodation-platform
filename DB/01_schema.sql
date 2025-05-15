@@ -71,7 +71,7 @@ CREATE TABLE [profile] (
 CREATE TABLE [dorm] (
     [id] INT PRIMARY KEY IDENTITY,
 	[dorm_group] INT NOT NULL FOREIGN KEY REFERENCES [dorm_group]([id]),
-	[capacity] INT NOT NULL,
+	[capacity] INT NOT NULL DEFAULT 0,
 
 	[name] NVARCHAR(255) NOT NULL,
 	[location] NVARCHAR(255) NOT NULL

@@ -98,26 +98,26 @@ VALUES
 -- -------------------------
 
 INSERT INTO [dorm]
-	([dorm_group], [capacity], [name], [location])
+	([dorm_group], [name], [location])
 VALUES
-	(1, 150, N'Căminul A1-A2', N'Str. B.P. Haşdeu nr. 90-92, Jud. Cluj'),
-	(1, 150, N'Căminul A3-A4', N'Str. B.P. Haşdeu nr. 90-92, Jud. Cluj'),
-	(1, 150, N'Căminul 1', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
-	(1, 150, N'Căminul 2', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
-	(1, 150, N'Căminul 3', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
-	(1, 150, N'Căminul 4', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
-	(1, 150, N'Căminul 5', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
-	(1, 150, N'Căminul 6', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
-	(1, 150, N'Căminul 14', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
-	(1, 150, N'Căminul 16', N'Str. B.P. Haşdeu nr. 90-92, Jud. Cluj'),
-	(1, 150, N'Căminul 17', N'Str. B.P. Haşdeu nr. 90-92, Jud. Cluj'),
-	(2, 150, N'Cămin Economica I', N'Str. Teodor Mihali nr. 58, Jud. Cluj'),
-	(2, 150, N'Cămin Economica II', N'Str. Teodor Mihali nr. 59, Jud. Cluj'),
-	(3, 150, N'Căminul "Sport XXI"', N'Str. Pandurilor nr. 7, Jud. Cluj'),
-	(4, 150, N'Cămin Teologic I', N'Str. Bisericii Sf. Toma nr. 2, Jud. Cluj'),
-	(5, 150, N'Complexul de cazare al Universităţii "Babeş-Bolyai"', N'Str. Pandurilor nr. 7, Jud. Cluj'),
-	(6, 150, N'Extensia Universitară Bistriţa', N'Str. Andrei Mureşanu nr. 3-5, Jud. Bistriţa Năsăud'),
-	(6, 150, N'Extensia Universitară Sighetu Marmaţiei', N'Str. Avram Iancu nr. 6, Jud. Maramureş');
+	(1, N'Căminul A1-A2', N'Str. B.P. Haşdeu nr. 90-92, Jud. Cluj'),
+	(1, N'Căminul A3-A4', N'Str. B.P. Haşdeu nr. 90-92, Jud. Cluj'),
+	(1, N'Căminul 1', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
+	(1, N'Căminul 2', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
+	(1, N'Căminul 3', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
+	(1, N'Căminul 4', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
+	(1, N'Căminul 5', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
+	(1, N'Căminul 6', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
+	(1, N'Căminul 14', N'Str. B.P. Haşdeu nr. 45, Jud. Cluj'),
+	(1, N'Căminul 16', N'Str. B.P. Haşdeu nr. 90-92, Jud. Cluj'),
+	(1, N'Căminul 17', N'Str. B.P. Haşdeu nr. 90-92, Jud. Cluj'),
+	(2, N'Cămin Economica I', N'Str. Teodor Mihali nr. 58, Jud. Cluj'),
+	(2, N'Cămin Economica II', N'Str. Teodor Mihali nr. 59, Jud. Cluj'),
+	(3, N'Căminul "Sport XXI"', N'Str. Pandurilor nr. 7, Jud. Cluj'),
+	(4, N'Cămin Teologic I', N'Str. Bisericii Sf. Toma nr. 2, Jud. Cluj'),
+	(5, N'Complexul de cazare al Universităţii "Babeş-Bolyai"', N'Str. Pandurilor nr. 7, Jud. Cluj'),
+	(6, N'Extensia Universitară Bistriţa', N'Str. Andrei Mureşanu nr. 3-5, Jud. Bistriţa Năsăud'),
+	(6, N'Extensia Universitară Sighetu Marmaţiei', N'Str. Avram Iancu nr. 6, Jud. Maramureş');
 
 -- -------------------------
 
@@ -209,6 +209,15 @@ BEGIN
 
         SET @floor += 1;
     END
+
+	-- Update dorm capacity based on inserted rooms
+    UPDATE [dorm]
+    SET [capacity] = (
+        SELECT SUM([capacity])
+        FROM [room]
+        WHERE [dorm] = @dormId
+    )
+    WHERE [id] = @dormId;
 
     FETCH NEXT FROM dorm_cursor INTO @dormId, @groupName;
 END

@@ -189,9 +189,8 @@ namespace DormManagementApi.Services.Interfaces
                 return false;
             }
 
-            // Get dorm applications for the user's faculty that have a status id of 3 (application is validated)
-            var dormApplications = GetDormApplications(faculty, 3);
-
+            // Get dorm applications for the user's faculty that have a validated application
+            var dormApplications = GetDormApplications(faculty, (int)ApplicationStatus.Validat);
             if (!dormApplications.Any())
             {
                 return false;
@@ -205,7 +204,7 @@ namespace DormManagementApi.Services.Interfaces
                 // relationship between the dorm table and the application table
                 var preferences = context.DormPreference
                     .Where(preference => preference.Application == application.Id)
-                    .OrderBy(ad => ad.Preference)
+                    .OrderBy(dp => dp.Preference)
                     .ToList();
 
                 // Check each preference one by one and assign the student to the first dorm that has capacity
@@ -224,18 +223,13 @@ namespace DormManagementApi.Services.Interfaces
                     }
                 }
 
-                if (!assigned)
-                {
-                    // No dorm available, change status to 6 (rejected)
-                    application.Status = 6;
-                    application.Comment = "Nu exista locuri disponibile in caminurile preferate";
-                }
-                else
-                {
-                    // Update the status to 5 (assigned)
-                    application.Status = 5;
-                    application.Comment = $"Repartizat la căminul {application.AssignedDorm}";
-                }
+                application.Status = assigned ?
+                    (int)ApplicationStatus.Repartizat :
+                    (int)ApplicationStatus.Respins;
+
+                application.Comment = assigned ?
+                    $"Repartizat la căminul {application.AssignedDorm}" :
+                    "Nu exista locuri disponibile in lista de preferinte";
 
                 application.LastUpdate = DateTime.Now;
             }
