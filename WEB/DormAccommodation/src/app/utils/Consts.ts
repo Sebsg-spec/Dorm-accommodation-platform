@@ -1,15 +1,16 @@
 export enum Consts {
 
-  APPLICATIONS_CLOSED,
+  SESSION_CLOSED,
   APPLICATIONS_LOADING,
-  APPLICATIONS_OPEN_NONE_REGISTERED,
-  APPLICATIONS_OPEN_REGISTERED_ALREADY,
+  SESSION_OPEN_APPLICATIONS_PHASE,
+  SESSION_OPEN_ASSIGNMENT_PHASE,
+  SESSION_OPEN_REASSIGNMENT_PHASE,
 
   BASE_URL = `https://localhost:7038/api`,
 
   APPLICATIONS_GET = `${BASE_URL}/Applications/GetApplications`,
   APPLICATIONS = `${BASE_URL}/Applications`,
-  
+
   APPLICATION_DETAILS = `${BASE_URL}/Applications/Details`,
   APPLICATION_DOCUMENTS = `${BASE_URL}/Applications/Documents`,
 
@@ -17,7 +18,7 @@ export enum Consts {
 
   LOGIN = `${BASE_URL}/Users/login`,
   REGISTER = `${BASE_URL}/Users/register`,
-  
+
   USERS = `${BASE_URL}/Users`,
   USER_UPDATE_ROLE = `${BASE_URL}/Users/UpdateRole`,
 
@@ -25,6 +26,11 @@ export enum Consts {
 
   DORMS = `${BASE_URL}/Dorms`,
 
-  DORM_PREFERENCES = `${BASE_URL}/DormPreferences`
+  DORM_PREFERENCES = `${BASE_URL}/DormPreferences`,
+
+  ACCOMMODATION_SESSIONS_GET_CURRENT = `${BASE_URL}/AccommodationSessions/GetCurrent`,
+  ACCOMMODATION_SESSIONS_CREATE = `${BASE_URL}/AccommodationSessions`,
+  ACCOMMODATION_SESSIONS_UPDATE = `${BASE_URL}/AccommodationSessions`
+
 }
 

@@ -45,6 +45,14 @@
   font-size: 1.8em;
 }
 
+.accommodation-session-details {
+  text-align: left;
+  color: #1a4977;
+  padding-top: 2%;
+  font-size: 0.5em;
+  font-weight: lighter;
+}
+
 .login-card {
   display: flex;
   box-sizing: border-box;
@@ -91,9 +99,49 @@ button:hover:not(.login-card-item) {
 .separator {
   border-top: 1px solid #1a4977;
   width: 95%;
-  margin-left: 2.5%;
-  margin-right: 2.5%;
+  margin: 2% 2.5% 0.5%;
+}
 
-  margin-top: 2%;
-  margin-bottom: 0.5%;
+.modal-phase {
+  display: flex;
+  flex-direction: row;
+}
+
+.modal-body {
+  color: #1a4977;
+  font-size: 1em;
+  align-items: center;
+}
+
+.modal-title {
+  color: #1A4977;
+  font-size: 1.5em;
+}
+
+.modal-content {
+
+  width: 50vw;
+  height: 50vh;
+  justify-self: center;
+  vertical-align: center;
+}
+
+td {
+  color: #1A4977;
+}
+
+th {
+  font-weight: bolder;
+  color: #1A4977;
+}
+.accommodation-session-details {
+  border-radius: 15px;
+  padding: 2%;
+  width: fit-content;
+  font-weight: bolder;
+  transition: all 0.2s ease;
+}
+
+.accommodation-session-details:hover {
+  background-color: #cccccc;
 }

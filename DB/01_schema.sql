@@ -1,7 +1,7 @@
 USE [inno];
 GO
 
--- -------------------------
+----------------------------
 
 DECLARE @sql NVARCHAR(MAX) = N'';
 
@@ -113,3 +113,24 @@ CREATE TABLE [dorm_preference] (
 
 	[preference] INT NOT NULL
 );
+
+CREATE TABLE [session_phase] (
+	[id] INT PRIMARY KEY IDENTITY,
+	[name] NVARCHAR(255) NOT NULL,
+);
+
+CREATE TABLE [accommodation_session] (
+	[id] INT PRIMARY KEY IDENTITY,
+	[name] NVARCHAR(255) NOT NULL,
+	[active] INT NOT NULL
+);
+
+CREATE TABLE [accommodation_session_details] (
+	[id] INT PRIMARY KEY IDENTITY,
+	[accommodation_session_id] INT NOT NULL FOREIGN KEY REFERENCES [accommodation_session]([id]),
+	[start_date] DATETIME2(0) NOT NULL,
+	[end_date] DATETIME2(0) NOT NULL,
+	[session_phase] INT NOT NULL FOREIGN KEY REFERENCES [session_phase]([id])
+);
+
+

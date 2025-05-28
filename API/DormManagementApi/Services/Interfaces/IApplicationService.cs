@@ -74,16 +74,27 @@ namespace DormManagementApi.Repositories.Interfaces
 
         public List<UserApplicationDto> GetForSecretary(int userId)
         {
+            List<UserApplicationDto> result = [];
+
             var secretaryProfile = context.Profile.Find(userId);
 
             var faculty = context.Faculty.Find(secretaryProfile.Faculty);
 
+            var currentAccommodationSession = context.AccommodationSession.FirstOrDefault(x => x.Active == 1);
+            if (currentAccommodationSession == null)
+            {
+                return result;
+            }
+
+            var currentAccommodationSessionId = currentAccommodationSession.Id;
+            var accommodationSessionApplicationsPhase = context.AccommodationSessionDetails.First(x => x.AccommodationSessionId == currentAccommodationSessionId && x.SessionPhase == 1);
+            var accommodationSessionReassignmentPhase = context.AccommodationSessionDetails.First(x => x.AccommodationSessionId == currentAccommodationSessionId && x.SessionPhase == 3);
+
             var secretaryApplications = context.Application
-                .Where(b => b.Faculty.Equals(secretaryProfile.Faculty))
+                .Where(b => b.Faculty.Equals(secretaryProfile.Faculty) && (b.LastUpdate >= accommodationSessionApplicationsPhase.StartDate && b.LastUpdate <= accommodationSessionReassignmentPhase.EndDate))
                 .OrderByDescending(x => x.LastUpdate)
                 .ToList();
 
-            List<UserApplicationDto> result = [];
 
             foreach (Application application in secretaryApplications)
             {

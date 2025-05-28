@@ -1,78 +1,117 @@
 <div class="component">
   <app-header-parameterized [hasUserLoginCard]="true"></app-header-parameterized>
+
   <div class="content">
-    <div *ngIf="showWhat == Consts.APPLICATIONS_CLOSED" class="alert alert-secondary registration-period-ended"
+    <div *ngIf="(showWhat === Consts.SESSION_CLOSED && userRole === 2)"
+         class="alert alert-secondary registration-period-ended"
          role="alert">Etapa de aplicare pentru
       obținerea unui loc în căminele UBB s-a încheiat.
     </div>
     <div *ngIf="showWhat == Consts.APPLICATIONS_LOADING" class="alert alert-secondary registration-period-ended"
-    role="alert">Se încarcă dosarele...
+         role="alert">Se încarcă dosarele...
     </div>
-    <button *ngIf="showWhat == Consts.APPLICATIONS_OPEN_NONE_REGISTERED" class="alert alert-info create-application-button"
-         role="alert"
-         (click)="GoToDormRegistration()">Încarcă dosar
+    <button
+      *ngIf="showWhat === Consts.SESSION_OPEN_APPLICATIONS_PHASE && userRole === 2 && openApplications.length === 0"
+      class="alert alert-info create-application-button"
+      role="alert"
+      (click)="GoToDormRegistration()">Încarcă dosar
     </button>
 
-    <div class="applications" *ngIf="showWhat == Consts.APPLICATIONS_OPEN_REGISTERED_ALREADY">
+    <div class="applications">
       <div class="applications-header">
         <nav class="nav-bar">
-          <button *ngIf="userRole === 1" (click)="switchTabs()" [class.active]="activeTab === 'your-applications'">Înregistrările tale</button>
-          <button *ngIf="userRole !== 1" (click)="switchTabs()" [class.active]="activeTab === 'your-applications'">Dosare</button>
-          <button (click)="switchTabs()" [class.active]="activeTab === 'history'">Istoric</button>
+          <button *ngIf="userRole === 2" (click)="switchTabs()" [class.active]="activeTab === 'your-applications'">
+            Înregistrările tale
+          </button>
+          <button *ngIf="userRole !== 1 && userRole !== 2" (click)="switchTabs()"
+                  [class.active]="activeTab === 'your-applications'">Dosare
+          </button>
+          <button *ngIf="userRole === 2" (click)="switchTabs()" [class.active]="activeTab === 'history'">Istoric
+          </button>
         </nav>
       </div>
-      <div *ngIf="activeTab === 'your-applications'">
-        <div *ngIf="openApplications.length > 0" class="grid-container">
-          <div *ngFor="let app of paginatedApplications" class="grid-item">
-            <app-application-card [currentApplication]="app"
-              (viewDetailsEvent)="GoToApplicationDetails($event)"
-              (updateApplicationEvent)="GoToUpdateApplication($event)">
-            </app-application-card>
+      <div class="cards-container">
+        <div *ngIf="activeTab === 'your-applications'">
+          <div *ngIf="showWhat !== Consts.SESSION_CLOSED && openApplications.length > 0" class="grid-container">
+            <div *ngFor="let app of paginatedApplications" class="grid-item">
+              <app-application-card [currentApplication]="app"
+                                    (viewDetailsEvent)="GoToApplicationDetails($event)"
+                                    (updateApplicationEvent)="GoToUpdateApplication($event)">
+              </app-application-card>
+            </div>
           </div>
-        </div>
-        <div *ngIf="openApplications.length === 0">
-          Nu există dosare active
-        </div>
-
-        <div class="pagination-container">
-          <button (click)="applicationCurrentPage = applicationCurrentPage - 1"
-                  [disabled]="applicationCurrentPage === 1"
-                  class="pagination-button"> Prev </button>
-        
-          <span class="pagination-info">Page {{ applicationCurrentPage }} of {{ applicationTotalPages }} </span>
-        
-          <button (click)="applicationCurrentPage = applicationCurrentPage + 1"
-                  [disabled]="applicationCurrentPage === applicationTotalPages"
-                  class="pagination-button">  Next </button>
-        </div>
-        
-
-        <div class="page-size-wrapper">
-          <label for="pageSize" class="page-size-label">Afișează</label>
-          <div class="custom-select-wrapper">
-            <select id="pageSize" [(ngModel)]="applicationPageSize" (change)="onApplicationPageSizeChange()">
-              <option *ngFor="let size of applicationPageSizeOptions" [value]="size">{{ size }}</option>
-            </select>
-            <span class="custom-arrow"></span>
+          <div class="no-active" *ngIf="openApplications.length === 0">
+            Nu există dosare active.
           </div>
-          <span class="page-size-label">pe pagină</span>
+
+          <div *ngIf="openApplications.length > 0" class="pagination-container">
+            <button (click)="applicationCurrentPage = applicationCurrentPage - 1"
+                    [disabled]="applicationCurrentPage === 1"
+                    class="pagination-button"> Prev
+            </button>
+
+            <span class="pagination-info">Page {{ applicationCurrentPage }} of {{ applicationTotalPages }} </span>
+
+            <button (click)="applicationCurrentPage = applicationCurrentPage + 1"
+                    [disabled]="applicationCurrentPage === applicationTotalPages"
+                    class="pagination-button"> Next
+            </button>
+          </div>
+
+
+          <div *ngIf="openApplications.length > 0" class="page-size-wrapper">
+            <label for="pageSize" class="page-size-label">Afișează</label>
+            <div class="custom-select-wrapper">
+              <select id="pageSize" [(ngModel)]="applicationPageSize" (change)="onApplicationPageSizeChange()">
+                <option *ngFor="let size of applicationPageSizeOptions" [value]="size">{{ size }}</option>
+              </select>
+              <span class="custom-arrow"></span>
+            </div>
+            <span class="page-size-label">pe pagină</span>
+          </div>
+
+
         </div>
 
-
-      </div>
         <ng-container *ngIf="activeTab === 'history'">
           <div *ngIf="history.length > 0" class="grid-container">
             <div *ngFor="let t of history" class="grid-item">
-              <app-application-card [currentApplication]="t" 
-                (viewDetailsEvent)="GoToApplicationDetails($event)"></app-application-card>
+              <app-application-card [currentApplication]="t"
+                                    (viewDetailsEvent)="GoToApplicationDetails($event)"></app-application-card>
             </div>
           </div>
-          <div *ngIf="history.length === 0">
-            Nu există dosare în istoric
+          <div class="no-active" *ngIf="history.length === 0">
+            Nu există dosare în istoric.
           </div>
+
+          <div class="pagination-container" *ngIf="history.length > 0">
+            <button (click)="applicationCurrentPage = applicationCurrentPage - 1"
+                    [disabled]="applicationCurrentPage === 1"
+                    class="pagination-button"> Prev
+            </button>
+
+            <span class="pagination-info">Page {{ applicationCurrentPage }} of {{ applicationTotalPages }} </span>
+
+            <button (click)="applicationCurrentPage = applicationCurrentPage + 1"
+                    [disabled]="applicationCurrentPage === applicationTotalPages"
+                    class="pagination-button"> Next
+            </button>
+          </div>
+          <div class="page-size-wrapper" *ngIf="history.length > 0">
+            <label for="pageSize" class="page-size-label">Afișează</label>
+            <div class="custom-select-wrapper">
+              <select id="pageSize" [(ngModel)]="applicationPageSize" (change)="onApplicationPageSizeChange()">
+                <option *ngFor="let size of applicationPageSizeOptions" [value]="size">{{ size }}</option>
+              </select>
+              <span class="custom-arrow"></span>
+            </div>
+            <span class="page-size-label">pe pagină</span>
+          </div>
+
         </ng-container>
       </div>
     </div>
+  </div>
   <footer>
     <br>
     <br>

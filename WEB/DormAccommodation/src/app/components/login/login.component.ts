@@ -15,6 +15,7 @@ import { User } from '../../models/user.model';
 import { Login } from '../../models/login.model';
 import { ProfileService } from '../../../services/profile.service';
 import { Profile } from '../../models/profile.model';
+import {AccommodationSessionService} from '../../../services/accommodation.session.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -143,11 +144,17 @@ export class LoginComponent implements OnInit {
 
   redirect(): any {
     const id = this.Profile.getUserProp('nameid');
+    const role = parseInt(this.Profile.getUserProp("role") ?? "0");
     this.Profile.getProfile(id!).subscribe((response: Profile) => {
       this.canAcces = 'true';
       sessionStorage.setItem('canAcces', this.canAcces);
       if (response.pin) {
-        this.router.navigateByUrl('home');
+        if(role === 4) {
+          this.router.navigateByUrl('admin-home');
+
+        } else {
+          this.router.navigateByUrl('home');
+        }
       } else {
         this.router.navigateByUrl('user-profile');
       }

@@ -267,3 +267,11 @@ VALUES
 	(9, 13, 1),
 	(9, 14, 2),
 	(9, 8, 3);
+
+
+INSERT INTO [session_phase]
+	([name])
+VALUES
+	(N'Aplicare'),
+	(N'Distribuire'),
+	(N'Redistribuire');

@@ -87,6 +87,7 @@ namespace DormManagementApi
             builder.Services.AddScoped<IRoomsService, RoomsService>();
             builder.Services.AddScoped<IUsersService, UsersService>();
             builder.Services.AddScoped<IStatusService, StatusService>();
+            builder.Services.AddScoped<IAccommodationSessionService, AccommodationSessionService>();
 
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

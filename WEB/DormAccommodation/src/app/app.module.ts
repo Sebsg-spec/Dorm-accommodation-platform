@@ -32,6 +32,11 @@ import { HeaderParameterizedComponent } from './components/header-parameterized/
 import { JwtInterceptor } from './utils/jwt.interceptor';
 import { ApplicationCardComponent } from './components/application-card/application-card.component';
 import { ApplicationUpdateComponent } from './components/application-update/application-update.component';
+import { AdminHomeComponent } from './components/admin-home/admin-home.component';
+import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
+import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
+import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
+import {MatButton} from '@angular/material/button';
 
 
 
@@ -40,6 +45,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [authGuardGuard] },
   { path: 'dosar', component: DormRegistrationPageComponent, canActivate: [authGuardGuard] },
   { path: 'admin', component: AdminComponent, canActivate: [authGuardGuard] },
+  { path: 'admin-home', component: AdminHomeComponent, canActivate: [authGuardGuard] },
   { path: 'management', component: ManagementComponent, canActivate: [authGuardGuard] },
   { path: 'user-profile', component: UserProfileComponent, canActivate: [authGuardGuard]},
   { path: 'application-details/:id', component: ApplicationDetailsComponent, canActivate: [authGuardGuard]},
@@ -61,7 +67,8 @@ const routes: Routes = [
     HeaderParameterizedComponent,
     ApplicationCardComponent,
     ApplicationDetailsComponent,
-    ApplicationUpdateComponent
+    ApplicationUpdateComponent,
+    AdminHomeComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,6 +77,23 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MatFormField,
+    MatDatepickerToggle,
+    MatDatepicker,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+    MatButton,
+    MatSuffix,
+    MatLabel,
+    MatButton,
+    MatDialogTitle,
+    MatDialogContent,
+    MatFormField,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatDatepickerInput,
   ],
   providers: [User, Login, Profile,
   {

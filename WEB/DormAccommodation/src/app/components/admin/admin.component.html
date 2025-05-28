@@ -1,6 +1,6 @@
 <div class="component">
   <app-header-parameterized [hasUserLoginCard]="true"></app-header-parameterized>
-  
+
   <div *ngIf="!loading && errorMessage" class="error">
     <p>{{ errorMessage }}</p>
   </div>
@@ -10,9 +10,9 @@
 
       <h1 class="admin-title">Panou Administrație</h1>
     </div>
-    
+
     <div class="control-panel" *ngIf="userRole === 3">
-      <button 
+      <button
         class="control-button"
         [disabled]="processingApplications"
         (click)="processApplications()">
@@ -26,11 +26,11 @@
 
     <div class="section" *ngIf="userRole === 4">
       <h2 class="section-title">Listă utilizatori</h2>
-      
+
       <div *ngIf="loading" class="loading">
         <span>Se încarcă utilizatorii...</span>
       </div>
-      
+
       <div *ngIf="!loading" class="users-list">
         <table class="users-table">
           <thead>
@@ -49,17 +49,17 @@
               <td>{{ user.lastName }}</td>
               <td>{{ user.firstName }}</td>
               <td>
-                <select 
-                  [disabled]="isAdmin(originalRoles[user.id])" 
-                  [(ngModel)]="selectedRoles[user.id]" 
+                <select
+                  [disabled]="isAdmin(originalRoles[user.id])"
+                  [(ngModel)]="selectedRoles[user.id]"
                   (change)="onRoleChange(user.id, selectedRoles[user.id])">
                   <option *ngFor="let role of roles" [value]="role.id">{{ role.name }}</option>
                 </select>
               </td>
               <td class="action-cell">
-                <button 
-                  class="save-button" 
-                  [disabled]="!isRoleChanged(user.id)" 
+                <button
+                  class="save-button"
+                  [disabled]="!isRoleChanged(user.id)"
                   [class.active]="isRoleChanged(user.id)"
                   (click)="updateUserRole(user.id)">
                   Salvează
@@ -103,4 +103,25 @@
   <a class="fixed-button" routerLink="/home">
     Înapoi
   </a>
+
+  <footer>
+    <br>
+    <br>
+    <div class="separator"></div>
+    <div class="container">
+      <div class="row footer">
+        <div class="col-md">
+          © Universitatea Babeş-Bolyai, 2025, <br>
+          toate drepturile rezervate
+        </div>
+        <div class="col-md">
+          Protecția datelor cu caracter personal
+        </div>
+        <div class="col-md">
+          Politica de utilizare cookies
+        </div>
+      </div>
+    </div>
+    <br>
+  </footer>
 </div>

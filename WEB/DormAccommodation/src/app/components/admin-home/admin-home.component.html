@@ -1,0 +1,249 @@
+<div class="component">
+  <app-header-parameterized [hasUserLoginCard]="true"></app-header-parameterized>
+  <div class="content">
+
+    <div class="applications">
+      <div class="applications-header">
+        <nav class="nav-bar">
+          <button (click)="switchTabs()">
+            {{accommodationSession.id === 0 ? "Creează o sesiune" : ("Sesiunea " + accommodationSession.name)}}
+          </button>
+        </nav>
+      </div>
+      <div class="cards-container">
+
+        <div class="session-creation-container">
+
+          <form [formGroup]="accommodationSessionForm"
+                (ngSubmit)="accommodationSessionId === 0 ? createSession() : updateAccommodationSession()">
+            <div class="application-stage-form-group">
+
+              <div class="form-field">
+                <label for="nume-sesiune" class="section-title">Nume sesiune:</label>
+                <input
+                  type="text"
+                  id="nume-sesiune"
+                  formControlName="name"
+                  maxlength="20"
+                  placeholder="Introduceți nume"
+                />
+                <div class="error"
+                     *ngIf="accommodationSessionForm.get('name')?.errors?.['required'] && (accommodationSessionForm.get('name')?.touched || accommodationSessionForm.get('name')?.dirty)">
+                      <span>
+                        Câmpul este obligatoriu.
+                      </span>
+                </div>
+                <div class="error"
+                     *ngIf="accommodationSessionForm.get('name')?.invalid && accommodationSessionForm.get('name')?.errors?.['minlength'] && (accommodationSessionForm.get('name')?.touched || accommodationSessionForm.get('name')?.dirty)">
+                      <span>
+                        Numele trebuie sa contina minim 5 caractere.
+                      </span>
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label class="section-title" for="etapa-aplicari">Etapa de aplicare</label>
+                <div id="etapa-aplicari">
+                  <div id="start-aplicari">
+                    <label for="start-perioada-aplicari">Dată început:</label>
+                    <input
+                      type="date"
+                      id="start-perioada-aplicari"
+                      min="{{minApplicationPhaseStartDate}}"
+                      formControlName="applicationPhaseStartDate"
+                    />
+                    <div class="error"
+                         *ngIf="accommodationSessionForm.get('applicationPhaseStartDate')?.errors?.['required'] && (accommodationSessionForm.get('applicationPhaseStartDate')?.touched || accommodationSessionForm.get('applicationPhaseStartDate')?.dirty)">
+                      <span>
+                        Câmpul este obligatoriu.
+                      </span>
+                    </div>
+
+                  </div>
+                  <div id="stop-aplicari">
+                    <label for="stop-perioada-aplicari">Dată sfârșit:</label>
+                    <input
+                      type="date"
+                      id="stop-perioada-aplicari"
+                      min="{{accommodationSessionForm.get('applicationPhaseStartDate')?.value}}"
+                      formControlName="applicationPhaseEndDate"
+                    />
+                    <div class="error"
+                         *ngIf="accommodationSessionForm.get('applicationPhaseEndDate')?.errors?.['required'] === true && (accommodationSessionForm.get('applicationPhaseEndDate')?.touched || accommodationSessionForm.get('applicationPhaseEndDate')?.dirty)">
+                      <span>
+                        Câmpul este obligatoriu.
+                      </span>
+                    </div>
+
+                    <div class="error" *ngIf="(
+                (accommodationSessionForm.get('applicationPhaseEndDate')?.errors?.['phaseConflict']  === true || accommodationSessionForm.get('assignmentPhaseStartDate')?.errors?.['phaseConflict'] === true)
+                &&
+                ((accommodationSessionForm.get('applicationPhaseEndDate')?.touched || accommodationSessionForm.get('applicationPhaseEndDate')?.dirty) || (accommodationSessionForm.get('assignmentPhaseStartDate')?.touched || accommodationSessionForm.get('assignmentPhaseStartDate')?.dirty)))">
+                      <span>
+                        Conflict cu data de inceput a urmatoarei etape.
+                      </span>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="error" *ngIf="(
+                (accommodationSessionForm.get('applicationPhaseStartDate')?.errors?.['dateRangeInvalid']  === true && accommodationSessionForm.get('applicationPhaseEndDate')?.errors?.['dateRangeInvalid'] === true)
+                &&
+                ((accommodationSessionForm.get('applicationPhaseStartDate')?.touched || accommodationSessionForm.get('applicationPhaseStartDate')?.dirty) || (accommodationSessionForm.get('applicationPhaseEndDate')?.touched || accommodationSessionForm.get('applicationPhaseEndDate')?.dirty)))">
+                      <span>
+                        Data de sfarsit nu poate fi inaintea datei de inceput.
+                      </span>
+                </div>
+              </div>
+
+
+              <div class="form-field">
+                <label class="section-title" for="etapa-repartizare">Etapa de repartizări</label>
+                <div id="etapa-repartizare">
+                  <div id="start-repartizare">
+                    <label for="start-perioada-repartizare">Dată început:</label>
+                    <input
+                      type="date"
+                      id="start-perioada-repartizare"
+                      min="{{accommodationSessionForm.get('applicationPhaseEndDate')?.value}}"
+                      formControlName="assignmentPhaseStartDate"
+                    />
+                    <div class="error"
+                         *ngIf="accommodationSessionForm.get('assignmentPhaseStartDate')?.errors?.['required'] === true && (accommodationSessionForm.get('assignmentPhaseStartDate')?.touched)">
+                      <span>
+                        Câmpul este obligatoriu.
+                      </span>
+                    </div>
+                    <div class="error" *ngIf="(
+                (accommodationSessionForm.get('applicationPhaseEndDate')?.errors?.['phaseConflict']  === true || accommodationSessionForm.get('assignmentPhaseStartDate')?.errors?.['phaseConflict'] === true)
+                &&
+                ((accommodationSessionForm.get('applicationPhaseEndDate')?.touched || accommodationSessionForm.get('applicationPhaseEndDate')?.dirty) || (accommodationSessionForm.get('assignmentPhaseStartDate')?.touched || accommodationSessionForm.get('assignmentPhaseStartDate')?.dirty)))">
+                      <span>
+                        Conflict intre etape.
+                      </span>
+                    </div>
+
+                  </div>
+
+                  <div id="stop-repartizare">
+                    <label for="stop-perioada-repartizare">Dată sfârșit:</label>
+                    <input
+                      type="date"
+                      min="{{accommodationSessionForm.get('assignmentPhaseStartDate')?.value}}"
+                      id="stop-perioada-repartizare"
+                      formControlName="assignmentPhaseEndDate"
+                    />
+                    <div class="error"
+                         *ngIf="accommodationSessionForm.get('assignmentPhaseEndDate')?.errors?.['required'] === true && (accommodationSessionForm.get('assignmentPhaseEndDate')?.touched)">
+                      <span>
+                        Câmpul este obligatoriu.
+                      </span>
+                    </div>
+
+                    <div class="error" *ngIf="(
+                (accommodationSessionForm.get('assignmentPhaseEndDate')?.errors?.['phaseConflict']  === true || accommodationSessionForm.get('assignmentPhaseEndDate')?.errors?.['phaseConflict'] === true)
+                &&
+                ((accommodationSessionForm.get('assignmentPhaseEndDate')?.touched || accommodationSessionForm.get('assignmentPhaseEndDate')?.dirty) || (accommodationSessionForm.get('reassignmentPhaseStartDate')?.touched || accommodationSessionForm.get('reassignmentPhaseStartDate')?.dirty)))">
+                      <span>
+                        Conflict cu data de inceput a urmatoarei etape.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="error" *ngIf="(
+                (accommodationSessionForm.get('assignmentPhaseStartDate')?.errors?.['dateRangeInvalid']  === true && accommodationSessionForm.get('assignmentPhaseEndDate')?.errors?.['dateRangeInvalid'] === true) &&
+                ((accommodationSessionForm.get('assignmentPhaseStartDate')?.touched || accommodationSessionForm.get('assignmentPhaseStartDate')?.dirty) && (accommodationSessionForm.get('assignmentPhaseEndDate')?.touched || accommodationSessionForm.get('assignmentPhaseEndDate')?.dirty)))">
+                  <span>
+                        Data de sfarsit nu poate fi inaintea datei de inceput.
+                      </span>
+                </div>
+
+              </div>
+
+              <div class="form-field">
+                <label class="section-title" for="etapa-redistribuire">Etapa de redistribuire</label>
+                <div id="etapa-redistribuire">
+                  <div id="start-redistribuire">
+                    <label for="start-perioada-redistribuire">Dată început:</label>
+                    <input
+                      type="date"
+                      id="start-perioada-redistribuire"
+                      min="{{accommodationSessionForm.get('assignmentPhaseEndDate')?.value}}"
+                      formControlName="reassignmentPhaseStartDate"
+                    />
+                    <div class="error"
+                         *ngIf="accommodationSessionForm.get('reassignmentPhaseStartDate')?.errors?.['required'] && (accommodationSessionForm.get('reassignmentPhaseStartDate')?.touched)">
+                      <span>
+                        Câmpul este obligatoriu.
+                      </span>
+                    </div>
+
+                    <div class="error" *ngIf="(
+                (accommodationSessionForm.get('assignmentPhaseEndDate')?.errors?.['phaseConflict']  === true || accommodationSessionForm.get('assignmentPhaseEndDate')?.errors?.['phaseConflict'] === true)
+                &&
+                ((accommodationSessionForm.get('assignmentPhaseEndDate')?.touched || accommodationSessionForm.get('assignmentPhaseEndDate')?.dirty) || (accommodationSessionForm.get('reassignmentPhaseStartDate')?.touched || accommodationSessionForm.get('reassignmentPhaseStartDate')?.dirty)))">
+                      <span>
+                        Conflict intre etape.
+                      </span>
+                    </div>
+                  </div>
+                  <div id="stop-redistribuire">
+                    <label for="stop-perioada-redistribuire">Dată sfârșit:</label>
+                    <input
+                      type="date"
+                      id="stop-perioada-redistribuire"
+                      min="{{accommodationSessionForm.get('reassignmentPhaseStartDate')?.value}}"
+                      formControlName="reassignmentPhaseEndDate"
+                    />
+                    <div class="error"
+                         *ngIf="accommodationSessionForm.get('reassignmentPhaseEndDate')?.errors?.['required'] && (accommodationSessionForm.get('reassignmentPhaseEndDate')?.touched)">
+                      <span>
+                        Câmpul este obligatoriu.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="error" *ngIf="(
+                (accommodationSessionForm.get('reassignmentPhaseStartDate')?.errors?.['dateRangeInvalid']  === true && accommodationSessionForm.get('reassignmentPhaseEndDate')?.errors?.['dateRangeInvalid'] === true) &&
+                ((accommodationSessionForm.get('reassignmentPhaseStartDate')?.touched || accommodationSessionForm.get('reassignmentPhaseStartDate')?.dirty) && (accommodationSessionForm.get('reassignmentPhaseEndDate')?.touched || accommodationSessionForm.get('reassignmentPhaseEndDate')?.dirty)))">
+                      <span>
+                        Data de sfarsit nu poate fi inaintea datei de inceput.
+                      </span>
+                </div>
+              </div>
+            </div>
+            <div class="error" *ngIf="accommodationSessionForm.getError('dateRangeInvalid') === true">
+                  {{accommodationSessionForm.errors?.['dateRangeInvalid']}}
+            </div>
+            <!-- Submit Button -->
+            <button class="row" type="submit" [disabled]="accommodationSessionForm.invalid">
+              Salvează
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <footer>
+    <br>
+    <br>
+    <div class="separator"></div>
+    <div class="container">
+      <div class="row footer">
+        <div class="col-md">
+          © Universitatea Babeş-Bolyai, 2025, <br>
+          toate drepturile rezervate
+        </div>
+        <div class="col-md">
+          Protecția datelor cu caracter personal
+        </div>
+        <div class="col-md">
+          Politica de utilizare a cookies-urilor
+        </div>
+      </div>
+    </div>
+    <br>
+  </footer>
+</div>
