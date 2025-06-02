@@ -7,9 +7,7 @@
          role="alert">Etapa de aplicare pentru
       obținerea unui loc în căminele UBB s-a încheiat.
     </div>
-    <div *ngIf="showWhat == Consts.APPLICATIONS_LOADING" class="alert alert-secondary registration-period-ended"
-         role="alert">Se încarcă dosarele...
-    </div>
+
     <button
       *ngIf="showWhat === Consts.SESSION_OPEN_APPLICATIONS_PHASE && userRole === 2 && openApplications.length === 0"
       class="alert alert-info create-application-button"
@@ -40,10 +38,13 @@
               </app-application-card>
             </div>
           </div>
-          <div class="no-active" *ngIf="openApplications.length === 0">
-            Nu există dosare active.
-          </div>
+         <div class="no-active" *ngIf="!isLoading && openApplications.length === 0">
+  Nu există dosare active.
+</div>
 
+          <div *ngIf="isLoading" class="loading-overlay">
+            <div class="spinner"></div>
+          </div>
           <div *ngIf="openApplications.length > 0" class="pagination-container">
             <button (click)="applicationCurrentPage = applicationCurrentPage - 1"
                     [disabled]="applicationCurrentPage === 1"

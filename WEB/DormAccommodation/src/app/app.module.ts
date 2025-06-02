@@ -39,7 +39,6 @@ import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/inp
 import {MatButton} from '@angular/material/button';
 
 
-
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'home', component: HomeComponent, canActivate: [authGuardGuard] },

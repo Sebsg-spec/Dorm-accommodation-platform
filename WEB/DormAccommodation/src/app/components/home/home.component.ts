@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
   public showWhat = Consts.APPLICATIONS_LOADING;
   protected readonly Consts = Consts;
   userRole: number | null = null;
+  isLoading = false;
 
   applicationPageSizeOptions = [4, 8, 12];
   applicationPageSize = 4;
@@ -83,11 +84,11 @@ export class HomeComponent implements OnInit {
 
 
   getApplications() {
+     this.isLoading = true;
+
 
     this.applicationService.getUserApplications().subscribe(
       (res) => {
-        console.log(res)
-
 
         if (res.length > 0) {
           if (this.showWhat === Consts.SESSION_CLOSED) {
@@ -107,6 +108,7 @@ export class HomeComponent implements OnInit {
               if (this.openApplications.length === 0) {
                 this.history = res;
               } else {
+                
                 this.history = res.filter(app => new Date(app.lastUpdate) < new Date(this.currentAccommodationSession.applicationPhaseStartDate) || new Date(app.lastUpdate) > new Date(this.currentAccommodationSession.reassignmentPhaseEndDate))
               }
 
@@ -115,9 +117,10 @@ export class HomeComponent implements OnInit {
             }
           }
         }
+         this.isLoading = false;
       }, error => {
         console.log(error);
-      })
+      })      
   }
 
   switchTabs() {
