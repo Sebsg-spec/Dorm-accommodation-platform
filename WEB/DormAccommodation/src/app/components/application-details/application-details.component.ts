@@ -18,7 +18,7 @@ export class ApplicationDetailsComponent implements OnInit {
 
   public userRole: number | null = null;
   errorMessage: string = '';
-  
+
   statuses: { id: number, name: string }[] = [
     // { id: 1, name: 'În curs de verificare' },
     { id: 2, name: 'În așteptare' },
@@ -38,7 +38,7 @@ export class ApplicationDetailsComponent implements OnInit {
 
   actionLoading: boolean = false;
   actionSuccess: boolean = false;
-  
+
   files: string[] = [];
   selectedFile: string | null = null;
 
@@ -50,7 +50,7 @@ export class ApplicationDetailsComponent implements OnInit {
     private applicationService: ApplicationService,
     private profileService: ProfileService,
     private sanitizer: DomSanitizer
-  ) { 
+  ) {
     this.userRole = parseInt(this.profileService.getUserProp("role") ?? "0");
   }
 
@@ -113,7 +113,7 @@ export class ApplicationDetailsComponent implements OnInit {
 
     this.updateStatusLoading = true;
     this.applicationService.updateApplicationStatus(
-      this.applicationId, 
+      this.applicationId,
       new StatusUpdateDto(this.selectedStatusId, this.statusComment)
     ).subscribe({
       next: () => {
@@ -136,10 +136,10 @@ export class ApplicationDetailsComponent implements OnInit {
       this.updateSuccess = false;
     }, 3000);
   }
-  
+
   loadPdfFiles(): void {
     if (!this.applicationId) return;
-    
+
     this.applicationService.getApplicationDocuments(this.applicationId).subscribe({
       next: (files) => {
         this.files = files;
@@ -155,7 +155,7 @@ export class ApplicationDetailsComponent implements OnInit {
 
     this.fileLoading = true;
     this.fileObject = null;
-    
+
     this.applicationService.getDocumentFile(this.applicationId, file).subscribe({
       next: (response) => {
         const fileURL = URL.createObjectURL(response);
@@ -184,7 +184,7 @@ export class ApplicationDetailsComponent implements OnInit {
 
     this.actionLoading = true;
     this.applicationService.acceptApplication(
-      this.applicationId, 
+      this.applicationId,
     ).subscribe({
       next: () => {
         this.loadApplicationDetails();
@@ -212,7 +212,7 @@ export class ApplicationDetailsComponent implements OnInit {
 
     this.actionLoading = true;
     this.applicationService.declineApplication(
-      this.applicationId, 
+      this.applicationId,
     ).subscribe({
       next: () => {
         this.loadApplicationDetails();
@@ -228,7 +228,7 @@ export class ApplicationDetailsComponent implements OnInit {
   }
 
   applyForRedistribution(): void {
-    if (!this.applicationId || this.userRole !== 2) { 
+    if (!this.applicationId || this.userRole !== 2) {
       this.errorMessage = 'Nu aveți permisiunea să aplicați pentru redistribuire.';
       return;
     }

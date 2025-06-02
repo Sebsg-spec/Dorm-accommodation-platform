@@ -29,6 +29,8 @@ namespace DormManagementApi.Repositories.Interfaces
         public bool Create(ref Application application)
         {
             application.ApplicationName = GenerateApplicationName(application);
+            int userId = application.User;
+            application.Year = context.Profile.FirstOrDefault(x => x.Id == userId).YearOfStudy?? 1;
             context.Application.Add(application);
             int saved = context.SaveChanges();
             return saved > 0;
